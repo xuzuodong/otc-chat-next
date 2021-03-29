@@ -2,6 +2,7 @@
     <div class="home">
         <h2>This is a Vue 3 component!</h2>
         <button @click="increase">Clicked {{ count }} times.</button>
+        <q-btn color="primary" icon="check" label="OK" @click="onClick" />
     </div>
 </template>
 
@@ -14,9 +15,14 @@ export default defineComponent({
             count.value++
         }
 
+        const onClick = () => {
+            console.log(123)
+        }
+        
         return {
             count,
             increase,
+            onClick,
         }
     },
 })
