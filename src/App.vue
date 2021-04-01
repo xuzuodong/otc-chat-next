@@ -4,12 +4,11 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import   './utils/comet-test1'
+import './utils/comet-test1'
 
 export default defineComponent({
-    setup () {
-        
+    setup() {
         return {}
-    }
+    },
 })
 </script>
