@@ -3,17 +3,17 @@
     <div class="flex justify-between items-start flex-nowrap w-screen py-1.5">
         <!-- 对方头像  -->
         <q-avatar
-            :class="{ invisible: !opposite }"
+            :class="{ invisible: fromMyself }"
             class="mx-4 min-w-chat-msg-avatar w-chat-msg-avatar h-chat-msg-avatar rounded-lg"
         >
             <img :src="default_avatar_url" />
         </q-avatar>
         <!-- 消息气泡 -->
-        <div :class="{ 'justify-end': !opposite }" class="flex-auto flex">
+        <div :class="{ 'justify-end': fromMyself }" class="flex-auto flex">
             <div
                 :class="[
-                    opposite ? 'bg-white' : 'bg-secondary',
-                    opposite ? 'rounded-chat-msg-bubble-opposite' : 'rounded-chat-msg-bubble-me',
+                    fromMyself ? 'bg-secondary' : 'bg-white',
+                    fromMyself ? 'rounded-chat-msg-bubble-myself' : 'rounded-chat-msg-bubble-opposite',
                 ]"
                 class="py-3 px-4"
             >
@@ -30,9 +30,9 @@
             </div>
         </div>
         <!-- 我的头像 -->
-        <q-avatar :class="{ invisible: opposite }" class="mx-4 w-9 min-w-9 h-9 rounded-lg"
-            ><img :src="default_avatar_url"
-        /></q-avatar>
+        <q-avatar :class="{ invisible: !fromMyself }" class="mx-4 w-9 min-w-9 h-9 rounded-lg">
+            <img :src="default_avatar_url" />
+        </q-avatar>
     </div>
 </template>
 
@@ -50,7 +50,7 @@ enum InputType {
 export default defineComponent({
     props: {
         /** 消息发出人，是否为对方，或是自己 */
-        opposite: Boolean,
+        fromMyself: Boolean,
         message: String,
         time: String,
     },

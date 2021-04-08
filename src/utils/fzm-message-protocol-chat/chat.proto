@@ -1,0 +1,68 @@
+syntax = "proto3";
+
+package dtalk.proto;
+option go_package = ".;proto";
+
+message Proto {
+    EventType eventType = 1;
+    bytes body = 2;
+}
+
+message CommonMsg {
+    int32 channelType = 1;
+    int64 logId = 2;
+    string msgId = 3;
+    string from = 4;
+    string target = 5;
+    int32 msgType = 6;
+    bytes msg = 7;
+    uint64 datetime = 8;
+}
+
+enum EventType {
+    commonMsg = 0;
+    commonMsgAck = 1;
+}
+
+enum MsgType {
+    System          = 0;
+    Text            = 1;
+    Audio           = 2;
+    Image           = 3;
+    Video           = 4;
+    File            = 5;
+}
+
+message CommonMsgAck {
+    int64 logId = 2;
+    uint64 datetime = 8;
+}
+
+message TextMsg {
+    string content = 1;
+}
+
+message AudioMsg {
+    string mediaUrl = 1;
+    int32 time = 2;
+}
+
+message ImageMsg {
+    string mediaUrl = 1;
+    int32 height = 2;
+    int32 width = 3;
+}
+
+message VideoMsg {
+    string mediaUrl = 1;
+    int32 time = 2;
+    int32 height = 3;
+    int32 width = 4;
+}
+
+message FileMsg {
+    string mediaUrl = 1;
+    string name = 2;
+    string md5 = 3;
+    int64 size = 4;
+}

@@ -11,7 +11,7 @@ module.exports = {
             borderRadius: {
                 lg: '10px',
                 'chat-msg-bubble-opposite': '3pt  20pt  20pt  20pt',
-                'chat-msg-bubble-me': '20pt  3pt  20pt  20pt',
+                'chat-msg-bubble-myself': '20pt  3pt  20pt  20pt',
             },
             width: {
                 'chat-msg-avatar': chatMsgAvatarSize,

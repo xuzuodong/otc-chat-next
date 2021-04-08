@@ -15,7 +15,7 @@ const ip = '([a-zA-Z0-9]{4}:)+[a-zA-Z0-9]'
  * @returns {boolean} valid - `true` if *val* is a valid url, `false` otherwise
  *
  */
-export default function(val: string | undefined, options?: { requireProtocol?: boolean }) {
+export default function(val: string | undefined, options?: { requireProtocol?: boolean }): boolean {
     if (!val) return false
 
     if (!options) {
