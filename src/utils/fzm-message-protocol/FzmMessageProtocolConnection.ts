@@ -11,7 +11,7 @@ interface QueueItem {
 export default class FzmMessageProtocolConnection {
     private webSocket: WebSocket
     onReceiveMessage?: (messageBody: Uint8Array) => void
-    onLostConnection?: () => void
+    onLoseConnection?: () => void
 
     seq: number
 
@@ -39,7 +39,7 @@ export default class FzmMessageProtocolConnection {
             // 下次将要发送心跳前，队列中尚有未发送成功的心跳，则表明断线
             if (this.queue.some((item) => item.type === FzmMessageTypes.HeartBeat)) {
                 console.log('WebSocket: 失去与服务器的连接')
-                this.onLostConnection && this.onLostConnection()
+                this.onLoseConnection && this.onLoseConnection()
                 this.disconnect()
             } else {
                 this.sendHeartBeat()

@@ -24,7 +24,7 @@ watchEffect((): void => {
             })
         }
 
-        connectionState.connection.onLostConnection = () => {
+        connectionState.connection.onLoseConnection = () => {
             connectionState.connection = undefined
             connectionState.error = true
         }
