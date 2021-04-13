@@ -18,6 +18,7 @@ module.exports = {
             },
             minWidth: {
                 'chat-msg-avatar': chatMsgAvatarSize,
+                'chat-msg-placeholder': '55px',
             },
             height: {
                 'chat-msg-avatar': chatMsgAvatarSize,
@@ -27,8 +28,11 @@ module.exports = {
                 'input-bar': inputBarHeight,
             },
             spacing: {
-                '4': '15px',
-                '5.5': '22px',
+                4: '15px',
+                5.5: '22px',
+            },
+            boxShadow: {
+                blue: '0px 0px 0px 1px #1888FA inset',
             },
             colors,
         },

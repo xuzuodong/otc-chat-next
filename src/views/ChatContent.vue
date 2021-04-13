@@ -5,9 +5,12 @@
         <ChatContentMessageVue
             v-for="message in messageStore.messages"
             :key="message.uuid"
+            v-model="message.state"
             :message="message.content"
             :fromMyself="myToken == message.from"
             :time="'4月20号 12:46'"
+            :uuid="message.uuid"
+            :type="message.type"
         />
 
         <!-- 监听视图高度变化，保证高度变化时，滚动到最底部 -->

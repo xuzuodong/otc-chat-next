@@ -1,32 +1,18 @@
-import { reactive, watchEffect } from 'vue'
-import { messageStore } from '@/store/messagesState'
-import decodeChatMessage from '@/utils/fzm-message-protocol-chat/decodeChatMessage'
+/**
+ * 全局网络连接状态
+ */
+
+import { reactive } from 'vue'
 import FzmMessageProtocolConnection from '@/utils/fzm-message-protocol/FzmMessageProtocolConnection'
 
 interface IConnectionState {
-    connection?: FzmMessageProtocolConnection
+    /** 连接实例，可以调用它来发送消息、断开连接等；只有成功建立连接时才有值，未连接成功或断联时为 undefined */
+    connection: FzmMessageProtocolConnection | undefined
+    /** 如果出错，connection 会变为 false */
     error: boolean
 }
 
 export const connectionState = reactive<IConnectionState>({
     connection: undefined,
     error: false,
-})
-
-watchEffect((): void => {
-    if (connectionState.connection) {
-        connectionState.connection.onReceiveMessage = (msgData) => {
-            const msg = decodeChatMessage(msgData)
-            messageStore.pushMessage({
-                content: msg.msg,
-                from: msg.from,
-                uuid: msg.uuid,
-            })
-        }
-
-        connectionState.connection.onLoseConnection = () => {
-            connectionState.connection = undefined
-            connectionState.error = true
-        }
-    }
 })

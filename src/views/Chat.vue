@@ -23,10 +23,13 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onBeforeUnmount } from 'vue'
+import { defineComponent, onBeforeUnmount, watchEffect } from 'vue'
 import { useRoute } from 'vue-router'
 import FzmMessageProtocol from '@/utils/fzm-message-protocol'
+import { messageStore } from '@/store/messagesState'
 import { connectionState } from '@/store/connectionState'
+import { ChatMessageTypes } from '@/utils/fzm-message-protocol-chat/chatMessageTypes'
+import decodeChatMessage from '@/utils/fzm-message-protocol-chat/decodeChatMessage'
 import ChatContentVue from './ChatContent.vue'
 import ChatInputVue from './ChatInput.vue'
 import ChatHeaderVue from './ChatHeader.vue'
@@ -39,7 +42,7 @@ export default defineComponent({
 
         const connect = () => {
             connectionState.error = false
-            
+
             const fmp = new FzmMessageProtocol('ws://172.16.101.126:8888/sub/')
             fmp.authorize({
                 appId: 'zb_otc',
@@ -52,6 +55,35 @@ export default defineComponent({
         }
 
         connect()
+
+        /**
+         * 每次 `connectionState.connection` 变化触发
+         */
+        watchEffect((): void => {
+            if (connectionState.connection) {
+                /**
+                 * 收到消息，解码并存入 `messageStore`
+                 */
+                connectionState.connection.onReceiveMessage = (msgData) => {
+                    const msg = decodeChatMessage(msgData)
+                    messageStore.pushMessage({
+                        content: msg.msg,
+                        from: msg.from,
+                        uuid: msg.uuid,
+                        state: null,
+                        type: (msg.type || 0) as ChatMessageTypes,
+                    })
+                }
+
+                /**
+                 * 断连，修改相应连接状态
+                 */
+                connectionState.connection.onLoseConnection = () => {
+                    connectionState.connection = undefined
+                    connectionState.error = true
+                }
+            }
+        })
 
         onBeforeUnmount(() => {
             connectionState.connection?.disconnect()

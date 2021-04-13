@@ -2,10 +2,28 @@ import decodeMessage from './decodeMessage'
 import encodeMessage from './encodeMessage'
 import { FzmMessageTypes } from './FzmMessageTypes'
 
-interface QueueItem {
+interface IPendingMessage {
     seq: number
+    uuid?: string
     type: FzmMessageTypes
-    resolve?: (value?: unknown) => void
+    resolve?: () => void
+    reject?: (reason?: string) => void
+    timeout?: NodeJS.Timeout
+}
+
+class PendingMessage implements IPendingMessage {
+    seq: number
+    uuid?: string
+    type: FzmMessageTypes
+    resolve?: () => void
+    reject?: (reason?: string) => void
+    timeout?: NodeJS.Timeout
+
+    constructor(seq: number, type: FzmMessageTypes, uuid: string) {
+        this.seq = seq
+        this.type = type
+        this.uuid = uuid
+    }
 }
 
 export default class FzmMessageProtocolConnection {
@@ -23,12 +41,12 @@ export default class FzmMessageProtocolConnection {
     private debug: boolean
 
     // 消息发送队列
-    queue: QueueItem[]
+    queue: PendingMessage[]
 
     constructor(ws: WebSocket) {
         console.log('WebSocket: 已连接')
 
-        this.queue = [] as QueueItem[]
+        this.queue = [] as PendingMessage[]
         this.seq = 0
         this.debug = process.env.NODE_ENV !== 'production'
         this.webSocket = ws
@@ -53,13 +71,9 @@ export default class FzmMessageProtocolConnection {
                 const responseSeq = response.header.seq
                 const responseAck = response.header.ack
 
-                if (responseType === FzmMessageTypes.ReceiveMessage) {
-                    console.log(response)
-                }
-
                 // 答复类型：心跳答复
                 if (responseType === FzmMessageTypes.HeartBeatResponse) {
-                    // 收到心跳答复后将发送心跳记录从队列中删除
+                    // 从队列中剔除
                     this.queue.splice(
                         this.queue.findIndex((i) => i.seq == responseSeq),
                         1
@@ -77,15 +91,31 @@ export default class FzmMessageProtocolConnection {
                     this.onReceiveMessage && this.onReceiveMessage(response.body)
                 }
 
-                // 接收到本用户发送消息成功的确认，发送队列中删除收到的 ack 对应的 seq 所代表的那条发送记录
+                // 接收到本用户发送消息成功的确认
                 else if (responseType === FzmMessageTypes.SendMessageResponse) {
                     console.log(`WebSocket: 发送消息成功, seq: ${responseSeq}`)
+
+                    const queueItem = this.queue.find((i) => i.seq == responseAck) as IPendingMessage
+                    queueItem.resolve && queueItem.resolve()
+                    if (queueItem.timeout) clearTimeout(queueItem.timeout)
+
+                    // 从队列中剔除
                     this.queue.splice(
                         this.queue.findIndex((i) => i.seq == responseAck),
                         1
                     )
                 }
             })
+        }
+
+        this.webSocket.onclose = () => {
+            console.log('WebSocket: 连接已关闭')
+            this.queue.forEach((m) => m.reject && m.reject())
+        }
+
+        this.webSocket.onerror = (event) => {
+            console.log(event)
+            this.queue.forEach((m) => m.reject && m.reject())
         }
     }
 
@@ -94,6 +124,7 @@ export default class FzmMessageProtocolConnection {
         return this.webSocket.readyState
     }
 
+    /** WebSocket 连接的 url */
     get url(): string {
         return this.webSocket.url
     }
@@ -107,12 +138,32 @@ export default class FzmMessageProtocolConnection {
         clearInterval(this.timer)
     }
 
-    /** 发送消息，需将消息内容转换为 protobuf 格式的二进制 */
-    sendMessage(msg: Uint8Array): void {
-        this.seq++
-        if (this.debug) console.log(`发送消息, seq: ${this.seq}`)
-        this.queue.push({ seq: this.seq, type: FzmMessageTypes.SendMessage })
-        this.webSocket.send(encodeMessage(msg, FzmMessageTypes.SendMessage, this.seq))
+    /**
+     * 发送消息，需将消息内容转换为 protobuf 格式的二进制
+     * @param msg 发送的消息，以及制定该条消息的唯一 id
+     * @param msg.body 消息对象
+     * @param msg.uuid 唯一id
+     * @returns promise
+     */
+    sendMessage(msg: { body: Uint8Array; uuid: string }): Promise<void> {
+        return new Promise((resolve, reject) => {
+            if (this.debug) console.log(`发送消息, seq: ${this.seq}`)
+
+            const failedMessage = this.queue.find((m) => m.uuid === msg.uuid) // 是否为之前发送失败的消息
+
+            let pendingMessage: IPendingMessage
+            if (failedMessage) {
+                pendingMessage = failedMessage
+            } else {
+                this.seq++
+                pendingMessage = new PendingMessage(this.seq, FzmMessageTypes.SendMessage, msg.uuid)
+                this.queue.push(pendingMessage)
+            }
+
+            pendingMessage.resolve = resolve
+            pendingMessage.reject = reject
+            this.webSocket.send(encodeMessage(msg.body, FzmMessageTypes.SendMessage, pendingMessage.seq))
+        })
     }
 
     private sendHeartBeat(): void {
