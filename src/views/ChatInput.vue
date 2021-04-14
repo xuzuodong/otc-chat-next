@@ -42,8 +42,6 @@ export default defineComponent({
         return {
             inputType,
             sendChatMessage,
-            ChatInputTextVue,
-            ChatInputVoiceVue,
         }
     },
 })

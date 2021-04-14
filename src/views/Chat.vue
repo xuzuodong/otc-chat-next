@@ -33,6 +33,7 @@ import { connectionState } from '@/store/connectionStore'
 import { ChatMessageTypes } from '@/types/chatMessageTypes'
 import FzmMessageProtocol from '@/utils/fzm-message-protocol'
 import decodeChatMessage from '@/utils/fzm-message-protocol-chat/decodeChatMessage'
+import { baseUrl } from '@/store/apiStore'
 
 export default defineComponent({
     components: { ChatHeaderVue, ChatContentVue, ChatInputVue },
@@ -43,7 +44,7 @@ export default defineComponent({
         const connect = () => {
             connectionState.error = false
 
-            const fmp = new FzmMessageProtocol('ws://172.16.101.126:8888/sub/')
+            const fmp = new FzmMessageProtocol('ws://' + baseUrl)
             fmp.authorize({
                 appId: 'zb_otc',
                 token: (route.query.token as string) || '1',

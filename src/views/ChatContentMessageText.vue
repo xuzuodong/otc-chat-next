@@ -21,7 +21,7 @@
 
 <script lang="ts">
 import { computed, defineComponent } from 'vue'
-import isUrl from 'is-url'
+import isUrl from '@/utils/is-url'
 import prependHttp from 'prepend-http'
 
 export default defineComponent({
@@ -29,8 +29,10 @@ export default defineComponent({
 
     setup(props) {
         const textMessage = computed(() => props.message?.content)
+        const isUrlMessage = computed(() => isUrl(textMessage.value))
+        console.log(isUrl(props.message?.content))
 
-        return { isUrl, prependHttp, textMessage }
+        return { isUrlMessage, prependHttp, textMessage }
     },
 })
 </script>
