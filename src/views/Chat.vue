@@ -25,14 +25,14 @@
 <script lang="ts">
 import { defineComponent, onBeforeUnmount, watchEffect } from 'vue'
 import { useRoute } from 'vue-router'
-import FzmMessageProtocol from '@/utils/fzm-message-protocol'
-import { messageStore } from '@/store/messagesState'
-import { connectionState } from '@/store/connectionState'
-import { ChatMessageTypes } from '@/utils/fzm-message-protocol-chat/chatMessageTypes'
-import decodeChatMessage from '@/utils/fzm-message-protocol-chat/decodeChatMessage'
 import ChatContentVue from './ChatContent.vue'
 import ChatInputVue from './ChatInput.vue'
 import ChatHeaderVue from './ChatHeader.vue'
+import { messageStore } from '@/store/messagesStore'
+import { connectionState } from '@/store/connectionStore'
+import { ChatMessageTypes } from '@/types/chatMessageTypes'
+import FzmMessageProtocol from '@/utils/fzm-message-protocol'
+import decodeChatMessage from '@/utils/fzm-message-protocol-chat/decodeChatMessage'
 
 export default defineComponent({
     components: { ChatHeaderVue, ChatContentVue, ChatInputVue },
@@ -67,7 +67,7 @@ export default defineComponent({
                 connectionState.connection.onReceiveMessage = (msgData) => {
                     const msg = decodeChatMessage(msgData)
                     messageStore.pushMessage({
-                        content: msg.msg,
+                        content: msg.content,
                         from: msg.from,
                         uuid: msg.uuid,
                         state: null,

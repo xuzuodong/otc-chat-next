@@ -13,18 +13,23 @@
 </template>
 
 <script lang='ts'>
+import { MessageContent } from '@/types/chat-message'
 import { ref } from '@vue/reactivity'
 import { defineComponent } from '@vue/runtime-core'
 export default defineComponent({
+    emits: ['send'],
+
     setup(props, { emit }) {
         /** 文本输入框中的实时内容 */
         const inputText = ref('')
-        
-        /** 发送文本消息，由父组件统一处理 */
+
+        /** 告诉父组件要发送一条文本消息 */
         const sendTextMessage = () => {
-            inputText.value && emit('send', { type: 1, content: inputText.value })
+            const textMessageContent: MessageContent = { content: inputText.value }
+            inputText.value && emit('send', { type: 1, content: textMessageContent })
             inputText.value = ''
         }
+
         return { inputText, sendTextMessage }
     },
 })

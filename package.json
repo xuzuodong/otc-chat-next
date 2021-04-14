@@ -36,6 +36,8 @@
     "eslint-config-prettier": "^8.1.0",
     "eslint-plugin-prettier": "^3.3.1",
     "eslint-plugin-vue": "^7.8.0",
+    "is-url": "^1.2.4",
+    "js-audio-recorder": "^1.0.7",
     "pinia": "^2.0.0-alpha.10",
     "postcss": "^7.0.35",
     "postcss-remove-declaration": "^1.0.0",

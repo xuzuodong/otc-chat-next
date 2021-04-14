@@ -20,6 +20,10 @@
 import { defineComponent, onMounted, ref } from '@vue/runtime-core'
 import { dom } from 'quasar'
 import ChatInputVoiceToastVue from './ChatInputVoiceToast.vue'
+import Recorder from 'js-audio-recorder'
+import { ChatMessageTypes } from '@/types/chatMessageTypes'
+import { messageStore } from '@/store/messagesStore'
+import { MessageContent } from '@/types/chat-message'
 
 export default defineComponent({
     components: { ChatInputVoiceToastVue },
@@ -28,9 +32,12 @@ export default defineComponent({
         /** 文本输入框 div 元素 */
         const voiceInput = ref<HTMLDivElement | null>(null)
 
-        /** 禁止语音输入框长按弹出菜单 */
+        let recorder: Recorder
+
         onMounted(() => {
+            /** 禁止语音输入框长按弹出菜单 */
             voiceInput.value && voiceInput.value.addEventListener('contextmenu', (e) => e.preventDefault())
+            recorder = new Recorder()
         })
 
         /** 语音输入状态 */
@@ -58,6 +65,8 @@ export default defineComponent({
         /** 按住按钮的时间 */
         let interval: number
         const startRecording = (): void => {
+            recorder.start()
+
             voiceState.value = VoiceState.endRecording
             startDate = Date.now()
             interval = window.setInterval(() => {
@@ -76,6 +85,8 @@ export default defineComponent({
         /** 松开语音按钮 */
         const endRecording = () => {
             if (voiceState.value === VoiceState.notRecording) return
+
+            recorder.stop()
 
             clearInterval(interval)
             timeCount.value = 10
@@ -99,7 +110,11 @@ export default defineComponent({
                 shouldCancelRecording.value = false
                 return
             }
-            console.log('发送语音')
+            const audioMessageContent: MessageContent = {
+                mediaUrl: '', 
+                time: 1
+            }
+            messageStore.sendMessage(ChatMessageTypes.Audio, audioMessageContent)
         }
 
         const cancelRecording = (e: TouchEvent): void => {

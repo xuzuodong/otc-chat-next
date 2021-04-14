@@ -1,6 +1,6 @@
-import { ChatMessageTypes } from './chatMessageTypes'
+import { ChatMessageTypes } from '@/types/chatMessageTypes'
+import { MessageContent } from '@/types/chat-message'
 import { dtalk } from './protobuf'
-import { utf8ToArray } from 'enc-utils'
 
 /**
  * 编码消息需要传的参数
@@ -13,12 +13,25 @@ interface ChatMessageEncoderArgs {
     /** 消息类型 */
     msgType: ChatMessageTypes
     /** 消息内容 */
-    msg: string
+    msg: MessageContent
     /** 消息的全数据库唯一 id */
     uuid: string
 }
 
 export default (msg: ChatMessageEncoderArgs): Uint8Array => {
+    let content
+
+    switch (msg.msgType) {
+        case ChatMessageTypes.Text:
+            content = dtalk.proto.TextMsg.encode(msg.msg).finish()
+            break
+        case ChatMessageTypes.Audio:
+            content = dtalk.proto.AudioMsg.encode(msg.msg).finish()
+            break
+        default:
+            throw '未知的消息类型：' + msg.msgType
+    }
+
     const body: dtalk.proto.ICommonMsg = {
         channelType: 0,
         logId: 0,
@@ -26,7 +39,7 @@ export default (msg: ChatMessageEncoderArgs): Uint8Array => {
         from: msg.from,
         target: msg.target,
         msgType: msg.msgType,
-        msg: utf8ToArray(msg.msg),
+        msg: content,
         datetime: Date.now(),
     }
     const bodyData = dtalk.proto.CommonMsg.encode(body).finish()

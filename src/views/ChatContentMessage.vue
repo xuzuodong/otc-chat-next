@@ -11,24 +11,8 @@
 
         <!-- 消息气泡 -->
         <div :class="[{ 'flex-row-reverse': fromMyself }]" class="flex-auto flex items-center">
-            <div
-                :class="[
-                    fromMyself ? 'bg-secondary' : 'bg-white',
-                    fromMyself ? 'rounded-chat-msg-bubble-myself' : 'rounded-chat-msg-bubble-opposite',
-                ]"
-                class="py-3 px-4"
-            >
-                <a
-                    v-if="isUrlMessage"
-                    :href="prependHttp(message)"
-                    class="text-primary"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                >
-                    {{ message }}
-                </a>
-                <div v-else>{{ message }}</div>
-            </div>
+            <ChatContentMessageTextVue v-if="type === 1" :from-myself="fromMyself" :message="message" />
+
             <!-- 消息状态 -->
             <div class="w-10 self-stretch flex flex-row justify-center items-center">
                 <!-- 发送失败 -->
@@ -50,57 +34,30 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent } from 'vue'
-import isUrl from '../utils/is-url'
-import prependHttp from 'prepend-http'
+import { defineComponent } from 'vue'
 import default_avatar_url from '../assets/user_avatar.png'
-import { connectionState } from '@/store/connectionState'
-import encodeChatMessage from '@/utils/fzm-message-protocol-chat/encodeChatMessage'
-import { ChatMessageTypes } from '@/utils/fzm-message-protocol-chat/chatMessageTypes'
-import { useRoute } from 'vue-router'
-
-enum InputType {
-    Text,
-    Voice,
-}
+import { messageStore } from '@/store/messagesStore'
+import ChatContentMessageTextVue from './ChatContentMessageText.vue'
 
 export default defineComponent({
+    components: { ChatContentMessageTextVue },
+
     props: {
         fromMyself: Boolean,
-        message: { type: String, required: true },
+        message: { type: Object, required: true },
         type: { type: Number, required: true },
         time: String,
         modelValue: String,
         uuid: String,
     },
 
-    emits: ['update:modelValue'], // 双向绑定重发消息成功/失败
-
-    setup(props, { emit }) {
-        const isUrlMessage = computed(() => isUrl(props.message))
-        const inputType = InputType.Text
-        const route = useRoute()
+    setup(props) {
+        /** 重发消息 */
         const resend = (uuid: string) => {
-            connectionState.connection
-                ?.sendMessage({
-                    body: encodeChatMessage({
-                        msgType: ChatMessageTypes.Text,
-                        target: (route.query.token as string) ? '1' : '2',
-                        from: (route.query.token as string) || '1',
-                        msg: props.message as string,
-                        uuid,
-                    }),
-                    uuid,
-                })
-                .then(() => {
-                    emit('update:modelValue', 'success')
-                })
-                .catch(() => {
-                    emit('update:modelValue', 'failure')
-                })
+            messageStore.sendMessage(props.type, props.message, uuid)
         }
 
-        return { isUrlMessage, prependHttp, default_avatar_url, inputType, resend }
+        return { default_avatar_url, resend }
     },
 })
 </script>

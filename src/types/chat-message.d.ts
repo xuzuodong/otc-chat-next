@@ -1,12 +1,15 @@
+import { dtalk } from '@/utils/fzm-message-protocol-chat/protobuf'
 /**
- * 建立连接后，委托 connection.sendMessage() 发送的消息格式
+ * protobuf 接收的消息
+ * 
+ * 包括 TextMsg, AudioMsg, ImageMsg, VideoMsg
+ * 详见：
+ * @see dtalk.proto.ITextMsg
+ * @see dtalk.proto.IAudioMsg
+ * @see dtalk.proto.IImageMsg
+ * @see dtalk.proto.IVideoMsg
  */
-import { ChatMessageTypes } from '@/utils/fzm-message-protocol-chat/chatMessageTypes'
 
-export interface ChatMessage {
-    content: string
-    from: string
-    uuid: string
-    state: 'pending' | 'success' | 'failure' | null // 对方发来的消息无状态，用 null 表示
-    type: ChatMessageTypes
+export interface MessageContent {
+    [contentProperty: string]: string | number
 }
