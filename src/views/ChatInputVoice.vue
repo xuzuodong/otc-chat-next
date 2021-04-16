@@ -5,7 +5,7 @@
         @touchend="endRecording"
         ref="voiceInput"
         :class="voiceState !== 0 ? 'bg-secondary-focus' : 'bg-secondary'"
-        class="w-3/5 text-center text-primary py-2 rounded-full shadow-blue"
+        class="w-3/5 text-center text-primary py-2 rounded-full shadow-blue select-none"
     >
         按住说话
     </div>
@@ -110,9 +110,11 @@ export default defineComponent({
                 shouldCancelRecording.value = false
                 return
             }
+
             const audioMessageContent: MessageContent = {
-                mediaUrl: '', 
-                time: 1
+                mediaUrl: '',
+                time: parseInt(recorder.duration.toFixed(0)),
+                rawMessage: recorder.getWAVBlob(),
             }
             messageStore.sendMessage(ChatMessageTypes.Audio, audioMessageContent)
         }

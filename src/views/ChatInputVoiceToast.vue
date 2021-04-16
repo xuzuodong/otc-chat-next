@@ -4,12 +4,12 @@
     >
         <div v-if="voiceState == 1" class="flex flex-col justify-around items-center h-full w-full">
             <div class="mt-6 flex justify-center">
-                <i class="text-8xl iconfont">&#xe60a;</i>
-                <i class="text-8xl iconfont">&#xe609;</i>
+                <i class="text-8xl iconfont select-none">&#xe60a;</i>
+                <i class="text-8xl iconfont select-none">&#xe609;</i>
             </div>
             <div class="text-center text-base mb-6">
-                <div>手指上滑，取消发送</div>
-                <div>还可以说{{timeout}}秒</div>
+                <div class=" select-none">手指上滑，取消发送</div>
+                <div class=" select-none">还可以说{{ timeout }}秒</div>
             </div>
         </div>
 
@@ -35,7 +35,7 @@ import { defineComponent } from 'vue'
 export default defineComponent({
     props: {
         voiceState: Number,
-        timeout: Number
+        timeout: Number,
     },
     setup() {
         return {}

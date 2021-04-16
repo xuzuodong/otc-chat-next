@@ -11,20 +11,26 @@
 
         <!-- 消息气泡 -->
         <div :class="[{ 'flex-row-reverse': fromMyself }]" class="flex-auto flex items-center">
-            <ChatContentMessageTextVue v-if="type === 1" :from-myself="fromMyself" :message="message" />
+            <ChatContentMessageTextVue v-if="type === 1" :from-myself="fromMyself" :content="content" />
+            <ChatContentMessageVoiceVue
+                v-else-if="type === 2"
+                :from-myself="fromMyself"
+                :content="content"
+                :state="state"
+            />
 
             <!-- 消息状态 -->
             <div class="w-10 self-stretch flex flex-row justify-center items-center">
                 <!-- 发送失败 -->
                 <div
-                    v-if="modelValue === 'failure'"
+                    v-if="state === 'failure'"
                     @click="resend"
                     class="w-full h-full flex flex-row justify-center items-center"
                 >
                     <q-icon name="error" size="22px" color="negative" />
                 </div>
                 <!-- 正在发送 -->
-                <q-spinner-ios v-else-if="modelValue === 'pending'" color="grey" size="1.25rem" :thickness="5" />
+                <q-spinner-ios v-else-if="state === 'pending'" color="grey" size="1.25rem" :thickness="5" />
             </div>
         </div>
 
@@ -38,23 +44,24 @@ import { defineComponent } from 'vue'
 import default_avatar_url from '../assets/user_avatar.png'
 import { messageStore } from '@/store/messagesStore'
 import ChatContentMessageTextVue from './ChatContentMessageText.vue'
+import ChatContentMessageVoiceVue from './ChatContentMessageVoice.vue'
 
 export default defineComponent({
-    components: { ChatContentMessageTextVue },
+    components: { ChatContentMessageTextVue, ChatContentMessageVoiceVue },
 
     props: {
         fromMyself: Boolean,
-        message: { type: Object, required: true },
+        content: { type: Object, required: true },
         type: { type: Number, required: true },
         time: String,
-        modelValue: String,
+        state: String,
         uuid: String,
     },
 
-    setup(props) {
+    setup(props) {        
         /** 重发消息 */
-        const resend = (uuid: string) => {
-            messageStore.sendMessage(props.type, props.message, uuid)
+        const resend = () => {
+            messageStore.sendMessage(props.type, props.content, props.uuid)
         }
 
         return { default_avatar_url, resend }

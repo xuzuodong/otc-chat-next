@@ -26,6 +26,7 @@ module.exports = {
             },
             minHeight: {
                 'input-bar': inputBarHeight,
+                'input-menu': '100px',
             },
             spacing: {
                 4: '15px',

@@ -4,4 +4,4 @@ module.exports = {
     semi: false, // JS 语句的末位不加封号
     singleQuote: true, // 字符串单引号优先
     printWidth: 120, // 一行代码超过 120 个字符时格式化为多行
-};
+}

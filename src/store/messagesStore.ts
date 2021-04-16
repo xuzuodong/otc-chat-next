@@ -3,12 +3,14 @@
  */
 
 import { MessageContent } from '@/types/chat-message'
-import { Ref, ref } from '@vue/reactivity'
+import { reactive, UnwrapNestedRefs } from '@vue/reactivity'
 import { from, target } from '@/store/userStore'
 import { ChatMessageTypes } from '@/types/chatMessageTypes'
 import encodeChatMessage from '@/utils/fzm-message-protocol-chat/encodeChatMessage'
 import { v4 as uuidv4 } from 'uuid'
 import { connectionState } from './connectionStore'
+import { uploadFile } from './ossStore'
+import { dtalk } from '@/utils/fzm-message-protocol-chat/protobuf'
 
 interface DisplayMessage {
     content: MessageContent
@@ -19,14 +21,14 @@ interface DisplayMessage {
 }
 
 class MessageStore {
-    messages: Ref<DisplayMessage[]>
+    messages: UnwrapNestedRefs<DisplayMessage[]>
 
     constructor() {
-        this.messages = ref<DisplayMessage[]>([])
+        this.messages = reactive<DisplayMessage[]>([])
     }
 
     pushMessage(message: DisplayMessage) {
-        this.messages.value.push(message)
+        this.messages.push(message)
     }
 
     /**
@@ -37,35 +39,64 @@ class MessageStore {
      */
     sendMessage(type: ChatMessageTypes, content: MessageContent, uuid?: string) {
         const _uuid = uuid || uuidv4()
-        /** 编码消息 */
+
+        /** 聊天界面显示的消息 */
+        let displayMessage: UnwrapNestedRefs<DisplayMessage>
+
+        /** 之前发送失败的消息 */
+        const existingMessage = uuid && this.messages.find((m) => m.uuid === _uuid)
+
+        // 如果是老消息，找出来赋给 displayMessage
+        if (existingMessage) {
+            existingMessage.state = 'pending'
+            displayMessage = existingMessage
+        }
+        // 如果是新消息，新建一个 displayMessage
+        else {
+            displayMessage = reactive<DisplayMessage>({
+                content,
+                from,
+                uuid: _uuid,
+                state: 'pending' as 'pending' | 'success' | 'failure' | null,
+                type,
+            })
+            this.pushMessage(displayMessage)
+        }
+
+        // 多媒体类的消息（语音、图片、视频）上传阿里云 OSS，取得 url，发送 url
+        if (type !== ChatMessageTypes.Text) {
+            content.rawMessage &&
+                uploadFile(content.rawMessage, type)
+                    .then((url) => {
+                        if (type === ChatMessageTypes.Audio) {
+                            ;(<dtalk.proto.IAudioMsg>content).mediaUrl = url
+                        }
+                        this.send(type, content, _uuid, displayMessage)
+                    })
+                    .catch((err) => {
+                        console.log(err)
+                    })
+        }
+        // 文本类消息，不需要上传 OSS，直接发送
+        else {
+            this.send(type, content, _uuid, displayMessage)
+        }
+    }
+
+    /** 编码并发送 */
+    private send(type: ChatMessageTypes, content: MessageContent, uuid: string, displayMessage: DisplayMessage) {
         const chatMessageData = encodeChatMessage({
             from,
             target,
             msgType: type,
             msg: content,
-            uuid: _uuid,
+            uuid,
         })
 
-        /** 聊天界面显示 */
-        const displayMessage = {
-            content,
-            from,
-            uuid: _uuid,
-            state: 'pending' as 'pending' | 'success' | 'failure',
-            type,
-        }
-        const existMessage = uuid && this.messages.value.find((m) => m.uuid === _uuid)
-        if (existMessage) {
-            existMessage.state = 'pending'
-        } else {
-            this.pushMessage(displayMessage)
-        }
-
-        /** 发送编码后的消息 */
         connectionState.connection
             ?.sendMessage({
                 body: chatMessageData,
-                uuid: _uuid,
+                uuid,
             })
             .then(() => {
                 displayMessage.state = 'success'

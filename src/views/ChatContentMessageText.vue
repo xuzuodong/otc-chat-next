@@ -25,12 +25,11 @@ import isUrl from '@/utils/is-url'
 import prependHttp from 'prepend-http'
 
 export default defineComponent({
-    props: { fromMyself: Boolean, message: Object },
+    props: { fromMyself: Boolean, content: Object },
 
     setup(props) {
-        const textMessage = computed(() => props.message?.content)
+        const textMessage = computed(() => props.content?.content)
         const isUrlMessage = computed(() => isUrl(textMessage.value))
-        console.log(isUrl(props.message?.content))
 
         return { isUrlMessage, prependHttp, textMessage }
     },

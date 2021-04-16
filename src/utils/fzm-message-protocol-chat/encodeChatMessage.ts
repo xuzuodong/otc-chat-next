@@ -23,10 +23,15 @@ export default (msg: ChatMessageEncoderArgs): Uint8Array => {
 
     switch (msg.msgType) {
         case ChatMessageTypes.Text:
-            content = dtalk.proto.TextMsg.encode(msg.msg).finish()
+            content = dtalk.proto.TextMsg.encode({
+                content: (msg.msg as dtalk.proto.ITextMsg).content
+            }).finish()
             break
         case ChatMessageTypes.Audio:
-            content = dtalk.proto.AudioMsg.encode(msg.msg).finish()
+            content = dtalk.proto.AudioMsg.encode({
+                mediaUrl: (msg.msg as dtalk.proto.AudioMsg).mediaUrl, 
+                time: (msg.msg as dtalk.proto.AudioMsg).time, 
+            }).finish()
             break
         default:
             throw '未知的消息类型：' + msg.msgType
