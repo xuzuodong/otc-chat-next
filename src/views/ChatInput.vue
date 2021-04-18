@@ -34,7 +34,7 @@ import ChatInputTextVue from './ChatInputText.vue'
 import ChatInputVoiceVue from './ChatInputVoice.vue'
 import ChatInputAlbumVue from './ChatInputAlbum.vue'
 import ChatInputCameraVue from './ChatInputCamera.vue'
-import ChatInputReceiveVue from './ChatInputReceive.vue'
+import ChatInputReceiveVue from './ChatInputReceipt.vue'
 
 export default defineComponent({
     components: { ChatInputTextVue, ChatInputVoiceVue, ChatInputAlbumVue, ChatInputCameraVue, ChatInputReceiveVue },

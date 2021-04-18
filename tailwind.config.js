@@ -19,6 +19,7 @@ module.exports = {
             minWidth: {
                 'chat-msg-avatar': chatMsgAvatarSize,
                 'chat-msg-placeholder': '55px',
+                'chat-msg-card-placeholder': '20px',
             },
             height: {
                 'chat-msg-avatar': chatMsgAvatarSize,

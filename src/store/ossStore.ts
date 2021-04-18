@@ -1,3 +1,7 @@
+/**
+ * 利用此实例来上传文件到「阿里云 OSS」，并获取文件的链接
+ */
+
 import axios from 'axios'
 import { date } from 'quasar'
 import { baseUrl } from './apiStore'
@@ -16,7 +20,7 @@ let credentials: Credentials | undefined
 
 const getCredentials = (): Promise<Credentials> => {
     return new Promise<Credentials>((resolve, reject) => {
-        if (credentials && !isExpired(new Date(credentials.Expiration))) {
+        if (credentials && !expired(new Date(credentials.Expiration))) {
             resolve(credentials)
         } else {
             axios({
@@ -34,7 +38,7 @@ const getCredentials = (): Promise<Credentials> => {
     })
 }
 
-const isExpired = (expiration: Date) => {
+const expired = (expiration: Date) => {
     const dateDiff = date.getDateDiff(new Date(), expiration, 'miliseconds')
     return dateDiff <= 0
 }

@@ -12,11 +12,17 @@ import { connectionState } from './connectionStore'
 import { uploadFile } from './ossStore'
 import { dtalk } from '@/utils/fzm-message-protocol-chat/protobuf'
 
+/** MessageStore 存储的数据结构 */
 interface DisplayMessage {
+    /** 消息内容，不同的消息类型有不同的结构 */
     content: MessageContent
+    /** 我的 id */
     from: string
+    /** 本条消息的 uuid */
     uuid: string
-    state: 'pending' | 'success' | 'failure' | null // 对方发来的消息无状态，用 null 表示
+    /** 显示在用户界面上的消息发送状态，对方发来的消息无状态，用 null 表示 */
+    state: 'pending' | 'success' | 'failure' | null
+    /** 消息类型 */
     type: ChatMessageTypes
 }
 
@@ -64,7 +70,7 @@ class MessageStore {
         }
 
         // 多媒体类的消息（语音、图片、视频）上传阿里云 OSS，取得 url，发送 url
-        if (type !== ChatMessageTypes.Text) {
+        if (type !== ChatMessageTypes.Text && type !== ChatMessageTypes.Card) {
             content.rawMessage &&
                 uploadFile(content.rawMessage, type)
                     .then((url) => {

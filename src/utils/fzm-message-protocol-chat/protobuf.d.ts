@@ -5,6 +5,108 @@ export namespace dtalk {
     /** Namespace proto. */
     namespace proto {
 
+        /** Device enum. */
+        enum Device {
+            Android = 0,
+            IOS = 1
+        }
+
+        /** Properties of a Login. */
+        interface ILogin {
+
+            /** Login device */
+            device?: (dtalk.proto.Device|null);
+
+            /** Login username */
+            username?: (string|null);
+        }
+
+        /** Represents a Login. */
+        class Login implements ILogin {
+
+            /**
+             * Constructs a new Login.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: dtalk.proto.ILogin);
+
+            /** Login device. */
+            public device: dtalk.proto.Device;
+
+            /** Login username. */
+            public username: string;
+
+            /**
+             * Creates a new Login instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns Login instance
+             */
+            public static create(properties?: dtalk.proto.ILogin): dtalk.proto.Login;
+
+            /**
+             * Encodes the specified Login message. Does not implicitly {@link dtalk.proto.Login.verify|verify} messages.
+             * @param message Login message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            public static encode(message: dtalk.proto.ILogin, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified Login message, length delimited. Does not implicitly {@link dtalk.proto.Login.verify|verify} messages.
+             * @param message Login message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            public static encodeDelimited(message: dtalk.proto.ILogin, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a Login message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns Login
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): dtalk.proto.Login;
+
+            /**
+             * Decodes a Login message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns Login
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): dtalk.proto.Login;
+
+            /**
+             * Verifies a Login message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            public static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Creates a Login message from a plain object. Also converts values to their respective internal types.
+             * @param object Plain object
+             * @returns Login
+             */
+            public static fromObject(object: { [k: string]: any }): dtalk.proto.Login;
+
+            /**
+             * Creates a plain object from a Login message. Also converts values to other types if specified.
+             * @param message Login
+             * @param [options] Conversion options
+             * @returns Plain object
+             */
+            public static toObject(message: dtalk.proto.Login, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+            /**
+             * Converts this Login to JSON.
+             * @returns JSON object
+             */
+            public toJSON(): { [k: string]: any };
+        }
+
         /** Properties of a Proto. */
         interface IProto {
 
@@ -246,7 +348,8 @@ export namespace dtalk {
             Audio = 2,
             Image = 3,
             Video = 4,
-            File = 5
+            File = 5,
+            Card = 6
         }
 
         /** Properties of a CommonMsgAck. */
@@ -844,6 +947,108 @@ export namespace dtalk {
 
             /**
              * Converts this FileMsg to JSON.
+             * @returns JSON object
+             */
+            public toJSON(): { [k: string]: any };
+        }
+
+        /** Properties of a CardMsg. */
+        interface ICardMsg {
+
+            /** CardMsg bank */
+            bank?: (string|null);
+
+            /** CardMsg name */
+            name?: (string|null);
+
+            /** CardMsg account */
+            account?: (string|null);
+        }
+
+        /** Represents a CardMsg. */
+        class CardMsg implements ICardMsg {
+
+            /**
+             * Constructs a new CardMsg.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: dtalk.proto.ICardMsg);
+
+            /** CardMsg bank. */
+            public bank: string;
+
+            /** CardMsg name. */
+            public name: string;
+
+            /** CardMsg account. */
+            public account: string;
+
+            /**
+             * Creates a new CardMsg instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns CardMsg instance
+             */
+            public static create(properties?: dtalk.proto.ICardMsg): dtalk.proto.CardMsg;
+
+            /**
+             * Encodes the specified CardMsg message. Does not implicitly {@link dtalk.proto.CardMsg.verify|verify} messages.
+             * @param message CardMsg message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            public static encode(message: dtalk.proto.ICardMsg, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified CardMsg message, length delimited. Does not implicitly {@link dtalk.proto.CardMsg.verify|verify} messages.
+             * @param message CardMsg message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            public static encodeDelimited(message: dtalk.proto.ICardMsg, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a CardMsg message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns CardMsg
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): dtalk.proto.CardMsg;
+
+            /**
+             * Decodes a CardMsg message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns CardMsg
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): dtalk.proto.CardMsg;
+
+            /**
+             * Verifies a CardMsg message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            public static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Creates a CardMsg message from a plain object. Also converts values to their respective internal types.
+             * @param object Plain object
+             * @returns CardMsg
+             */
+            public static fromObject(object: { [k: string]: any }): dtalk.proto.CardMsg;
+
+            /**
+             * Creates a plain object from a CardMsg message. Also converts values to other types if specified.
+             * @param message CardMsg
+             * @param [options] Conversion options
+             * @returns Plain object
+             */
+            public static toObject(message: dtalk.proto.CardMsg, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+            /**
+             * Converts this CardMsg to JSON.
              * @returns JSON object
              */
             public toJSON(): { [k: string]: any };

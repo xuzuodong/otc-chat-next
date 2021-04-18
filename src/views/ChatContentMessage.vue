@@ -11,13 +11,19 @@
 
         <!-- 消息气泡 -->
         <div :class="[{ 'flex-row-reverse': fromMyself }]" class="flex-auto flex items-center">
+            <!-- 文本消息 -->
             <ChatContentMessageTextVue v-if="type === 1" :from-myself="fromMyself" :content="content" />
+
+            <!-- 语音消息 -->
             <ChatContentMessageVoiceVue
                 v-else-if="type === 2"
                 :from-myself="fromMyself"
                 :content="content"
                 :state="state"
             />
+
+            <!-- 卡片消息 -->
+            <ChatContentMessageCardVue v-else-if="type === 6" :from-myself="fromMyself" :content="content" />
 
             <!-- 消息状态 -->
             <div class="w-10 self-stretch flex flex-row justify-center items-center">
@@ -34,8 +40,8 @@
             </div>
         </div>
 
-        <!-- placeholder -->
-        <div class="min-w-chat-msg-placeholder"></div>
+        <!-- 空白元素占位 -->
+        <div :class="type === 6 ? 'min-w-chat-msg-card-placeholder' : 'min-w-chat-msg-placeholder'"></div>
     </div>
 </template>
 
@@ -45,9 +51,10 @@ import default_avatar_url from '../assets/user_avatar.png'
 import { messageStore } from '@/store/messagesStore'
 import ChatContentMessageTextVue from './ChatContentMessageText.vue'
 import ChatContentMessageVoiceVue from './ChatContentMessageVoice.vue'
+import ChatContentMessageCardVue from './ChatContentMessageCard.vue'
 
 export default defineComponent({
-    components: { ChatContentMessageTextVue, ChatContentMessageVoiceVue },
+    components: { ChatContentMessageTextVue, ChatContentMessageVoiceVue, ChatContentMessageCardVue },
 
     props: {
         fromMyself: Boolean,
@@ -58,7 +65,7 @@ export default defineComponent({
         uuid: String,
     },
 
-    setup(props) {        
+    setup(props) {
         /** 重发消息 */
         const resend = () => {
             messageStore.sendMessage(props.type, props.content, props.uuid)

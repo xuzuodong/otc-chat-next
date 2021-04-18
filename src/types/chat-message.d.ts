@@ -8,6 +8,7 @@ export type MessageContent = (
     | dtalk.proto.IAudioMsg
     | dtalk.proto.IImageMsg
     | dtalk.proto.IVideoMsg
+    | dtalk.proto.ICardMsg
 ) & {
     rawMessage?: Blob
 }

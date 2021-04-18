@@ -24,13 +24,20 @@ export default (msg: ChatMessageEncoderArgs): Uint8Array => {
     switch (msg.msgType) {
         case ChatMessageTypes.Text:
             content = dtalk.proto.TextMsg.encode({
-                content: (msg.msg as dtalk.proto.ITextMsg).content
+                content: (msg.msg as dtalk.proto.ITextMsg).content,
             }).finish()
             break
         case ChatMessageTypes.Audio:
             content = dtalk.proto.AudioMsg.encode({
-                mediaUrl: (msg.msg as dtalk.proto.AudioMsg).mediaUrl, 
-                time: (msg.msg as dtalk.proto.AudioMsg).time, 
+                mediaUrl: (msg.msg as dtalk.proto.AudioMsg).mediaUrl,
+                time: (msg.msg as dtalk.proto.AudioMsg).time,
+            }).finish()
+            break
+        case ChatMessageTypes.Card:
+            content = dtalk.proto.CardMsg.encode({
+                bank: (msg.msg as dtalk.proto.CardMsg).bank,
+                name: (msg.msg as dtalk.proto.CardMsg).name,
+                account: (msg.msg as dtalk.proto.CardMsg).account,
             }).finish()
             break
         default:

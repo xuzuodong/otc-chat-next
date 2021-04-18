@@ -25,6 +25,243 @@ export const dtalk = $root.dtalk = (() => {
          */
         const proto = {};
 
+        /**
+         * Device enum.
+         * @name dtalk.proto.Device
+         * @enum {number}
+         * @property {number} Android=0 Android value
+         * @property {number} IOS=1 IOS value
+         */
+        proto.Device = (function() {
+            const valuesById = {}, values = Object.create(valuesById);
+            values[valuesById[0] = "Android"] = 0;
+            values[valuesById[1] = "IOS"] = 1;
+            return values;
+        })();
+
+        proto.Login = (function() {
+
+            /**
+             * Properties of a Login.
+             * @memberof dtalk.proto
+             * @interface ILogin
+             * @property {dtalk.proto.Device|null} [device] Login device
+             * @property {string|null} [username] Login username
+             */
+
+            /**
+             * Constructs a new Login.
+             * @memberof dtalk.proto
+             * @classdesc Represents a Login.
+             * @implements ILogin
+             * @constructor
+             * @param {dtalk.proto.ILogin=} [properties] Properties to set
+             */
+            function Login(properties) {
+                if (properties)
+                    for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null)
+                            this[keys[i]] = properties[keys[i]];
+            }
+
+            /**
+             * Login device.
+             * @member {dtalk.proto.Device} device
+             * @memberof dtalk.proto.Login
+             * @instance
+             */
+            Login.prototype.device = 0;
+
+            /**
+             * Login username.
+             * @member {string} username
+             * @memberof dtalk.proto.Login
+             * @instance
+             */
+            Login.prototype.username = "";
+
+            /**
+             * Creates a new Login instance using the specified properties.
+             * @function create
+             * @memberof dtalk.proto.Login
+             * @static
+             * @param {dtalk.proto.ILogin=} [properties] Properties to set
+             * @returns {dtalk.proto.Login} Login instance
+             */
+            Login.create = function create(properties) {
+                return new Login(properties);
+            };
+
+            /**
+             * Encodes the specified Login message. Does not implicitly {@link dtalk.proto.Login.verify|verify} messages.
+             * @function encode
+             * @memberof dtalk.proto.Login
+             * @static
+             * @param {dtalk.proto.ILogin} message Login message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            Login.encode = function encode(message, writer) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (message.device != null && Object.hasOwnProperty.call(message, "device"))
+                    writer.uint32(/* id 1, wireType 0 =*/8).int32(message.device);
+                if (message.username != null && Object.hasOwnProperty.call(message, "username"))
+                    writer.uint32(/* id 2, wireType 2 =*/18).string(message.username);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified Login message, length delimited. Does not implicitly {@link dtalk.proto.Login.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof dtalk.proto.Login
+             * @static
+             * @param {dtalk.proto.ILogin} message Login message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            Login.encodeDelimited = function encodeDelimited(message, writer) {
+                return this.encode(message, writer).ldelim();
+            };
+
+            /**
+             * Decodes a Login message from the specified reader or buffer.
+             * @function decode
+             * @memberof dtalk.proto.Login
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {dtalk.proto.Login} Login
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            Login.decode = function decode(reader, length) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                let end = length === undefined ? reader.len : reader.pos + length, message = new $root.dtalk.proto.Login();
+                while (reader.pos < end) {
+                    let tag = reader.uint32();
+                    switch (tag >>> 3) {
+                    case 1:
+                        message.device = reader.int32();
+                        break;
+                    case 2:
+                        message.username = reader.string();
+                        break;
+                    default:
+                        reader.skipType(tag & 7);
+                        break;
+                    }
+                }
+                return message;
+            };
+
+            /**
+             * Decodes a Login message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof dtalk.proto.Login
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {dtalk.proto.Login} Login
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            Login.decodeDelimited = function decodeDelimited(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.uint32());
+            };
+
+            /**
+             * Verifies a Login message.
+             * @function verify
+             * @memberof dtalk.proto.Login
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            Login.verify = function verify(message) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (message.device != null && message.hasOwnProperty("device"))
+                    switch (message.device) {
+                    default:
+                        return "device: enum value expected";
+                    case 0:
+                    case 1:
+                        break;
+                    }
+                if (message.username != null && message.hasOwnProperty("username"))
+                    if (!$util.isString(message.username))
+                        return "username: string expected";
+                return null;
+            };
+
+            /**
+             * Creates a Login message from a plain object. Also converts values to their respective internal types.
+             * @function fromObject
+             * @memberof dtalk.proto.Login
+             * @static
+             * @param {Object.<string,*>} object Plain object
+             * @returns {dtalk.proto.Login} Login
+             */
+            Login.fromObject = function fromObject(object) {
+                if (object instanceof $root.dtalk.proto.Login)
+                    return object;
+                let message = new $root.dtalk.proto.Login();
+                switch (object.device) {
+                case "Android":
+                case 0:
+                    message.device = 0;
+                    break;
+                case "IOS":
+                case 1:
+                    message.device = 1;
+                    break;
+                }
+                if (object.username != null)
+                    message.username = String(object.username);
+                return message;
+            };
+
+            /**
+             * Creates a plain object from a Login message. Also converts values to other types if specified.
+             * @function toObject
+             * @memberof dtalk.proto.Login
+             * @static
+             * @param {dtalk.proto.Login} message Login
+             * @param {$protobuf.IConversionOptions} [options] Conversion options
+             * @returns {Object.<string,*>} Plain object
+             */
+            Login.toObject = function toObject(message, options) {
+                if (!options)
+                    options = {};
+                let object = {};
+                if (options.defaults) {
+                    object.device = options.enums === String ? "Android" : 0;
+                    object.username = "";
+                }
+                if (message.device != null && message.hasOwnProperty("device"))
+                    object.device = options.enums === String ? $root.dtalk.proto.Device[message.device] : message.device;
+                if (message.username != null && message.hasOwnProperty("username"))
+                    object.username = message.username;
+                return object;
+            };
+
+            /**
+             * Converts this Login to JSON.
+             * @function toJSON
+             * @memberof dtalk.proto.Login
+             * @instance
+             * @returns {Object.<string,*>} JSON object
+             */
+            Login.prototype.toJSON = function toJSON() {
+                return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+            };
+
+            return Login;
+        })();
+
         proto.Proto = (function() {
 
             /**
@@ -660,6 +897,7 @@ export const dtalk = $root.dtalk = (() => {
          * @property {number} Image=3 Image value
          * @property {number} Video=4 Video value
          * @property {number} File=5 File value
+         * @property {number} Card=6 Card value
          */
         proto.MsgType = (function() {
             const valuesById = {}, values = Object.create(valuesById);
@@ -669,6 +907,7 @@ export const dtalk = $root.dtalk = (() => {
             values[valuesById[3] = "Image"] = 3;
             values[valuesById[4] = "Video"] = 4;
             values[valuesById[5] = "File"] = 5;
+            values[valuesById[6] = "Card"] = 6;
             return values;
         })();
 
@@ -2059,6 +2298,238 @@ export const dtalk = $root.dtalk = (() => {
             };
 
             return FileMsg;
+        })();
+
+        proto.CardMsg = (function() {
+
+            /**
+             * Properties of a CardMsg.
+             * @memberof dtalk.proto
+             * @interface ICardMsg
+             * @property {string|null} [bank] CardMsg bank
+             * @property {string|null} [name] CardMsg name
+             * @property {string|null} [account] CardMsg account
+             */
+
+            /**
+             * Constructs a new CardMsg.
+             * @memberof dtalk.proto
+             * @classdesc Represents a CardMsg.
+             * @implements ICardMsg
+             * @constructor
+             * @param {dtalk.proto.ICardMsg=} [properties] Properties to set
+             */
+            function CardMsg(properties) {
+                if (properties)
+                    for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null)
+                            this[keys[i]] = properties[keys[i]];
+            }
+
+            /**
+             * CardMsg bank.
+             * @member {string} bank
+             * @memberof dtalk.proto.CardMsg
+             * @instance
+             */
+            CardMsg.prototype.bank = "";
+
+            /**
+             * CardMsg name.
+             * @member {string} name
+             * @memberof dtalk.proto.CardMsg
+             * @instance
+             */
+            CardMsg.prototype.name = "";
+
+            /**
+             * CardMsg account.
+             * @member {string} account
+             * @memberof dtalk.proto.CardMsg
+             * @instance
+             */
+            CardMsg.prototype.account = "";
+
+            /**
+             * Creates a new CardMsg instance using the specified properties.
+             * @function create
+             * @memberof dtalk.proto.CardMsg
+             * @static
+             * @param {dtalk.proto.ICardMsg=} [properties] Properties to set
+             * @returns {dtalk.proto.CardMsg} CardMsg instance
+             */
+            CardMsg.create = function create(properties) {
+                return new CardMsg(properties);
+            };
+
+            /**
+             * Encodes the specified CardMsg message. Does not implicitly {@link dtalk.proto.CardMsg.verify|verify} messages.
+             * @function encode
+             * @memberof dtalk.proto.CardMsg
+             * @static
+             * @param {dtalk.proto.ICardMsg} message CardMsg message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            CardMsg.encode = function encode(message, writer) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (message.bank != null && Object.hasOwnProperty.call(message, "bank"))
+                    writer.uint32(/* id 1, wireType 2 =*/10).string(message.bank);
+                if (message.name != null && Object.hasOwnProperty.call(message, "name"))
+                    writer.uint32(/* id 2, wireType 2 =*/18).string(message.name);
+                if (message.account != null && Object.hasOwnProperty.call(message, "account"))
+                    writer.uint32(/* id 3, wireType 2 =*/26).string(message.account);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified CardMsg message, length delimited. Does not implicitly {@link dtalk.proto.CardMsg.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof dtalk.proto.CardMsg
+             * @static
+             * @param {dtalk.proto.ICardMsg} message CardMsg message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            CardMsg.encodeDelimited = function encodeDelimited(message, writer) {
+                return this.encode(message, writer).ldelim();
+            };
+
+            /**
+             * Decodes a CardMsg message from the specified reader or buffer.
+             * @function decode
+             * @memberof dtalk.proto.CardMsg
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {dtalk.proto.CardMsg} CardMsg
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            CardMsg.decode = function decode(reader, length) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                let end = length === undefined ? reader.len : reader.pos + length, message = new $root.dtalk.proto.CardMsg();
+                while (reader.pos < end) {
+                    let tag = reader.uint32();
+                    switch (tag >>> 3) {
+                    case 1:
+                        message.bank = reader.string();
+                        break;
+                    case 2:
+                        message.name = reader.string();
+                        break;
+                    case 3:
+                        message.account = reader.string();
+                        break;
+                    default:
+                        reader.skipType(tag & 7);
+                        break;
+                    }
+                }
+                return message;
+            };
+
+            /**
+             * Decodes a CardMsg message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof dtalk.proto.CardMsg
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {dtalk.proto.CardMsg} CardMsg
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            CardMsg.decodeDelimited = function decodeDelimited(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.uint32());
+            };
+
+            /**
+             * Verifies a CardMsg message.
+             * @function verify
+             * @memberof dtalk.proto.CardMsg
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            CardMsg.verify = function verify(message) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (message.bank != null && message.hasOwnProperty("bank"))
+                    if (!$util.isString(message.bank))
+                        return "bank: string expected";
+                if (message.name != null && message.hasOwnProperty("name"))
+                    if (!$util.isString(message.name))
+                        return "name: string expected";
+                if (message.account != null && message.hasOwnProperty("account"))
+                    if (!$util.isString(message.account))
+                        return "account: string expected";
+                return null;
+            };
+
+            /**
+             * Creates a CardMsg message from a plain object. Also converts values to their respective internal types.
+             * @function fromObject
+             * @memberof dtalk.proto.CardMsg
+             * @static
+             * @param {Object.<string,*>} object Plain object
+             * @returns {dtalk.proto.CardMsg} CardMsg
+             */
+            CardMsg.fromObject = function fromObject(object) {
+                if (object instanceof $root.dtalk.proto.CardMsg)
+                    return object;
+                let message = new $root.dtalk.proto.CardMsg();
+                if (object.bank != null)
+                    message.bank = String(object.bank);
+                if (object.name != null)
+                    message.name = String(object.name);
+                if (object.account != null)
+                    message.account = String(object.account);
+                return message;
+            };
+
+            /**
+             * Creates a plain object from a CardMsg message. Also converts values to other types if specified.
+             * @function toObject
+             * @memberof dtalk.proto.CardMsg
+             * @static
+             * @param {dtalk.proto.CardMsg} message CardMsg
+             * @param {$protobuf.IConversionOptions} [options] Conversion options
+             * @returns {Object.<string,*>} Plain object
+             */
+            CardMsg.toObject = function toObject(message, options) {
+                if (!options)
+                    options = {};
+                let object = {};
+                if (options.defaults) {
+                    object.bank = "";
+                    object.name = "";
+                    object.account = "";
+                }
+                if (message.bank != null && message.hasOwnProperty("bank"))
+                    object.bank = message.bank;
+                if (message.name != null && message.hasOwnProperty("name"))
+                    object.name = message.name;
+                if (message.account != null && message.hasOwnProperty("account"))
+                    object.account = message.account;
+                return object;
+            };
+
+            /**
+             * Converts this CardMsg to JSON.
+             * @function toJSON
+             * @memberof dtalk.proto.CardMsg
+             * @instance
+             * @returns {Object.<string,*>} JSON object
+             */
+            CardMsg.prototype.toJSON = function toJSON() {
+                return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+            };
+
+            return CardMsg;
         })();
 
         return proto;

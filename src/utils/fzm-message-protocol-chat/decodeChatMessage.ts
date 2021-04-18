@@ -14,12 +14,16 @@ export default (data: Uint8Array): DecodedMessage => {
     let content: MessageContent
     const TextMsg = dtalk.proto.TextMsg
     const AudioMsg = dtalk.proto.AudioMsg
+    const CardMsg = dtalk.proto.CardMsg
     switch (commonMsg.msgType) {
         case 1:
             content = TextMsg.toObject(TextMsg.decode(commonMsg.msg || new Uint8Array()))
             break
         case 2:
             content = AudioMsg.toObject(AudioMsg.decode(commonMsg.msg || new Uint8Array()))
+            break
+        case 6:
+            content = CardMsg.toObject(CardMsg.decode(commonMsg.msg || new Uint8Array()))
             break
         default:
             throw '解码消息时发现未知的消息类型：' + commonMsg.msgType

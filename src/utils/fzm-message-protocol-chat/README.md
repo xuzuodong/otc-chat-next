@@ -9,7 +9,7 @@
 生成的 js 文件可以将相应的数据结构构造成 `protobuf` 格式的二进制文件，这些生成的构造器称为 **Type**，然后在 JavaScript 代码中可以快速将某个 Object 构造成该 Type 的二进制数据（JavaScript 中使用 Uint8Array 类型表示）。
 
 ```shell
-npx pbjs -t static-module -w es6  -o src/utils/fzm-message-protocol-chat/proto.js src/utils/fzm-message-protocol-chat/chat.proto
+npx pbjs -t static-module -w es6  -o src/utils/fzm-message-protocol-chat/protobuf.js src/utils/fzm-message-protocol-chat/chat.proto
 ```
 
 ## 生成 protobuf.d.ts

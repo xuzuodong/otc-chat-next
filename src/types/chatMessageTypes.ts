@@ -6,4 +6,5 @@ export enum ChatMessageTypes {
     Image = 3,
     Video = 4,
     File = 5,
+    Card = 6,
 }

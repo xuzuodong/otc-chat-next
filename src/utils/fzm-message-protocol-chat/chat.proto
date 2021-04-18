@@ -3,6 +3,16 @@ syntax = "proto3";
 package dtalk.proto;
 option go_package = ".;proto";
 
+enum Device {
+    Android = 0;
+    IOS = 1;
+}
+
+message Login {
+    Device device = 1;
+    string username = 2;
+}
+
 message Proto {
     EventType eventType = 1;
     bytes body = 2;
@@ -31,6 +41,7 @@ enum MsgType {
     Image           = 3;
     Video           = 4;
     File            = 5;
+    Card            = 6;
 }
 
 message CommonMsgAck {
@@ -65,4 +76,10 @@ message FileMsg {
     string name = 2;
     string md5 = 3;
     int64 size = 4;
+}
+
+message CardMsg {
+    string bank = 1;
+    string name = 2;
+    string account = 3;
 }
