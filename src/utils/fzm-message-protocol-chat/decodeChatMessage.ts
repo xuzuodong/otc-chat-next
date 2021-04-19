@@ -15,12 +15,16 @@ export default (data: Uint8Array): DecodedMessage => {
     const TextMsg = dtalk.proto.TextMsg
     const AudioMsg = dtalk.proto.AudioMsg
     const CardMsg = dtalk.proto.CardMsg
+    const ImageMsg = dtalk.proto.ImageMsg
     switch (commonMsg.msgType) {
         case 1:
             content = TextMsg.toObject(TextMsg.decode(commonMsg.msg || new Uint8Array()))
             break
         case 2:
             content = AudioMsg.toObject(AudioMsg.decode(commonMsg.msg || new Uint8Array()))
+            break
+        case 3:
+            content = ImageMsg.toObject(ImageMsg.decode(commonMsg.msg || new Uint8Array()))
             break
         case 6:
             content = CardMsg.toObject(CardMsg.decode(commonMsg.msg || new Uint8Array()))

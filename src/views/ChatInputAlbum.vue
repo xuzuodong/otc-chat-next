@@ -1,5 +1,5 @@
 <template>
-    <ChatInputMenuButtonVue @click="chooseImage" label="图片/视频" :iconUrl="iconUrl" />
+    <ChatInputMenuButtonVue @click="input.click()" label="图片/视频" :iconUrl="iconUrl" />
 
     <input
         v-show="false"
@@ -12,22 +12,43 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue'
+import { defineComponent, reactive, ref } from 'vue'
 import iconUrl from '@/assets/input_menu_album.png'
 import ChatInputMenuButtonVue from '@/views/ChatInputMenuButton.vue'
+import { messageStore } from '@/store/messagesStore'
+import { ChatMessageTypes } from '@/types/chatMessageTypes'
 
 export default defineComponent({
     components: { ChatInputMenuButtonVue },
 
     setup() {
-        const input = ref<null | HTMLInputElement>(null)
-        const receiveImage = () => {
-            console.log(123)
+        const input = ref<HTMLInputElement | null>(null)
+
+        const receiveImage = (e: Event) => {
+            const input = e.target as HTMLInputElement
+            const file = input.files && input.files[0]
+            if (!file) return
+
+            const img = new Image()
+            img.src = URL.createObjectURL(file)
+
+            img.onload = () => {
+                if (!file) return
+
+                const imageMessageContent = reactive({
+                    mediaUrl: '',
+                    height: img.height,
+                    width: img.width,
+                    rawMessage: file,
+                })
+
+                messageStore.sendMessage(ChatMessageTypes.Image, imageMessageContent)
+            }
+
+            input.value = '' // 防止 image input 第二次上传同一张图片失效
         }
-        const chooseImage = () => {
-            input.value?.click()
-        }
-        return { iconUrl, input, receiveImage , chooseImage}
+
+        return { iconUrl, input, receiveImage }
     },
 })
 </script>

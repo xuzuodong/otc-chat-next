@@ -22,6 +22,9 @@
                 :state="state"
             />
 
+            <!-- 图片消息 -->
+            <ChatContentMessageImageVue v-else-if="type === 3" :from-myself="fromMyself" :content="content" />
+
             <!-- 卡片消息 -->
             <ChatContentMessageCardVue v-else-if="type === 6" :from-myself="fromMyself" :content="content" />
 
@@ -52,9 +55,15 @@ import { messageStore } from '@/store/messagesStore'
 import ChatContentMessageTextVue from './ChatContentMessageText.vue'
 import ChatContentMessageVoiceVue from './ChatContentMessageVoice.vue'
 import ChatContentMessageCardVue from './ChatContentMessageCard.vue'
+import ChatContentMessageImageVue from './ChatContentMessageImage.vue'
 
 export default defineComponent({
-    components: { ChatContentMessageTextVue, ChatContentMessageVoiceVue, ChatContentMessageCardVue },
+    components: {
+        ChatContentMessageTextVue,
+        ChatContentMessageVoiceVue,
+        ChatContentMessageCardVue,
+        ChatContentMessageImageVue,
+    },
 
     props: {
         fromMyself: Boolean,

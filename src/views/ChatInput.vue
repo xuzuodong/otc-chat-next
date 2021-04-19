@@ -20,7 +20,7 @@
     <!-- input menu -->
     <div v-show="showMenu" class="min-h-input-menu flex items-center px-8 text-sm text-subtle">
         <ChatInputAlbumVue />
-        <ChatInputCameraVue />
+        <!-- <ChatInputCameraVue /> -->
         <ChatInputReceiveVue />
     </div>
 </template>
@@ -33,11 +33,17 @@ import { MessageContent } from '@/types/chat-message'
 import ChatInputTextVue from './ChatInputText.vue'
 import ChatInputVoiceVue from './ChatInputVoice.vue'
 import ChatInputAlbumVue from './ChatInputAlbum.vue'
-import ChatInputCameraVue from './ChatInputCamera.vue'
+// import ChatInputCameraVue from './ChatInputCamera.vue'
 import ChatInputReceiveVue from './ChatInputReceipt.vue'
 
 export default defineComponent({
-    components: { ChatInputTextVue, ChatInputVoiceVue, ChatInputAlbumVue, ChatInputCameraVue, ChatInputReceiveVue },
+    components: {
+        ChatInputTextVue,
+        ChatInputVoiceVue,
+        ChatInputAlbumVue,
+        // ChatInputCameraVue,
+        ChatInputReceiveVue,
+    },
 
     setup() {
         const enum InputType {

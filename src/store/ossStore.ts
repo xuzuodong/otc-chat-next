@@ -93,7 +93,7 @@ export const uploadFile = (file: Blob, type: ChatMessageTypes): Promise<string> 
 
                 const day = date.formatDate(new Date(), 'YYYYMMDD')
 
-                /** example: `otc-chat/audio/20210415/qqq-www-eee-rrr` */
+                /** example: `otc-chat/audio/20210415/qqq-www-eee-rrr.wav` */
                 const objectName = `otc-chat/${typeName}/${day}/${uuidv4()}.${extName}`
 
                 oss.put(objectName, file)

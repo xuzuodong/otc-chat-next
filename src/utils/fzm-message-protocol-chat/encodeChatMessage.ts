@@ -33,6 +33,13 @@ export default (msg: ChatMessageEncoderArgs): Uint8Array => {
                 time: (msg.msg as dtalk.proto.AudioMsg).time,
             }).finish()
             break
+        case ChatMessageTypes.Image:
+            content = dtalk.proto.ImageMsg.encode({
+                mediaUrl: (msg.msg as dtalk.proto.ImageMsg).mediaUrl,
+                width: (msg.msg as dtalk.proto.ImageMsg).width,
+                height: (msg.msg as dtalk.proto.ImageMsg).height,
+            }).finish()
+            break
         case ChatMessageTypes.Card:
             content = dtalk.proto.CardMsg.encode({
                 bank: (msg.msg as dtalk.proto.CardMsg).bank,

@@ -15,7 +15,7 @@ import { dtalk } from '@/utils/fzm-message-protocol-chat/protobuf'
 /** MessageStore 存储的数据结构 */
 interface DisplayMessage {
     /** 消息内容，不同的消息类型有不同的结构 */
-    content: MessageContent
+    content: MessageContent | UnwrapNestedRefs<MessageContent>
     /** 我的 id */
     from: string
     /** 本条消息的 uuid */
@@ -76,6 +76,8 @@ class MessageStore {
                     .then((url) => {
                         if (type === ChatMessageTypes.Audio) {
                             ;(<dtalk.proto.IAudioMsg>content).mediaUrl = url
+                        } else if (type === ChatMessageTypes.Image) {
+                            ;(<dtalk.proto.IImageMsg>content).mediaUrl = url
                         }
                         this.send(type, content, _uuid, displayMessage)
                     })
