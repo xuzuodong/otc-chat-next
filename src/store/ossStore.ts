@@ -4,7 +4,7 @@
 
 import axios from 'axios'
 import { date } from 'quasar'
-import { baseUrl } from './apiStore'
+import { baseUrl } from './baseUrlStore'
 import OSS from 'ali-oss'
 import { ChatMessageTypes } from '@/types/chatMessageTypes'
 import { v4 as uuidv4 } from 'uuid'

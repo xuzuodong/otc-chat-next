@@ -17,13 +17,18 @@ export default defineComponent({
     props: { fromMyself: Boolean, content: Object },
 
     setup(props) {
-        const imgSrc = computed(() =>
-            props.fromMyself ? URL.createObjectURL(props?.content?.rawMessage) : props?.content?.mediaUrl
-        )
+        const imgSrc = computed(() => {
+            if (props.fromMyself) {
+                if (props?.content?.rawMessage) {
+                    return URL.createObjectURL(props?.content?.rawMessage)
+                } else {
+                    return props?.content?.mediaUrl
+                }
+            } else {
+                return props?.content?.mediaUrl
+            }
+        })
         return { imgSrc }
     },
 })
 </script>
-
-<style scoped>
-</style>

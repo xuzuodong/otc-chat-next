@@ -1,5 +1,5 @@
 <template>
-    <div v-if="time" class="text-xs text-gray-400 text-center pb-2 pt-4">{{ time }}</div>
+    <div v-if="!hideDatetime" class="text-xs text-gray-400 text-center pb-2 pt-4">{{ time }}</div>
     <div
         class="flex justify-between items-start flex-nowrap w-screen py-1.5"
         :class="{ 'flex-row-reverse': fromMyself }"
@@ -72,6 +72,7 @@ export default defineComponent({
         time: String,
         state: String,
         uuid: String,
+        hideDatetime: Boolean,
     },
 
     setup(props) {

@@ -6,6 +6,7 @@ interface DecodedMessage {
     from: string
     uuid: string
     type: dtalk.proto.MsgType
+    datetime: number
 }
 
 export default (data: Uint8Array): DecodedMessage => {
@@ -38,5 +39,6 @@ export default (data: Uint8Array): DecodedMessage => {
         from: commonMsg.from || '0',
         uuid: JSON.stringify(commonMsg.logId),
         type: commonMsg.msgType || 0,
+        datetime: commonMsg.datetime,
     }
 }

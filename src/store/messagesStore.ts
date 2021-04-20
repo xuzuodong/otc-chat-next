@@ -4,13 +4,14 @@
 
 import { MessageContent } from '@/types/chat-message'
 import { reactive, UnwrapNestedRefs } from '@vue/reactivity'
-import { from, target } from '@/store/userStore'
+import { from, target } from '@/store/appCallerStore'
 import { ChatMessageTypes } from '@/types/chatMessageTypes'
 import encodeChatMessage from '@/utils/fzm-message-protocol-chat/encodeChatMessage'
 import { v4 as uuidv4 } from 'uuid'
 import { connectionState } from './connectionStore'
 import { uploadFile } from './ossStore'
 import { dtalk } from '@/utils/fzm-message-protocol-chat/protobuf'
+import { date } from 'quasar'
 
 /** MessageStore 存储的数据结构 */
 interface DisplayMessage {
@@ -24,6 +25,10 @@ interface DisplayMessage {
     state: 'pending' | 'success' | 'failure' | null
     /** 消息类型 */
     type: ChatMessageTypes
+    /** 消息发送时间 */
+    datetime: number
+    /** 是否隐藏消息时间 */
+    hideDatetime?: boolean
 }
 
 class MessageStore {
@@ -34,6 +39,12 @@ class MessageStore {
     }
 
     pushMessage(message: DisplayMessage) {
+        // 和上条消息发送间隔小于 2 分钟的隐藏显示时间
+        if (this.messages.length) {
+            const lastMsg = this.messages[this.messages.length - 1]
+            const hideDate = date.getDateDiff(message.datetime, lastMsg.datetime, 'seconds') < 120
+            message.hideDatetime = hideDate
+        }
         this.messages.push(message)
     }
 
@@ -65,13 +76,14 @@ class MessageStore {
                 uuid: _uuid,
                 state: 'pending' as 'pending' | 'success' | 'failure' | null,
                 type,
+                datetime: Date.now(),
             })
             this.pushMessage(displayMessage)
         }
 
         // 多媒体类的消息（语音、图片、视频）上传阿里云 OSS，取得 url，发送 url
         if (type !== ChatMessageTypes.Text && type !== ChatMessageTypes.Card) {
-            content.rawMessage &&
+            if (content.rawMessage) {
                 uploadFile(content.rawMessage, type)
                     .then((url) => {
                         if (type === ChatMessageTypes.Audio) {
@@ -84,6 +96,12 @@ class MessageStore {
                     .catch((err) => {
                         console.log(err)
                     })
+            }
+
+            // 处理发送微信二维码的支付方式，是特殊的图片，直接发送外链
+            else if (type === ChatMessageTypes.Image && (<dtalk.proto.IAudioMsg>content).mediaUrl) {
+                this.send(type, content, _uuid, displayMessage)
+            }
         }
         // 文本类消息，不需要上传 OSS，直接发送
         else {

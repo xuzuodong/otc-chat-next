@@ -7,10 +7,11 @@
             :key="message.uuid"
             :content="message.content"
             :fromMyself="myToken == message.from"
-            :time="'4月20号 12:46'"
+            :time="formatDate(message.datetime, 'MM月DD日 HH:mm')"
             :uuid="message.uuid"
             :type="message.type"
             :state="message.state"
+            :hideDatetime="message.hideDatetime"
         />
 
         <!-- 监听视图高度变化，保证高度变化时，滚动到最底部 -->
@@ -19,14 +20,15 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, watchEffect, reactive } from 'vue'
-import { from } from '@/store/userStore'
+import { defineComponent, onMounted, watchEffect } from 'vue'
+import { from } from '@/store/appCallerStore'
 import { connectionState } from '@/store/connectionStore'
 import { messageStore } from '@/store/messagesStore'
 import useScrollToBottom from '@/composables/useScrollToBottom'
 import ChatContentMessageVue from './ChatContentMessage.vue'
 import { ChatMessageTypes } from '@/types/chatMessageTypes'
 import decodeChatMessage from '@/utils/fzm-message-protocol-chat/decodeChatMessage'
+import { date } from 'quasar'
 
 export default defineComponent({
     components: { ChatContentMessageVue },
@@ -34,9 +36,11 @@ export default defineComponent({
         const myToken = from
 
         const messages = messageStore.messages
-    
+
         const { scrollToBottom, scrollArea } = useScrollToBottom()
         onMounted(scrollToBottom)
+
+        const formatDate = date.formatDate
 
         /**
          * 接收消息，把消息存入 messageStore 并显示
@@ -54,6 +58,7 @@ export default defineComponent({
                         uuid: msg.uuid,
                         state: null,
                         type: (msg.type || 0) as ChatMessageTypes,
+                        datetime: msg.datetime,
                     })
                 }
 
@@ -67,7 +72,7 @@ export default defineComponent({
             }
         })
 
-        return { scrollToBottom, scrollArea, messages, myToken, reactive }
+        return { scrollToBottom, scrollArea, messages, myToken, formatDate }
     },
 })
 </script>

@@ -1,9 +1,17 @@
 <template>
     <div class="flex flex-col h-full text-base bg-gray-50">
-        <ChatHeaderVue />
+        <!-- 没连上时界面上只有一个返回按钮 -->
+        <div
+            v-if="!connectionState.connection"
+            @click="close"
+            class="h-chat-header w-10 text-center flex justify-center items-center"
+        >
+            <i class="iconfont text-lg">&#xe606;</i>
+        </div>
+        <ChatHeaderVue v-else />
 
         <div
-            v-if="connectionState.error"
+            v-if="initError"
             @click="connect"
             class="flex flex-row justify-center items-center bg-gray-50 h-full w-full"
         >
@@ -23,14 +31,15 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onBeforeUnmount } from 'vue'
+import { defineComponent, onBeforeUnmount, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import ChatContentVue from './ChatContent.vue'
 import ChatInputVue from './ChatInput.vue'
 import ChatHeaderVue from './ChatHeader.vue'
 import { connectionState } from '@/store/connectionStore'
 import FzmMessageProtocol from '@/utils/fzm-message-protocol'
-import { baseUrl } from '@/store/apiStore'
+import { baseUrl } from '@/store/baseUrlStore'
+import { getOrderInfo } from '@/store/appCallerStore'
 
 export default defineComponent({
     components: { ChatHeaderVue, ChatContentVue, ChatInputVue },
@@ -38,18 +47,31 @@ export default defineComponent({
     setup() {
         const route = useRoute()
 
+        const initError = ref(false)
+
         const connect = () => {
             connectionState.error = false
+            initError.value = false
 
             const fmp = new FzmMessageProtocol(`ws://${baseUrl}/sub/`)
-            fmp.authorize({
-                appId: 'zb_otc',
-                token: (route.query.token as string) || '1',
-            })
-                .then((conn) => {
+
+            Promise.all([
+                // 连接 WebSocket
+                fmp.authorize({
+                    appId: 'zb_otc',
+                    token: (route.query.token as string) || '1',
+                }),
+                // 获取订单信息
+                getOrderInfo(),
+            ])
+                .then((values) => {
+                    const [conn] = values
                     connectionState.connection = conn
                 })
-                .catch(() => console.error('WebSocket: 鉴权失败！'))
+                .catch((reason) => {
+                    initError.value = true
+                    console.error(reason)
+                })
         }
 
         connect()
@@ -58,7 +80,7 @@ export default defineComponent({
             connectionState.connection?.disconnect()
         })
 
-        return { connectionState, connect }
+        return { connectionState, connect, initError }
     },
 })
 </script>

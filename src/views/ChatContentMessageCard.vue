@@ -3,7 +3,7 @@
         <div class="py-3 px-3 flex items-center">
             <q-icon :name="'img:' + iconUrl" size="28px" class="mr-1" /> {{ content.bank }}
         </div>
-        <div class="pb-3 px-4 flex flex-nowrap">
+        <div class="pb-3 px-4 flex flex-nowrap justify-between">
             <div class="pr-4">{{ content.name }}</div>
             <div>{{ content.account }}</div>
         </div>
@@ -22,6 +22,3 @@ export default defineComponent({
     },
 })
 </script>
-
-<style scoped>
-</style>

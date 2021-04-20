@@ -9,47 +9,61 @@
  *     2. 如果选择的收款方式是微信/支付宝，发送对应二维码的图片
  */
 
-import { defineComponent } from 'vue'
+import { defineComponent, ref } from 'vue'
 import { useQuasar } from 'quasar'
 import iconUrl from '@/assets/input_menu_receive.png'
 import ChatInputMenuButtonVue from '@/views/ChatInputMenuButton.vue'
 import ChatInputReceiptDialogVue from './ChatInputReceiptDialog.vue'
-import { dtalk } from '@/utils/fzm-message-protocol-chat/protobuf'
 import { messageStore } from '@/store/messagesStore'
 import { ChatMessageTypes } from '@/types/chatMessageTypes'
+import { getOrderInfo, OrderInfo } from '@/store/appCallerStore'
 
 export default defineComponent({
     components: { ChatInputMenuButtonVue },
     setup() {
         const quasar = useQuasar()
 
-        const fakeCardInfo: dtalk.proto.ICardMsg = {
-            bank: '中国建设银行',
-            name: '张三',
-            account: '**** 229',
-        }
-
-        const fakeAlipayAccount = '123****1234'
-        const fakeWechatAccount = '123****@qq.com'
+        const orderInfo = ref<OrderInfo | undefined>(undefined)
+        getOrderInfo().then((info) => (orderInfo.value = info))
 
         /** 弹出 “选择收款方式” 对话框 */
         const selectReceiveMoneyMethods = () => {
+            if (!orderInfo.value) return
+
+            const receiveMethods = orderInfo.value.pay.map((m) => ({
+                accountName: m.bankName,
+                accountAddress: m.cardId,
+            }))
+
             quasar
                 .dialog({
                     component: ChatInputReceiptDialogVue,
                     componentProps: {
-                        receiveMethods: [
-                            { accountName: fakeCardInfo.bank, accountAddress: fakeCardInfo.account },
-                            { accountName: '支付宝', accountAddress: fakeAlipayAccount },
-                            { accountName: '微信', accountAddress: fakeWechatAccount },
-                        ],
+                        receiveMethods,
                     },
                 })
-                .onOk(() => {
-                    messageStore.sendMessage(ChatMessageTypes.Card, {
-                        bank: fakeCardInfo.bank,
-                        name: fakeCardInfo.name,
-                        account: fakeCardInfo.account,
+                .onOk((selectedMap: boolean[]) => {
+                    orderInfo.value?.pay.forEach((m, index) => {
+                        if (selectedMap[index]) {
+                            switch (m.type) {
+                                case '1':
+                                    // 银行卡
+                                    messageStore.sendMessage(ChatMessageTypes.Card, {
+                                        bank: m.bankName,
+                                        name: m.name,
+                                        account: m.cardId,
+                                    })
+                                    break
+                                default:
+                                    // 支付宝 | 微信
+                                    messageStore.sendMessage(ChatMessageTypes.Image, {
+                                        mediaUrl: m.codeImage,
+                                        height: 200,
+                                        width: 200,
+                                    })
+                                    break
+                            }
+                        }
                     })
                 })
         }

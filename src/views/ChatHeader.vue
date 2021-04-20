@@ -1,10 +1,10 @@
 <template>
     <!-- 顶部导航栏 -->
     <div class="h-chat-header bg-white flex flex-row justify-between">
-        <div class="w-10 text-center flex justify-center items-center">
+        <div @click="close" class="w-10 text-center flex justify-center items-center">
             <i class="iconfont text-lg">&#xe606;</i>
         </div>
-        <div class="self-center font-bold text-lg">对方昵称</div>
+        <div class="self-center font-bold text-lg">{{ userNick }}</div>
         <div class="w-10 text-center flex justify-center items-center">
             <!-- <i class="iconfont text-3xl"> &#xe607;</i> -->
         </div>
@@ -14,21 +14,46 @@
     <div class="h-20 rounded-b-3xl bg-white flex justify-between px-4">
         <div class="pt-2">
             <div class="text-subtle text-sm pb-1">交易总额</div>
-            <div class="text-bold text-primary text-xl">￥{{ 1200 }}</div>
+            <div class="text-bold text-primary text-xl">￥{{ orderInfo?.cost }}</div>
         </div>
         <div class="pt-2 text-right">
-            <div class="text-dark pb-1"><i class="iconfont text-gray-300">&#xe608;</i> {{ '14:55' }}</div>
-            <div class="text-bold text-primary text-xl">{{ '请付款' }}</div>
+            <div :class="{ 'opacity-0': !orderInfo?.timeLevel }" class="text-dark pb-1">
+                <i class="iconfont text-gray-300">&#xe608;</i> {{ timeLeft }}
+            </div>
+            <div class="text-bold text-primary text-xl">{{ orderInfo?.status }}</div>
         </div>
+    </div>
+
+    <div v-if="debug">
+        <div>from: {{ from }}</div>
+        <div>token: {{ token }}</div>
+        <div>orderid: {{ orderid }}</div>
     </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { computed, defineComponent, ref } from 'vue'
+import { from, token, orderid, getOrderInfo, OrderInfo } from '@/store/appCallerStore'
+import jsBridge from '@/utils/jsBridge'
 
 export default defineComponent({
     setup() {
-        return {}
+        const debug = process.env.NODE_ENV === 'development'
+
+        const close = () => new jsBridge().closeCurrentWebview()
+
+        const orderInfo = ref<OrderInfo | undefined>(undefined)
+        getOrderInfo().then((info) => (orderInfo.value = info))
+
+        const userNick = computed(() => {
+            return from == orderInfo.value?.userId ? orderInfo.value.userNick : orderInfo.value?.merchantNick
+        })
+
+        const timeLeft = computed(() => {
+            return orderInfo.value && orderInfo.value.levelTime % 60
+        })
+
+        return { from, token, orderid, debug, close, userNick, orderInfo, timeLeft }
     },
 })
 </script>

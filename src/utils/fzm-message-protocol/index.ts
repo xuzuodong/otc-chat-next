@@ -24,7 +24,7 @@ export default class FzmMessageProtocol {
             }
 
             this.ws.onclose = () => {
-                reject()
+                reject(`WebSocket 连接被服务器端关闭，这大概率是鉴权失败导致的`)
             }
         })
     }
