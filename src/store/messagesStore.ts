@@ -86,6 +86,8 @@ class MessageStore {
             if (content.rawMessage) {
                 uploadFile(content.rawMessage, type)
                     .then((url) => {
+                        console.log(`阿里云 OSS 上传成功, ${url}`)
+
                         if (type === ChatMessageTypes.Audio) {
                             ;(<dtalk.proto.IAudioMsg>content).mediaUrl = url
                         } else if (type === ChatMessageTypes.Image) {

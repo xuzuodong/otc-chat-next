@@ -17,6 +17,7 @@ import iconUrl from '@/assets/input_menu_album.png'
 import ChatInputMenuButtonVue from '@/views/ChatInputMenuButton.vue'
 import { messageStore } from '@/store/messagesStore'
 import { ChatMessageTypes } from '@/types/chatMessageTypes'
+import compress from '@/utils/compressor'
 
 export default defineComponent({
     components: { ChatInputMenuButtonVue },
@@ -24,22 +25,25 @@ export default defineComponent({
     setup() {
         const input = ref<HTMLInputElement | null>(null)
 
-        const receiveImage = (e: Event) => {
+        const receiveImage = async (e: Event) => {
             const input = e.target as HTMLInputElement
             const file = input.files && input.files[0]
             if (!file) return
 
+            const compressedFile = await compress(file)
+
+            // 利用 Image 获取尺寸
             const img = new Image()
-            img.src = URL.createObjectURL(file)
+            img.src = URL.createObjectURL(compressedFile)
 
             img.onload = () => {
-                if (!file) return
+                if (!compressedFile) return
 
                 const imageMessageContent = reactive({
                     mediaUrl: '',
                     height: img.height,
                     width: img.width,
-                    rawMessage: file,
+                    rawMessage: compressedFile,
                 })
 
                 messageStore.sendMessage(ChatMessageTypes.Image, imageMessageContent)
