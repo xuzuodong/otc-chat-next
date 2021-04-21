@@ -100,7 +100,7 @@ class MessageStore {
                     })
             }
 
-            // 处理发送微信二维码的支付方式，是特殊的图片，直接发送外链
+            // 特殊情况处理：当发送微信和支付宝收款方式时，由于是直接从后端拿到的图片外链，所以直接发送
             else if (type === ChatMessageTypes.Image && (<dtalk.proto.IAudioMsg>content).mediaUrl) {
                 this.send(type, content, _uuid, displayMessage)
             }

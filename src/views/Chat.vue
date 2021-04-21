@@ -40,6 +40,7 @@ import { connectionState } from '@/store/connectionStore'
 import FzmMessageProtocol from '@/utils/fzm-message-protocol'
 import { baseUrl } from '@/store/baseUrlStore'
 import { getOrderInfo } from '@/store/appCallerStore'
+import { token } from '@/store/appCallerStore'
 
 export default defineComponent({
     components: { ChatHeaderVue, ChatContentVue, ChatInputVue },
@@ -54,13 +55,15 @@ export default defineComponent({
             initError.value = false
 
             const fmp = new FzmMessageProtocol(`ws://${baseUrl}/sub/`)
+            console.log(token)
 
             Promise.all([
                 // 连接 WebSocket
                 fmp.authorize({
                     appId: 'zb_otc',
-                    token: (route.query.token as string) || '1',
+                    token,
                 }),
+
                 // 获取订单信息
                 getOrderInfo(),
             ])

@@ -88,7 +88,7 @@ export const uploadFile = (file: Blob, type: ChatMessageTypes): Promise<string> 
                         extName = 'mp4'
                         break
                     default:
-                        throw '上传华为云OBS：暂未分类的文件类型'
+                        throw '上传阿里云 OSS 时出错：暂未分类的文件类型'
                 }
 
                 const day = date.formatDate(new Date(), 'YYYYMMDD')

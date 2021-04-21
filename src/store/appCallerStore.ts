@@ -60,7 +60,7 @@ export const getOrderInfo = (): Promise<OrderInfo> => {
             axios({
                 url: `http://${baseTradeUrl}/receive/trade-opponent?order_num=${query.orderid}`,
                 method: `get`,
-                headers: { Authorization: `Bearer ${token}` },
+                headers: { Authorization: token },
             })
                 .then((res) => {
                     if (res.status == 200 && res.data.code == 200) {
@@ -108,4 +108,4 @@ export const target = `${query.orderid}_${query.token}` || 'null-orderid'
 /** orderid */
 export const orderid = query.orderid || 'null-orderid'
 /** 我的 token */
-export const token = query.token || 'null-token'
+export const token = `Bearer ${query.token}` || 'null-token'
