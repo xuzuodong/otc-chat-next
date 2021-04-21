@@ -23,7 +23,12 @@
             />
 
             <!-- 图片消息 -->
-            <ChatContentMessageImageVue v-else-if="type === 3" :from-myself="fromMyself" :content="content" />
+            <ChatContentMessageImageVue
+                v-else-if="type === 3"
+                :from-myself="fromMyself"
+                :content="content"
+                :percentage="percentage"
+            />
 
             <!-- 卡片消息 -->
             <ChatContentMessageCardVue v-else-if="type === 6" :from-myself="fromMyself" :content="content" />
@@ -73,6 +78,7 @@ export default defineComponent({
         state: String,
         uuid: String,
         hideDatetime: Boolean,
+        percentage: Number,
     },
 
     setup(props) {

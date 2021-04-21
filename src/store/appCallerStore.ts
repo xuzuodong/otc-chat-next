@@ -103,9 +103,9 @@ export const getOrderInfo = (): Promise<OrderInfo> => {
 
 /** 我的 id */
 export const from = query.id || 'null-user-id'
-/** 本项目内发送的 target 为 orderid_token 格式 */
-export const target = `${query.orderid}_${query.token}` || 'null-orderid'
-/** orderid */
-export const orderid = query.orderid || 'null-orderid'
 /** 我的 token */
 export const token = `Bearer ${query.token}` || 'null-token'
+/** 本项目内发送的 target 为 orderid_token 格式 */
+export const target = `${query.orderid}_${token}` || 'null-orderid'
+/** orderid */
+export const orderid = query.orderid || 'null-orderid'

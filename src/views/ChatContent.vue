@@ -6,12 +6,13 @@
             v-for="message in messages"
             :key="message.uuid"
             :content="message.content"
-            :fromMyself="myToken == message.from"
+            :fromMyself="myid == message.from"
             :time="formatDate(message.datetime, 'MM月DD日 HH:mm')"
             :uuid="message.uuid"
             :type="message.type"
             :state="message.state"
             :hideDatetime="message.hideDatetime"
+            :percentage="message.percentage"
         />
 
         <!-- 监听视图高度变化，保证高度变化时，滚动到最底部 -->
@@ -33,7 +34,7 @@ import { date } from 'quasar'
 export default defineComponent({
     components: { ChatContentMessageVue },
     setup() {
-        const myToken = from
+        const myid = from
 
         const messages = messageStore.messages
 
@@ -72,7 +73,7 @@ export default defineComponent({
             }
         })
 
-        return { scrollToBottom, scrollArea, messages, myToken, formatDate }
+        return { scrollToBottom, scrollArea, messages, myid, formatDate }
     },
 })
 </script>

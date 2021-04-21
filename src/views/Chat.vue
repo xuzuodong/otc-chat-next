@@ -32,7 +32,6 @@
 
 <script lang="ts">
 import { defineComponent, onBeforeUnmount, ref } from 'vue'
-import { useRoute } from 'vue-router'
 import ChatContentVue from './ChatContent.vue'
 import ChatInputVue from './ChatInput.vue'
 import ChatHeaderVue from './ChatHeader.vue'
@@ -46,7 +45,6 @@ export default defineComponent({
     components: { ChatHeaderVue, ChatContentVue, ChatInputVue },
 
     setup() {
-        const route = useRoute()
 
         const initError = ref(false)
 

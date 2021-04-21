@@ -43,6 +43,10 @@ const expired = (expiration: Date) => {
     return dateDiff <= 0
 }
 
+const bucket = 'dld-test'
+const region = 'oss-cn-shanghai'
+const ossBaseUrl = `http://${bucket}.${region}.aliyuncs.com/`
+
 const getOssClientInstance = (): Promise<OSS> => {
     return new Promise((resolve, reject) => {
         getCredentials()
@@ -66,9 +70,10 @@ const getOssClientInstance = (): Promise<OSS> => {
  * 将 Blob 对象上传至阿里云 OSS
  * @param file 文件，按媒体类型和日期分文件夹，文件名为随机的 uuid
  * @param type 消息类型
+ * @param onprogress 回调函数，处理每次上传进度更新
  * @returns 上传成功的话能获得 url
  */
-export const uploadFile = (file: Blob, type: ChatMessageTypes): Promise<string> => {
+export const uploadFile = (file: Blob, type: ChatMessageTypes, onprogress?: (p: number) => void): Promise<string> => {
     return new Promise((resolve, reject) => {
         getOssClientInstance()
             .then((oss) => {
@@ -96,12 +101,16 @@ export const uploadFile = (file: Blob, type: ChatMessageTypes): Promise<string> 
                 /** example: `otc-chat/audio/20210415/qqq-www-eee-rrr.wav` */
                 const objectName = `otc-chat/${typeName}/${day}/${uuidv4()}.${extName}`
 
-                oss.put(objectName, file)
-                    .then((result) => {
-                        resolve(result.url)
+                oss.multipartUpload(objectName, file, {
+                    progress(p) {
+                        onprogress && onprogress(p)
+                    },
+                })
+                    .then((res) => {
+                        resolve(ossBaseUrl + res.name)
                     })
-                    .catch((err) => {
-                        reject(err)
+                    .catch((res) => {
+                        reject(res)
                     })
             })
             .catch((err) => {

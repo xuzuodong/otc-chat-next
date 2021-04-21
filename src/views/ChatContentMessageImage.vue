@@ -7,14 +7,28 @@
         :no-spinner="fromMyself"
         spinner-size="md"
         spinner-color="primary"
-    />
+    >
+        <!-- 图片上灰色遮罩 -->
+        <transition name="fade">
+            <div v-if="percentage != undefined && percentage < 1" class="absolute-full flex flex-center">
+                <!-- 上传进度圆圈 -->
+                <q-circular-progress
+                    :value="percentage * 100"
+                    size="45px"
+                    :thickness="1"
+                    color="white"
+                    track-color="grey-6"
+                    class="q-ma-md"
+                /></div
+        ></transition>
+    </q-img>
 </template>
 
 <script lang="ts">
 import { computed, defineComponent } from 'vue'
 
 export default defineComponent({
-    props: { fromMyself: Boolean, content: Object },
+    props: { fromMyself: Boolean, content: Object, percentage: Number },
 
     setup(props) {
         const imgSrc = computed(() => {

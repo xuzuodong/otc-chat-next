@@ -23,6 +23,8 @@ interface DisplayMessage {
     uuid: string
     /** 显示在用户界面上的消息发送状态，对方发来的消息无状态，用 null 表示 */
     state: 'pending' | 'success' | 'failure' | null
+    /** 多媒体消息的上传进度, 值为 0 ~ 1 */
+    percentage?: number
     /** 消息类型 */
     type: ChatMessageTypes
     /** 消息发送时间 */
@@ -77,6 +79,7 @@ class MessageStore {
                 state: 'pending' as 'pending' | 'success' | 'failure' | null,
                 type,
                 datetime: Date.now(),
+                percentage: 0,
             })
             this.pushMessage(displayMessage)
         }
@@ -84,7 +87,9 @@ class MessageStore {
         // 多媒体类的消息（语音、图片、视频）上传阿里云 OSS，取得 url，发送 url
         if (type !== ChatMessageTypes.Text && type !== ChatMessageTypes.Card) {
             if (content.rawMessage) {
-                uploadFile(content.rawMessage, type)
+                uploadFile(content.rawMessage, type, (p: number) => {
+                    displayMessage.percentage = p
+                })
                     .then((url) => {
                         console.log(`阿里云 OSS 上传成功, ${url}`)
 
@@ -113,6 +118,8 @@ class MessageStore {
 
     /** 编码并发送 */
     private send(type: ChatMessageTypes, content: MessageContent, uuid: string, displayMessage: DisplayMessage) {
+        // console.log(from, target)
+
         const chatMessageData = encodeChatMessage({
             from,
             target,
