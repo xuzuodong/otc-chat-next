@@ -15,6 +15,13 @@
             @click="connect"
             class="flex flex-row justify-center items-center bg-gray-50 h-full w-full"
         >
+            初始化聊天失败
+        </div>
+        <div
+            v-else-if="connectionState.error"
+            @click="connect"
+            class="flex flex-row justify-center items-center bg-gray-50 h-full w-full"
+        >
             网络错误，点击屏幕尝试重连
         </div>
         <div
@@ -45,7 +52,6 @@ export default defineComponent({
     components: { ChatHeaderVue, ChatContentVue, ChatInputVue },
 
     setup() {
-
         const initError = ref(false)
 
         const connect = () => {

@@ -12,7 +12,7 @@
             :type="message.type"
             :state="message.state"
             :hideDatetime="message.hideDatetime"
-            :percentage="message.percentage"
+            :uploadProgress="message.uploadProgress"
         />
 
         <!-- 监听视图高度变化，保证高度变化时，滚动到最底部 -->

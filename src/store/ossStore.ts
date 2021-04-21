@@ -5,7 +5,7 @@
 import axios from 'axios'
 import { date } from 'quasar'
 import { baseUrl } from './baseUrlStore'
-import OSS from 'ali-oss'
+import OSS, { Checkpoint } from 'ali-oss'
 import { ChatMessageTypes } from '@/types/chatMessageTypes'
 import { v4 as uuidv4 } from 'uuid'
 
@@ -73,7 +73,11 @@ const getOssClientInstance = (): Promise<OSS> => {
  * @param onprogress 回调函数，处理每次上传进度更新
  * @returns 上传成功的话能获得 url
  */
-export const uploadFile = (file: Blob, type: ChatMessageTypes, onprogress?: (p: number) => void): Promise<string> => {
+export const uploadFile = (
+    file: Blob,
+    type: ChatMessageTypes,
+    onprogress?: (p: number, checkpoint: Checkpoint) => void
+): Promise<string> => {
     return new Promise((resolve, reject) => {
         getOssClientInstance()
             .then((oss) => {
@@ -102,8 +106,8 @@ export const uploadFile = (file: Blob, type: ChatMessageTypes, onprogress?: (p: 
                 const objectName = `otc-chat/${typeName}/${day}/${uuidv4()}.${extName}`
 
                 oss.multipartUpload(objectName, file, {
-                    progress(p) {
-                        onprogress && onprogress(p)
+                    progress(p, checkpoint) {
+                        onprogress && onprogress(p, checkpoint)
                     },
                 })
                     .then((res) => {
@@ -116,5 +120,15 @@ export const uploadFile = (file: Blob, type: ChatMessageTypes, onprogress?: (p: 
             .catch((err) => {
                 reject(err)
             })
+    })
+}
+
+export const abortUploadFile = (checkpoint: Checkpoint): Promise<void> => {
+    return new Promise((resolve) => {
+        getOssClientInstance().then((oss) => {
+            oss.abortMultipartUpload(checkpoint.name, checkpoint.uploadId).then(() => {
+                resolve()
+            })
+        })
     })
 }

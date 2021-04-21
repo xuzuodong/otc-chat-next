@@ -27,7 +27,7 @@
                 v-else-if="type === 3"
                 :from-myself="fromMyself"
                 :content="content"
-                :percentage="percentage"
+                :uploadProgress="uploadProgress"
             />
 
             <!-- 卡片消息 -->
@@ -44,7 +44,14 @@
                     <q-icon name="error" size="22px" color="negative" />
                 </div>
                 <!-- 正在发送 -->
-                <q-spinner-ios v-else-if="state === 'pending'" color="grey" size="1.25rem" :thickness="5" />
+                <q-spinner-ios v-else-if="state === 'pending' && !isMedia" color="grey" size="1.25rem" :thickness="5" />
+                <q-icon
+                    v-else-if="state === 'pending' && isMedia"
+                    @click="abort"
+                    name="cancel"
+                    size="22px"
+                    color="negative"
+                />
             </div>
         </div>
 
@@ -54,13 +61,14 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { computed, defineComponent, ref } from 'vue'
 import default_avatar_url from '../assets/user_avatar.png'
 import { messageStore } from '@/store/messagesStore'
 import ChatContentMessageTextVue from './ChatContentMessageText.vue'
 import ChatContentMessageVoiceVue from './ChatContentMessageVoice.vue'
 import ChatContentMessageCardVue from './ChatContentMessageCard.vue'
 import ChatContentMessageImageVue from './ChatContentMessageImage.vue'
+import { ChatMessageTypes } from '@/types/chatMessageTypes'
 
 export default defineComponent({
     components: {
@@ -76,9 +84,9 @@ export default defineComponent({
         type: { type: Number, required: true },
         time: String,
         state: String,
-        uuid: String,
+        uuid: { type: String, required: true },
         hideDatetime: Boolean,
-        percentage: Number,
+        uploadProgress: Object,
     },
 
     setup(props) {
@@ -87,7 +95,15 @@ export default defineComponent({
             messageStore.sendMessage(props.type, props.content, props.uuid)
         }
 
-        return { default_avatar_url, resend }
+        const abort = () => {
+            messageStore.abortSendingMessage(props.uuid, props.uploadProgress?.checkpoint)
+        }
+
+        const isMedia = computed(() => {
+            return props.type === ChatMessageTypes.Image || props.type === ChatMessageTypes.Video
+        })
+
+        return { default_avatar_url, resend, isMedia, abort }
     },
 })
 </script>

@@ -10,10 +10,13 @@
     >
         <!-- 图片上灰色遮罩 -->
         <transition name="fade">
-            <div v-if="percentage != undefined && percentage < 1" class="absolute-full flex flex-center">
+            <div
+                v-if="uploadProgress != undefined && uploadProgress.percentage < 100"
+                class="absolute-full flex flex-center"
+            >
                 <!-- 上传进度圆圈 -->
                 <q-circular-progress
-                    :value="percentage * 100"
+                    :value="uploadProgress.percentage"
                     size="45px"
                     :thickness="1"
                     color="white"
@@ -28,7 +31,7 @@
 import { computed, defineComponent } from 'vue'
 
 export default defineComponent({
-    props: { fromMyself: Boolean, content: Object, percentage: Number },
+    props: { fromMyself: Boolean, content: Object, uploadProgress: Object },
 
     setup(props) {
         const imgSrc = computed(() => {
