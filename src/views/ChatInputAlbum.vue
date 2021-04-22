@@ -6,7 +6,7 @@
         ref="input"
         name="file"
         type="file"
-        accept="image/png, image/gif, image/jpg, image/jpeg"
+        accept=".png, .jpg, .jpeg, .gif, .mov, .mp4, .m4v"
         @change="receiveImage"
     />
 </template>
@@ -30,23 +30,50 @@ export default defineComponent({
             const file = input.files && input.files[0]
             if (!file) return
 
-            const compressedFile = await compress(file)
+            // 接收图片
+            if (file.name.match(/(.jpg$)|(.gif$)|(.jpeg$)|(.png$)/)) {
+                const compressedFile = await compress(file)
 
-            // 利用 Image 获取尺寸
-            const img = new Image()
-            img.src = URL.createObjectURL(compressedFile)
+                // 利用 Image 获取尺寸
+                const img = new Image()
+                img.src = URL.createObjectURL(compressedFile)
 
-            img.onload = () => {
-                if (!compressedFile) return
+                img.onload = () => {
+                    if (!compressedFile) return
 
-                const imageMessageContent = reactive({
-                    mediaUrl: '',
-                    height: img.height,
-                    width: img.width,
-                    rawMessage: compressedFile,
-                })
+                    const imageMessageContent = reactive({
+                        mediaUrl: '',
+                        height: img.height,
+                        width: img.width,
+                        rawMessage: compressedFile,
+                    })
 
-                messageStore.sendMessage(ChatMessageTypes.Image, imageMessageContent)
+                    messageStore.sendMessage(ChatMessageTypes.Image, imageMessageContent)
+                    URL.revokeObjectURL(img.src)
+                }
+            }
+
+            // 接收视频
+            else if (file.name.match(/(.mp4$)|(.mov$)|(.m4a$)/)) {
+                var video = document.createElement('video')
+                video.src = URL.createObjectURL(file)
+                video.onloadedmetadata = () => {
+                    if (file.size > 104857600) {
+                        alert('视频文件过大，目前仅支持发送 100MB 以内的视频')
+                        return
+                    }
+
+                    const videoMessageContent = reactive({
+                        mediaUrl: '',
+                        height: video.videoHeight,
+                        width: video.videoWidth,
+                        time: video.duration,
+                        rawMessage: file,
+                    })
+
+                    messageStore.sendMessage(ChatMessageTypes.Video, videoMessageContent)
+                    URL.revokeObjectURL(video.src)
+                }
             }
 
             input.value = '' // 防止 image input 第二次上传同一张图片失效

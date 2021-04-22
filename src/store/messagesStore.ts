@@ -14,8 +14,16 @@ import { dtalk } from '@/utils/fzm-message-protocol-chat/protobuf'
 import { date } from 'quasar'
 import { Checkpoint } from 'ali-oss'
 
+/** 多媒体消息的上传进度 */
+export interface UploadProgress {
+    /** 上传百分比，值为 0 ~ 100 */
+    percentage: number
+    /** OSS 分片上传产生的碎片 */
+    checkpoint?: Checkpoint
+}
+
 /** MessageStore 存储的数据结构 */
-interface DisplayMessage {
+export interface DisplayMessage {
     /** 消息内容，不同的消息类型有不同的结构 */
     content: MessageContent | UnwrapNestedRefs<MessageContent>
     /** 我的 id */
@@ -25,10 +33,7 @@ interface DisplayMessage {
     /** 显示在用户界面上的消息发送状态，对方发来的消息无状态，用 null 表示 */
     state: 'pending' | 'success' | 'failure' | null
     /** 多媒体消息的上传进度, 值为 0 ~ 1 */
-    uploadProgress?: {
-        percentage: number
-        checkpoint?: Checkpoint
-    }
+    uploadProgress?: UploadProgress
     /** 消息类型 */
     type: ChatMessageTypes
     /** 消息发送时间 */
@@ -108,6 +113,8 @@ class MessageStore {
                         ;(<dtalk.proto.IAudioMsg>content).mediaUrl = url
                     } else if (type === ChatMessageTypes.Image) {
                         ;(<dtalk.proto.IImageMsg>content).mediaUrl = url
+                    } else if (type === ChatMessageTypes.Video) {
+                        ;(<dtalk.proto.IVideoMsg>content).mediaUrl = url
                     }
                     this.send(type, content, _uuid, message)
                 })

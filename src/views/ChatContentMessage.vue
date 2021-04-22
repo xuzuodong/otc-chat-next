@@ -31,6 +31,14 @@
                 :uploadProgress="uploadProgress"
             />
 
+            <ChatContentMessageVideoVue
+                v-else-if="type === 4"
+                :from-myself="fromMyself"
+                :state="state"
+                :content="content"
+                :uploadProgress="uploadProgress"
+            />
+
             <!-- 卡片消息 -->
             <ChatContentMessageCardVue v-else-if="type === 6" :from-myself="fromMyself" :content="content" />
 
@@ -70,6 +78,7 @@ import ChatContentMessageVoiceVue from './ChatContentMessageVoice.vue'
 import ChatContentMessageCardVue from './ChatContentMessageCard.vue'
 import ChatContentMessageImageVue from './ChatContentMessageImage.vue'
 import { ChatMessageTypes } from '@/types/chatMessageTypes'
+import ChatContentMessageVideoVue from './ChatContentMessageVideo.vue'
 
 export default defineComponent({
     components: {
@@ -77,6 +86,7 @@ export default defineComponent({
         ChatContentMessageVoiceVue,
         ChatContentMessageCardVue,
         ChatContentMessageImageVue,
+        ChatContentMessageVideoVue,
     },
 
     props: {

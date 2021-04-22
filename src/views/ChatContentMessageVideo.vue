@@ -1,0 +1,94 @@
+<template>
+    <q-img
+        :src="posterImgSrc"
+        :ratio="content.width / content.height"
+        class="bg-white w-36 relative rounded-md"
+        style="max-height: 150px; min-height: 100px"
+        :no-spinner="fromMyself"
+        spinner-size="md"
+        spinner-color="primary"
+    >
+        <!-- 图片上灰色遮罩 -->
+        <transition name="fade">
+            <div v-if="showProgress" class="absolute-full flex flex-center">
+                <!-- 上传进度圆圈 -->
+                <q-circular-progress
+                    :value="uploadProgress.percentage"
+                    size="45px"
+                    :thickness="1"
+                    color="white"
+                    track-color="grey-6"
+                    class="q-ma-md"
+                />
+            </div>
+            <div v-else @click="playVideo" class="absolute-full flex flex-center">
+                <q-avatar size="100px" font-size="52px" text-color="white" icon="play_circle" />
+            </div>
+        </transition>
+    </q-img>
+</template>
+
+<script lang="ts">
+import { defineComponent, ref, computed } from 'vue'
+
+export default defineComponent({
+    props: { fromMyself: Boolean, content: Object, state: String, uploadProgress: Object },
+
+    setup(props) {
+        const posterImgSrc = ref<string | undefined>(undefined)
+
+        const videoUrl = props.fromMyself ? URL.createObjectURL(props?.content?.rawMessage) : props?.content?.mediaUrl
+        drawVideoToCanvas(videoUrl).then((canvas: HTMLCanvasElement) => {
+            canvas.toBlob((blob) => {
+                posterImgSrc.value = URL.createObjectURL(blob)
+            })
+        })
+
+        const showProgress = computed(() => {
+            if (props.state === 'pending') {
+                return props.uploadProgress != undefined && props.uploadProgress.percentage < 100
+            } else {
+                return false
+            }
+        })
+
+        return { posterImgSrc, showProgress }
+    },
+})
+
+function drawVideoToCanvas(url: string): Promise<HTMLCanvasElement> {
+    return new Promise((resolve, reject) => {
+        const canvas = document.createElement('canvas')
+        const video = document.createElement('video')
+        video.crossOrigin = 'anonymous'
+        
+        video.onloadedmetadata = () => {
+            video.currentTime = 0
+        }
+
+        video.onseeked = () => {
+            // delay the drawImage call, otherwise we get an empty canvas on iOS
+            // see https://stackoverflow.com/questions/44145740/how-does-double-requestanimationframe-work
+            window.requestAnimationFrame(() => {
+                window.requestAnimationFrame(() => {
+                    canvas.height = video.videoHeight
+                    canvas.width = video.videoWidth
+                    canvas.getContext('2d')?.drawImage(video, 0, 0, canvas.width, canvas.height)
+
+                    resolve(canvas)
+                })
+            })
+        }
+
+        video.onerror = () => {
+            reject(video.error)
+        }
+
+        video.src = url
+        video.load()
+    })
+}
+</script>
+
+<style scoped>
+</style>

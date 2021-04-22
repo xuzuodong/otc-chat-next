@@ -40,6 +40,14 @@ export default (msg: ChatMessageEncoderArgs): Uint8Array => {
                 height: (msg.msg as dtalk.proto.ImageMsg).height,
             }).finish()
             break
+        case ChatMessageTypes.Video:
+            content = dtalk.proto.VideoMsg.encode({
+                mediaUrl: (msg.msg as dtalk.proto.IVideoMsg).mediaUrl,
+                width: (msg.msg as dtalk.proto.IVideoMsg).width,
+                height: (msg.msg as dtalk.proto.IVideoMsg).height,
+                time: (msg.msg as dtalk.proto.IVideoMsg).time,
+            }).finish()
+            break
         case ChatMessageTypes.Card:
             content = dtalk.proto.CardMsg.encode({
                 bank: (msg.msg as dtalk.proto.CardMsg).bank,
