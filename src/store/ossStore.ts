@@ -21,8 +21,12 @@ let credentials: Credentials | undefined
 const getCredentials = (): Promise<Credentials> => {
     return new Promise<Credentials>((resolve, reject) => {
         if (credentials && !expired(new Date(credentials.Expiration))) {
+            console.log(`OSS 凭证已存在，直接使用`)
             resolve(credentials)
         } else {
+            // if (!credentials) console.log(`OSS 凭证不存在，请求 OSS 凭证...`)
+            // else console.log(`OSS 凭证过期，请求新的 OSS 凭证...`)
+
             axios({
                 method: 'get',
                 url: `http://${baseUrl}/oss/get-token`,
@@ -39,8 +43,8 @@ const getCredentials = (): Promise<Credentials> => {
 }
 
 const expired = (expiration: Date) => {
-    const dateDiff = date.getDateDiff(new Date(), expiration, 'miliseconds')
-    return dateDiff <= 0
+    const dateDiff = date.getDateDiff(new Date(), expiration, 'seconds')
+    return dateDiff >= 0
 }
 
 const bucket = 'dld-test'
