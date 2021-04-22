@@ -26,6 +26,7 @@
             <ChatContentMessageImageVue
                 v-else-if="type === 3"
                 :from-myself="fromMyself"
+                :state="state"
                 :content="content"
                 :uploadProgress="uploadProgress"
             />
@@ -61,7 +62,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, ref } from 'vue'
+import { computed, defineComponent } from 'vue'
 import default_avatar_url from '../assets/user_avatar.png'
 import { messageStore } from '@/store/messagesStore'
 import ChatContentMessageTextVue from './ChatContentMessageText.vue'

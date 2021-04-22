@@ -90,32 +90,31 @@ class MessageStore {
 
         // 多媒体类的消息（语音、图片、视频）上传阿里云 OSS，取得 url，发送 url
         if (type !== ChatMessageTypes.Text && type !== ChatMessageTypes.Card) {
-            if (content.rawMessage) {
-                uploadFile(content.rawMessage, type, (p: number, checkpoint: Checkpoint) => {
-                    displayMessage.uploadProgress = {
-                        percentage: p * 100,
-                        checkpoint,
-                    }
-                })
-                    .then((url) => {
-                        console.log(`阿里云 OSS 上传成功, ${url}`)
-
-                        if (type === ChatMessageTypes.Audio) {
-                            ;(<dtalk.proto.IAudioMsg>content).mediaUrl = url
-                        } else if (type === ChatMessageTypes.Image) {
-                            ;(<dtalk.proto.IImageMsg>content).mediaUrl = url
-                        }
-                        this.send(type, content, _uuid, displayMessage)
-                    })
-                    .catch((err) => {
-                        console.log(err)
-                    })
-            }
-
             // 特殊情况处理：当发送微信和支付宝收款方式时，由于是直接从后端拿到的图片外链，所以直接发送
-            else if (type === ChatMessageTypes.Image && (<dtalk.proto.IAudioMsg>content).mediaUrl) {
-                this.send(type, content, _uuid, displayMessage)
+            if (!content.rawMessage) {
+                if (type === ChatMessageTypes.Image && (<dtalk.proto.IAudioMsg>content).mediaUrl) {
+                    this.send(type, content, _uuid, displayMessage)
+                }
+                return
             }
+
+            uploadFile(content.rawMessage, type, this.getOnprogressCallback(displayMessage))
+                .then((url) => {
+                    // 如果用户提前终止了本次上传，则直接 return
+                    if (displayMessage.state === 'failure') return
+
+                    console.log(`阿里云 OSS 上传成功, ${url}`)
+
+                    if (type === ChatMessageTypes.Audio) {
+                        ;(<dtalk.proto.IAudioMsg>content).mediaUrl = url
+                    } else if (type === ChatMessageTypes.Image) {
+                        ;(<dtalk.proto.IImageMsg>content).mediaUrl = url
+                    }
+                    this.send(type, content, _uuid, displayMessage)
+                })
+                .catch((err) => {
+                    console.log(err)
+                })
         }
         // 文本类消息，不需要上传 OSS，直接发送
         else {
@@ -123,14 +122,18 @@ class MessageStore {
         }
     }
 
+    /**
+     * 用户主动终止上传
+     * @param uuid 终止的消息 id
+     * @param checkpoint 分片片段
+     */
     abortSendingMessage(uuid: string, checkpoint: Checkpoint) {
-        abortUploadFile(checkpoint).then(() => {
-            const theMessage = this.messages.find((m) => m.uuid == uuid)
-            if (theMessage) {
-                theMessage.state = 'failure'
-                theMessage.uploadProgress = undefined
-            }
-        })
+        abortUploadFile(checkpoint)
+        const theMessage = this.messages.find((m) => m.uuid == uuid)
+        if (theMessage) {
+            theMessage.state = 'failure'
+            theMessage.uploadProgress = undefined
+        }
     }
 
     /** 编码并发送 */
@@ -156,6 +159,18 @@ class MessageStore {
             .catch(() => {
                 displayMessage.state = 'failure'
             })
+    }
+
+    /** 返回一个回调函数，该回调函数在每次上传文件的进度更新时执行 */
+    private getOnprogressCallback(displayMessage: DisplayMessage) {
+        return (p: number, checkpoint: Checkpoint) => {
+            if (displayMessage.state === 'pending') {
+                displayMessage.uploadProgress = {
+                    percentage: p * 100,
+                    checkpoint,
+                }
+            }
+        }
     }
 }
 
