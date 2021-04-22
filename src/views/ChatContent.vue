@@ -53,7 +53,7 @@ export default defineComponent({
                  */
                 connectionState.connection.onReceiveMessage = (msgData) => {
                     const msg = decodeChatMessage(msgData)
-                    messageStore.pushMessage({
+                    messageStore.displayNewMessage({
                         content: msg.content,
                         from: msg.from,
                         uuid: msg.uuid,

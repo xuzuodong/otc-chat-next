@@ -66,6 +66,8 @@ const getOssClientInstance = (): Promise<OSS> => {
     })
 }
 
+type OnprogressFunction = (p: number, checkpoint: Checkpoint) => void
+
 /**
  * 将 Blob 对象上传至阿里云 OSS
  * @param file 文件，按媒体类型和日期分文件夹，文件名为随机的 uuid
@@ -73,11 +75,7 @@ const getOssClientInstance = (): Promise<OSS> => {
  * @param onprogress 回调函数，处理每次上传进度更新
  * @returns 上传成功的话能获得 url
  */
-export const uploadFile = (
-    file: Blob,
-    type: ChatMessageTypes,
-    onprogress?: (p: number, checkpoint: Checkpoint) => void
-): Promise<string> => {
+export const uploadFile = (file: Blob, type: ChatMessageTypes, onprogress?: OnprogressFunction): Promise<string> => {
     return new Promise((resolve, reject) => {
         getOssClientInstance()
             .then((oss) => {

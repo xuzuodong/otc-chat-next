@@ -8,7 +8,7 @@ import FzmMessageProtocolConnection from '@/utils/fzm-message-protocol/FzmMessag
 interface IConnectionState {
     /** 连接实例，可以调用它来发送消息、断开连接等；只有成功建立连接时才有值，未连接成功或断联时为 undefined */
     connection: FzmMessageProtocolConnection | undefined
-    /** 如果出错，connection 会变为 false */
+    /** 如果出错，该值会变为 true */
     error: boolean
 }
 
