@@ -1,5 +1,6 @@
 <template>
     <q-img
+        @click="viewImage"
         :src="imgSrc"
         :ratio="content.width / content.height"
         class="bg-white w-36 relative rounded-md"
@@ -26,6 +27,8 @@
 
 <script lang="ts">
 import { computed, defineComponent } from 'vue'
+import { useQuasar } from 'quasar'
+import MediaViewerVue from '@/components/MediaViewer.vue'
 
 export default defineComponent({
     props: { fromMyself: Boolean, content: Object, state: String, uploadProgress: Object },
@@ -51,7 +54,20 @@ export default defineComponent({
             }
         })
 
-        return { imgSrc, showProgress }
+        const quasar = useQuasar()
+        const viewImage = () => {
+            quasar
+                .dialog({
+                    component: MediaViewerVue,
+                    componentProps: {
+                        type: 'image', 
+                        url: imgSrc.value, 
+                        ratio: props?.content?.width / props?.content?.height
+                    },
+                })
+        }
+
+        return { imgSrc, showProgress, viewImage }
     },
 })
 </script>

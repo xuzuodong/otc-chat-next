@@ -5,6 +5,20 @@ body,
     width: 100%;
 }
 
+#viewer {
+    .q-dialog__inner--minimized {
+        padding: 0;
+    }
+
+    .q-dialog__inner > div {
+        box-shadow: none;
+    }
+
+    .q-dialog__backdrop {
+        background: rgba(0, 0, 0, 1);
+    }
+}
+
 // quasar
 @import '~quasar-styl';
 @import './transitions.scss';

@@ -1,5 +1,6 @@
 <template>
     <q-img
+        @click="viewVideo"
         :src="posterImgSrc"
         :ratio="content.width / content.height"
         class="bg-white w-36 relative rounded-md"
@@ -30,6 +31,8 @@
 
 <script lang="ts">
 import { defineComponent, ref, computed } from 'vue'
+import { useQuasar } from 'quasar'
+import MediaViewerVue from '@/components/MediaViewer.vue'
 
 export default defineComponent({
     props: { fromMyself: Boolean, content: Object, state: String, uploadProgress: Object },
@@ -52,7 +55,20 @@ export default defineComponent({
             }
         })
 
-        return { posterImgSrc, showProgress }
+        const quasar = useQuasar()
+        const viewVideo = () => {
+            quasar
+                .dialog({
+                    component: MediaViewerVue,
+                    componentProps: {
+                        type: 'video',
+                        url: props?.content?.mediaUrl,
+                        ratio: props?.content?.width / props?.content?.height,
+                    },
+                })
+        }
+
+        return { posterImgSrc, showProgress, viewVideo }
     },
 })
 
@@ -61,7 +77,7 @@ function drawVideoToCanvas(url: string): Promise<HTMLCanvasElement> {
         const canvas = document.createElement('canvas')
         const video = document.createElement('video')
         video.crossOrigin = 'anonymous'
-        
+
         video.onloadedmetadata = () => {
             video.currentTime = 0
         }
