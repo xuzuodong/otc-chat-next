@@ -1,13 +1,14 @@
 <template>
     <!-- input bar -->
-    <div class="flex justify-between items-center min-h-input-bar bg-white">
-        <div
+    <div class="flex justify-between items-center min-h-input-bar bg-white pl-10">
+        <!-- 发送语音入口暂时禁用，因为发送语音功能在手机端的浏览器兼容性很差 -->
+        <!-- <div
             @click="inputType === 1 ? (inputType = 2) : (inputType = 1)"
             class="w-7 h-7 mx-2.5 text-center select-none"
         >
             <i v-if="inputType === 1" class="iconfont text-primary text-xl">&#xe604;</i>
             <i v-else class="iconfont text-primary text-xl">&#xe60d;</i>
-        </div>
+        </div> -->
 
         <ChatInputTextVue v-if="inputType === 1" @send="sendChatMessage" @focus="showMenu = false" />
         <ChatInputVoiceVue v-else-if="inputType === 2" />
