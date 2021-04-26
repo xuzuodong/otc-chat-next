@@ -22,7 +22,7 @@
 
 <script lang="ts">
 import { defineComponent, nextTick, watch, watchEffect } from 'vue'
-import { from } from '@/store/appCallerStore'
+import { from, orderid } from '@/store/appCallerStore'
 import { connectionState } from '@/store/connectionStore'
 import { DisplayMessage, messageStore } from '@/store/messagesStore'
 import useScrollTo from '@/composables/useScrollTo'
@@ -58,6 +58,8 @@ export default defineComponent({
                 // 收到消息，解码并存入 `messageStore`
                 connectionState.connection.onReceiveMessage = (msgData) => {
                     const msg = decodeChatMessage(msgData)
+                    // 收到的非本笔订单的消息不处理
+                    if (msg.orderid !== orderid) return
 
                     messageStore.displayNewMessage({
                         content: msg.content,

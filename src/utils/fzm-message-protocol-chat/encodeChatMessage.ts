@@ -69,6 +69,8 @@ export default (msg: ChatMessageEncoderArgs): Uint8Array => {
         msg: content,
         datetime: Date.now(),
     }
+    console.log(body);
+    
     const bodyData = dtalk.proto.CommonMsg.encode(body).finish()
 
     const container = {

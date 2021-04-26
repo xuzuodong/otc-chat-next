@@ -8,6 +8,8 @@ interface DecodedMessage {
     type: dtalk.proto.MsgType
     datetime: number
     logid: string
+    /** 收到的 target 值是该笔订单 id */
+    orderid?: string
 }
 
 export default (data: Uint8Array): DecodedMessage => {
@@ -40,12 +42,17 @@ export default (data: Uint8Array): DecodedMessage => {
             throw '解码消息时发现未知的消息类型：' + commonMsg.msgType
     }
 
+    if (!commonMsg.from || !commonMsg.msgType || !commonMsg.target) {
+        throw '解码消息时发现空字段，理论上不可能出现这种情况'
+    }
+
     return {
         content,
-        from: commonMsg.from || '0',
+        from: commonMsg.from,
         uuid: JSON.stringify(commonMsg.logId),
-        type: commonMsg.msgType || 0,
+        type: commonMsg.msgType,
         datetime: commonMsg.datetime,
         logid: commonMsg.logId,
+        orderid: commonMsg.target,
     }
 }
