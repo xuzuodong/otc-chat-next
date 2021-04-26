@@ -40,7 +40,7 @@ export default defineComponent({
     setup(props) {
         const posterImgSrc = ref<string | undefined>(undefined)
 
-        const videoUrl = props.fromMyself ? URL.createObjectURL(props?.content?.rawMessage) : props?.content?.mediaUrl
+        const videoUrl = props?.content?.rawMessage || props?.content?.mediaUrl
         drawVideoToCanvas(videoUrl).then((canvas: HTMLCanvasElement) => {
             canvas.toBlob((blob) => {
                 posterImgSrc.value = URL.createObjectURL(blob)
@@ -57,15 +57,14 @@ export default defineComponent({
 
         const quasar = useQuasar()
         const viewVideo = () => {
-            quasar
-                .dialog({
-                    component: MediaViewerVue,
-                    componentProps: {
-                        type: 'video',
-                        url: props?.content?.mediaUrl,
-                        ratio: props?.content?.width / props?.content?.height,
-                    },
-                })
+            quasar.dialog({
+                component: MediaViewerVue,
+                componentProps: {
+                    type: 'video',
+                    url: props?.content?.mediaUrl,
+                    ratio: props?.content?.width / props?.content?.height,
+                },
+            })
         }
 
         return { posterImgSrc, showProgress, viewVideo }

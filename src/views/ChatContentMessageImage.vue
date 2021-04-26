@@ -35,12 +35,8 @@ export default defineComponent({
 
     setup(props) {
         const imgSrc = computed(() => {
-            if (props.fromMyself) {
-                if (props?.content?.rawMessage) {
-                    return URL.createObjectURL(props?.content?.rawMessage)
-                } else {
-                    return props?.content?.mediaUrl
-                }
+            if (props?.content?.rawMessage) {
+                return URL.createObjectURL(props?.content?.rawMessage)
             } else {
                 return props?.content?.mediaUrl
             }
@@ -56,15 +52,14 @@ export default defineComponent({
 
         const quasar = useQuasar()
         const viewImage = () => {
-            quasar
-                .dialog({
-                    component: MediaViewerVue,
-                    componentProps: {
-                        type: 'image', 
-                        url: imgSrc.value, 
-                        ratio: props?.content?.width / props?.content?.height
-                    },
-                })
+            quasar.dialog({
+                component: MediaViewerVue,
+                componentProps: {
+                    type: 'image',
+                    url: imgSrc.value,
+                    ratio: props?.content?.width / props?.content?.height,
+                },
+            })
         }
 
         return { imgSrc, showProgress, viewImage }
