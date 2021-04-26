@@ -13,9 +13,15 @@
         <div
             v-if="initError"
             @click="connect"
-            class="flex flex-row justify-center items-center bg-gray-50 h-full w-full"
+            class="flex flex-col justify-center items-center bg-gray-50 h-full w-full px-5"
         >
-            初始化聊天失败
+            <div>初始化聊天失败</div>
+            <div v-if="debug" class="w-full">
+                <div>from: {{ from }}</div>
+                <div>token: {{ token }}</div>
+                <div>orderid: {{ orderid }}</div>
+                <div class="break-all">url: {{ url }}</div>
+            </div>
         </div>
         <div
             v-else-if="connectionState.error"
@@ -46,13 +52,14 @@ import { connectionState } from '@/store/connectionStore'
 import FzmMessageProtocol from '@/utils/fzm-message-protocol'
 import { baseUrl } from '@/store/baseUrlStore'
 import { getOrderInfo } from '@/store/appCallerStore'
-import { token } from '@/store/appCallerStore'
+import { token, from, orderid } from '@/store/appCallerStore'
 
 export default defineComponent({
     components: { ChatHeaderVue, ChatContentVue, ChatInputVue },
 
     setup() {
         const initError = ref(false)
+        const debug = process.env.NODE_ENV === 'development'
 
         const connect = () => {
             connectionState.error = false
@@ -87,7 +94,16 @@ export default defineComponent({
             connectionState.connection?.disconnect()
         })
 
-        return { connectionState, connect, initError }
+        return {
+            connectionState,
+            connect,
+            initError,
+            debug,
+            from,
+            token,
+            orderid,
+            url: window.location.href,
+        }
     },
 })
 </script>
