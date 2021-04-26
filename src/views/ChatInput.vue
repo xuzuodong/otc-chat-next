@@ -22,7 +22,7 @@
     <div v-show="showMenu" class="min-h-input-menu flex items-center px-8 text-sm text-subtle">
         <ChatInputAlbumVue />
         <!-- <ChatInputCameraVue /> -->
-        <ChatInputReceiveVue />
+        <ChatInputReceiptVue v-if="showReceiptInput" />
     </div>
 </template>
 
@@ -35,7 +35,9 @@ import ChatInputTextVue from './ChatInputText.vue'
 import ChatInputVoiceVue from './ChatInputVoice.vue'
 import ChatInputAlbumVue from './ChatInputAlbum.vue'
 // import ChatInputCameraVue from './ChatInputCamera.vue'
-import ChatInputReceiveVue from './ChatInputReceipt.vue'
+import ChatInputReceiptVue from './ChatInputReceipt.vue'
+import { getOrderInfo } from '@/store/appCallerStore'
+import { from } from '@/store/appCallerStore'
 
 export default defineComponent({
     components: {
@@ -43,7 +45,7 @@ export default defineComponent({
         ChatInputVoiceVue,
         ChatInputAlbumVue,
         // ChatInputCameraVue,
-        ChatInputReceiveVue,
+        ChatInputReceiptVue,
     },
 
     setup() {
@@ -63,10 +65,28 @@ export default defineComponent({
             messageStore.sendMessage(payload.type, payload.content)
         }
 
+        // 币的出售方才可以发送自己的「收款方式」给对方；
+        // 出售方可能是承兑商，也可能是普通用户；
+        // 如果用户找承兑商买币，那么承兑商的界面上显示「收款方式」按钮，
+        // 如果用户找承兑商卖币，那么用户的界面上显示「收款方式」按钮。
+        const showReceiptInput = ref(false)
+        getOrderInfo().then((orderInfo) => {
+            // 当前用户是承兑商还是普通用户
+            const isUserMerchant = orderInfo.merchantId === from
+
+            const merchantShowInputCase = isUserMerchant && orderInfo.type == 2
+            const userShowInputCase = !isUserMerchant && orderInfo.type == 1
+
+            if (merchantShowInputCase || userShowInputCase) {
+                showReceiptInput.value = true
+            }
+        })
+
         return {
             inputType,
             showMenu,
             sendChatMessage,
+            showReceiptInput,
         }
     },
 })

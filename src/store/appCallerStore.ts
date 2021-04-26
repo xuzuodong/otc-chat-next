@@ -47,6 +47,8 @@ export interface OrderInfo {
     pay: Pay[]
     /** 剩余时间 */
     levelTime: number
+    /** 订单类型 1 卖, 2 买 */
+    type: 1 | 2
 }
 
 let orderInfo: OrderInfo
@@ -87,6 +89,7 @@ export const getOrderInfo = (): Promise<OrderInfo> => {
                             cost: rawOrderInfo.cost,
                             pay,
                             levelTime: rawOrderInfo.level_time,
+                            type: rawOrderInfo.type,
                         }
 
                         resolve(orderInfo)
