@@ -3,8 +3,8 @@
  */
 
 import { MessageContent } from '@/types/chat-message'
-import { reactive, UnwrapNestedRefs } from '@vue/reactivity'
-import { from, target } from '@/store/appCallerStore'
+import { reactive, UnwrapNestedRefs, Ref, ref } from '@vue/reactivity'
+import { from, orderid, target } from '@/store/appCallerStore'
 import { ChatMessageTypes } from '@/types/chatMessageTypes'
 import encodeChatMessage from '@/utils/fzm-message-protocol-chat/encodeChatMessage'
 import { v4 as uuidv4 } from 'uuid'
@@ -13,6 +13,9 @@ import { uploadFile, abortUploadFile } from './ossStore'
 import { dtalk } from '@/utils/fzm-message-protocol-chat/protobuf'
 import { date } from 'quasar'
 import { Checkpoint } from 'ali-oss'
+import axios, { AxiosResponse } from 'axios'
+import { baseUrl } from './baseUrlStore'
+import { ChatRecordBody } from '@/types/record'
 
 /** 多媒体消息的上传进度 */
 export interface UploadProgress {
@@ -40,23 +43,34 @@ export interface DisplayMessage {
     datetime: number
     /** 是否隐藏消息时间 */
     hideDatetime?: boolean
+    /** 消息发送成功后，后端赋予该消息的唯一 id */
+    logid?: string
 }
 
 class MessageStore {
     messages: UnwrapNestedRefs<DisplayMessage[]>
+    /** 一次向服务器请求消息的数量 */
+    retrieveLength = 10
+    /** 记录最后一次添加数据的操作是否为新数据，当数据变化时根据此属性来判断是否滚动至最底部 */
+    appendingNewMessage: Ref<boolean>
 
     constructor() {
         this.messages = reactive<DisplayMessage[]>([])
+        this.appendingNewMessage = ref(true)
+    }
+
+    private shouldDisplayMessageDate(latterDate: number, formerDate: number): boolean {
+        return date.getDateDiff(latterDate, formerDate, 'seconds') < 120
     }
 
     displayNewMessage(message: DisplayMessage) {
         // 和上条消息发送间隔小于 2 分钟的隐藏显示时间
         if (this.messages.length) {
             const lastMsg = this.messages[this.messages.length - 1]
-            const hideDate = date.getDateDiff(message.datetime, lastMsg.datetime, 'seconds') < 120
-            message.hideDatetime = hideDate
+            message.hideDatetime = this.shouldDisplayMessageDate(message.datetime, lastMsg.datetime)
         }
         this.messages.push(message)
+        this.appendingNewMessage.value = true
     }
 
     /**
@@ -126,6 +140,47 @@ class MessageStore {
         else {
             this.send(type, content, _uuid, message)
         }
+    }
+
+    /** 从后端拉取之前的聊天记录 */
+    public retrieveMessages(): Promise<void> {
+        this.appendingNewMessage.value = this.messages.length ? false : true
+        return new Promise((resolve, reject) => {
+            const logid = this.messages.length ? this.messages[0].logid : undefined
+            const url = `http://${baseUrl}/record/chatrecord?uid=${from}&orderId=${orderid}&count=${this.retrieveLength}`
+            axios({
+                method: 'get',
+                url: logid ? url + `&logId=${logid}` : url,
+            })
+                .then((res: AxiosResponse<ChatRecordBody>) => {
+                    // data.result 中的最后一条消息是最老的，也就是需要放在 this.messages 的最前面
+                    res.data.data.result.forEach((record) => {
+                        this.messages.unshift({
+                            content: record.content,
+                            from: record.user_id,
+                            uuid: record.msg_id,
+                            state: null,
+                            type: record.msg_type,
+                            datetime: record.create_time,
+                            hideDatetime: false,
+                            logid: record.log_id,
+                        })
+
+                        // 新插入的消息和下面那条消息比较时间，小于两分钟就隐藏下面那条消息的时间
+                        const underMessage = this.messages[1]
+                        if (underMessage) {
+                            underMessage.hideDatetime = this.shouldDisplayMessageDate(
+                                underMessage.datetime,
+                                record.create_time
+                            )
+                        }
+                    })
+                    resolve()
+                })
+                .catch((res) => {
+                    reject(res)
+                })
+        })
     }
 
     /**

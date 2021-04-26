@@ -1,71 +1,78 @@
 <template>
-    <div v-if="!hideDatetime" class="text-xs text-gray-400 text-center pb-2 pt-4">{{ time }}</div>
-    <div
-        class="flex justify-between items-start flex-nowrap w-screen py-1.5"
-        :class="{ 'flex-row-reverse': fromMyself }"
-    >
-        <!-- 头像  -->
-        <q-avatar class="mx-4 min-w-chat-msg-avatar w-chat-msg-avatar h-chat-msg-avatar rounded-lg">
-            <img :src="default_avatar_url" />
-        </q-avatar>
+    <div>
+        <div v-if="!hideDatetime" class="text-xs text-gray-400 text-center pb-2 pt-4">{{ time }}</div>
+        <div
+            class="flex justify-between items-start flex-nowrap w-screen py-1.5"
+            :class="{ 'flex-row-reverse': fromMyself }"
+        >
+            <!-- 头像  -->
+            <q-avatar class="mx-4 min-w-chat-msg-avatar w-chat-msg-avatar h-chat-msg-avatar rounded-lg">
+                <img :src="default_avatar_url" />
+            </q-avatar>
 
-        <!-- 消息气泡 -->
-        <div :class="[{ 'flex-row-reverse': fromMyself }]" class="flex-auto flex items-center">
-            <!-- 文本消息 -->
-            <ChatContentMessageTextVue v-if="type === 1" :from-myself="fromMyself" :content="content" />
+            <!-- 消息气泡 -->
+            <div :class="[{ 'flex-row-reverse': fromMyself }]" class="flex-auto flex items-center">
+                <!-- 文本消息 -->
+                <ChatContentMessageTextVue v-if="type === 1" :from-myself="fromMyself" :content="content" />
 
-            <!-- 语音消息 -->
-            <ChatContentMessageVoiceVue
-                v-else-if="type === 2"
-                :from-myself="fromMyself"
-                :content="content"
-                :state="state"
-            />
-
-            <!-- 图片消息 -->
-            <ChatContentMessageImageVue
-                v-else-if="type === 3"
-                :from-myself="fromMyself"
-                :state="state"
-                :content="content"
-                :uploadProgress="uploadProgress"
-            />
-
-            <ChatContentMessageVideoVue
-                v-else-if="type === 4"
-                :from-myself="fromMyself"
-                :state="state"
-                :content="content"
-                :uploadProgress="uploadProgress"
-            />
-
-            <!-- 卡片消息 -->
-            <ChatContentMessageCardVue v-else-if="type === 6" :from-myself="fromMyself" :content="content" />
-
-            <!-- 消息状态 -->
-            <div class="w-10 self-stretch flex flex-row justify-center items-center">
-                <!-- 发送失败 -->
-                <div
-                    v-if="state === 'failure'"
-                    @click="resend"
-                    class="w-full h-full flex flex-row justify-center items-center"
-                >
-                    <q-icon name="error" size="22px" color="negative" />
-                </div>
-                <!-- 正在发送 -->
-                <q-spinner-ios v-else-if="state === 'pending' && !isMedia" color="grey" size="1.25rem" :thickness="5" />
-                <q-icon
-                    v-else-if="state === 'pending' && isMedia"
-                    @click="abort"
-                    name="cancel"
-                    size="22px"
-                    color="negative"
+                <!-- 语音消息 -->
+                <ChatContentMessageVoiceVue
+                    v-else-if="type === 2"
+                    :from-myself="fromMyself"
+                    :content="content"
+                    :state="state"
                 />
-            </div>
-        </div>
 
-        <!-- 空白元素占位 -->
-        <div :class="type === 6 ? 'min-w-chat-msg-card-placeholder' : 'min-w-chat-msg-placeholder'"></div>
+                <!-- 图片消息 -->
+                <ChatContentMessageImageVue
+                    v-else-if="type === 3"
+                    :from-myself="fromMyself"
+                    :state="state"
+                    :content="content"
+                    :uploadProgress="uploadProgress"
+                />
+
+                <ChatContentMessageVideoVue
+                    v-else-if="type === 4"
+                    :from-myself="fromMyself"
+                    :state="state"
+                    :content="content"
+                    :uploadProgress="uploadProgress"
+                />
+
+                <!-- 卡片消息 -->
+                <ChatContentMessageCardVue v-else-if="type === 6" :from-myself="fromMyself" :content="content" />
+
+                <!-- 消息状态 -->
+                <div class="w-10 self-stretch flex flex-row justify-center items-center">
+                    <!-- 发送失败 -->
+                    <div
+                        v-if="state === 'failure'"
+                        @click="resend"
+                        class="w-full h-full flex flex-row justify-center items-center"
+                    >
+                        <q-icon name="error" size="22px" color="negative" />
+                    </div>
+                    <!-- 正在发送 -->
+                    <q-spinner-ios
+                        v-else-if="state === 'pending' && !isMedia"
+                        color="grey"
+                        size="1.25rem"
+                        :thickness="5"
+                    />
+                    <q-icon
+                        v-else-if="state === 'pending' && isMedia"
+                        @click="abort"
+                        name="cancel"
+                        size="22px"
+                        color="negative"
+                    />
+                </div>
+            </div>
+
+            <!-- 空白元素占位 -->
+            <div :class="type === 6 ? 'min-w-chat-msg-card-placeholder' : 'min-w-chat-msg-placeholder'"></div>
+        </div>
     </div>
 </template>
 

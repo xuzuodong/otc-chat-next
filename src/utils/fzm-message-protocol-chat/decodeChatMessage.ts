@@ -7,10 +7,12 @@ interface DecodedMessage {
     uuid: string
     type: dtalk.proto.MsgType
     datetime: number
+    logid: string
 }
 
 export default (data: Uint8Array): DecodedMessage => {
     const commonMsg: dtalk.proto.ICommonMsg = dtalk.proto.CommonMsg.decode(data)
+    console.log(commonMsg)
 
     let content: MessageContent
     const TextMsg = dtalk.proto.TextMsg
@@ -44,5 +46,6 @@ export default (data: Uint8Array): DecodedMessage => {
         uuid: JSON.stringify(commonMsg.logId),
         type: commonMsg.msgType || 0,
         datetime: commonMsg.datetime,
+        logid: commonMsg.logId,
     }
 }
