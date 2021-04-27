@@ -4,7 +4,7 @@
         <div @click="close" class="w-10 text-center flex justify-center items-center">
             <i class="iconfont text-lg">&#xe606;</i>
         </div>
-        <div class="self-center font-bold text-lg">{{ userNick }}</div>
+        <div class="self-center font-bold text-lg">{{ targetNick }}</div>
         <div class="w-10 text-center flex justify-center items-center">
             <!-- <i class="iconfont text-3xl"> &#xe607;</i> -->
         </div>
@@ -45,15 +45,15 @@ export default defineComponent({
         const orderInfo = ref<OrderInfo | undefined>(undefined)
         getOrderInfo().then((info) => (orderInfo.value = info))
 
-        const userNick = computed(() => {
-            return from == orderInfo.value?.userId ? orderInfo.value.userNick : orderInfo.value?.merchantNick
+        const targetNick = computed(() => {
+            return from == orderInfo.value?.userId ? orderInfo.value?.merchantNick : orderInfo.value?.userNick
         })
 
         const timeLeft = computed(() => {
             return orderInfo.value && orderInfo.value.levelTime % 60
         })
 
-        return { from, token, orderid, debug, close, userNick, orderInfo, timeLeft }
+        return { from, token, orderid, debug, close, targetNick, orderInfo, timeLeft }
     },
 })
 </script>
