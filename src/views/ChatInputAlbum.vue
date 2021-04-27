@@ -31,7 +31,7 @@ export default defineComponent({
             if (!file) return
 
             // 接收图片
-            if (file.name.match(/(.jpg$)|(.gif$)|(.jpeg$)|(.png$)/)) {
+            if (file.name.match(/(.jpg$)|(.gif$)|(.jpeg$)|(.png$)/i)) {
                 const compressedFile = await compress(file)
 
                 // 利用 Image 获取尺寸
@@ -54,7 +54,7 @@ export default defineComponent({
             }
 
             // 接收视频
-            else if (file.name.match(/(.mp4$)|(.mov$)|(.m4a$)/)) {
+            else if (file.name.match(/(.mp4$)|(.mov$)|(.m4a$)/i)) {
                 var video = document.createElement('video')
                 video.src = URL.createObjectURL(file)
                 video.onloadedmetadata = () => {
@@ -74,6 +74,8 @@ export default defineComponent({
                     messageStore.sendMessage(ChatMessageTypes.Video, videoMessageContent)
                     URL.revokeObjectURL(video.src)
                 }
+            } else {
+                throw '未能识别的文件类型'
             }
 
             input.value = '' // 防止 image input 第二次上传同一张图片失效
