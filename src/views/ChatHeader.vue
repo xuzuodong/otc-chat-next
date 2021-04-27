@@ -16,11 +16,11 @@
             <div class="text-subtle text-sm pb-1">交易总额</div>
             <div class="text-bold text-primary text-xl">￥{{ orderInfo?.cost }}</div>
         </div>
-        <div class='pt-2 text-right'>
-            <div :class="{ 'opacity-0': !orderInfo?.levelTime }" class='text-dark pb-1'>
-                <i class='iconfont text-gray-300'>&#xe608;</i> {{ timeLeft }}
+        <div class="pt-2 text-right">
+            <div :class="{ 'opacity-0': !orderInfo?.levelTime }" class="text-dark pb-1">
+                <i class="iconfont text-gray-300">&#xe608;</i> {{ timeLeft }}
             </div>
-            <div class='text-bold text-primary text-xl'>{{ orderInfo?.status }}</div>
+            <div class="text-bold text-primary text-xl">{{ orderInfo?.status }}</div>
         </div>
     </div>
 
@@ -54,7 +54,7 @@ export default defineComponent({
             const levelTime = orderInfo.value?.levelTime
             if (!levelTime) return
 
-            const minutesRemain = (levelTime / 60).toFixed(0)
+            const minutesRemain = Math.floor(levelTime / 60).toString()
             let secondsRemain = (levelTime % 60).toString()
             if (secondsRemain.length === 1) secondsRemain = '0' + secondsRemain
             return minutesRemain + ':' + secondsRemain
