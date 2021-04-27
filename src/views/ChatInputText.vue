@@ -1,21 +1,22 @@
 <template>
-    <q-input
+    <textarea
+        ref="textarea"
         @keydown.enter.prevent="sendTextMessage"
-        borderless
-        class="flex-grow"
+        class="flex-grow border-none outline-none py-2.5 h-9"
         v-model="inputText"
+        style="max-height: 6em"
         type="text"
         placeholder="想说点什么呢..."
         :input-class="['text-base']"
-        autogrow
-        input-style="max-height: 6em"
     />
 </template>
 
 <script lang='ts'>
 import { MessageContent } from '@/types/chat-message'
 import { ref } from '@vue/reactivity'
-import { defineComponent } from '@vue/runtime-core'
+import { defineComponent, onMounted } from '@vue/runtime-core'
+import autosize from 'autosize'
+
 export default defineComponent({
     emits: ['send'],
 
@@ -30,7 +31,11 @@ export default defineComponent({
             inputText.value = ''
         }
 
-        return { inputText, sendTextMessage }
+        /** 限定 textarea 的最大长度 */
+        const textarea = ref<HTMLTextAreaElement | null>(null)
+        onMounted(() => textarea.value && autosize(textarea.value))
+
+        return { inputText, sendTextMessage, textarea }
     },
 })
 </script>

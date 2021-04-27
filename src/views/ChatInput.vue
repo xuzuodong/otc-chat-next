@@ -10,7 +10,7 @@
             <i v-else class="iconfont text-primary text-xl">&#xe60d;</i>
         </div> -->
 
-        <ChatInputTextVue v-if="inputType === 1" @send="sendChatMessage" @focus="showMenu = false" />
+        <ChatInputTextVue v-if="inputType === 1" @send="sendChatMessage" @click="showMenu = false" />
         <ChatInputVoiceVue v-else-if="inputType === 2" />
 
         <div @click="showMenu ? (showMenu = false) : (showMenu = true)" class="w-7 h-7 mx-2.5 text-center select-none">
