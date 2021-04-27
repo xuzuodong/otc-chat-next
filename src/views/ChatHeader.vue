@@ -16,11 +16,11 @@
             <div class="text-subtle text-sm pb-1">交易总额</div>
             <div class="text-bold text-primary text-xl">￥{{ orderInfo?.cost }}</div>
         </div>
-        <div class="pt-2 text-right">
-            <div :class="{ 'opacity-0': !orderInfo?.timeLevel }" class="text-dark pb-1">
-                <i class="iconfont text-gray-300">&#xe608;</i> {{ timeLeft }}
+        <div class='pt-2 text-right'>
+            <div :class="{ 'opacity-0': !orderInfo?.levelTime }" class='text-dark pb-1'>
+                <i class='iconfont text-gray-300'>&#xe608;</i> {{ timeLeft }}
             </div>
-            <div class="text-bold text-primary text-xl">{{ orderInfo?.status }}</div>
+            <div class='text-bold text-primary text-xl'>{{ orderInfo?.status }}</div>
         </div>
     </div>
 
@@ -49,9 +49,22 @@ export default defineComponent({
             return from == orderInfo.value?.userId ? orderInfo.value?.merchantNick : orderInfo.value?.userNick
         })
 
+        // 计算剩余时间
         const timeLeft = computed(() => {
-            return orderInfo.value && orderInfo.value.levelTime % 60
+            const levelTime = orderInfo.value?.levelTime
+            if (!levelTime) return
+
+            const minutesRemain = (levelTime / 60).toFixed(0)
+            let secondsRemain = (levelTime % 60).toString()
+            if (secondsRemain.length === 1) secondsRemain = '0' + secondsRemain
+            return minutesRemain + ':' + secondsRemain
         })
+
+        // 倒数剩余时间
+        setInterval(() => {
+            if (!orderInfo.value?.levelTime) return
+            orderInfo.value.levelTime--
+        }, 1000)
 
         return { from, token, orderid, debug, close, targetNick, orderInfo, timeLeft }
     },
