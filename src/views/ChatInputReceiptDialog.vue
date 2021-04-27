@@ -76,7 +76,7 @@ export default defineComponent({
         const { dialogRef, onDialogOK, onDialogHide, onDialogCancel } = useDialogPluginComponent()
 
         /** 记录用户选了哪几种收款方式 */
-        const selectedMap = reactive(props.receiveMethods.map(() => true))
+        const selectedMap = reactive(props.receiveMethods.map(() => false))
         selectedMap[0] === false && (selectedMap[0] = true) // 默认勾选第一种
 
         /** 点击确定收款 */
