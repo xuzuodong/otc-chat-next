@@ -11,7 +11,10 @@
             </q-avatar>
 
             <!-- 消息气泡 -->
-            <div :class="[{ 'flex-row-reverse': fromMyself }]" class="flex-auto flex items-center">
+            <div
+                :class="[{ 'flex-row-reverse': fromMyself }]"
+                class="flex-auto flex items-center max-w-chat-msg-bubble"
+            >
                 <!-- 文本消息 -->
                 <ChatContentMessageTextVue v-if="type === 1" :from-myself="fromMyself" :content="content" />
 
@@ -69,9 +72,6 @@
                     />
                 </div>
             </div>
-
-            <!-- 空白元素占位 -->
-            <div :class="type === 6 ? 'min-w-chat-msg-card-placeholder' : 'min-w-chat-msg-placeholder'"></div>
         </div>
     </div>
 </template>

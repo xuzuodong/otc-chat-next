@@ -18,8 +18,10 @@ module.exports = {
             },
             minWidth: {
                 'chat-msg-avatar': chatMsgAvatarSize,
-                'chat-msg-placeholder': '55px',
-                'chat-msg-card-placeholder': '40px',
+            },
+            maxWidth: {
+                'chat-msg-bubble': '300px',
+                'chat-msg-text': '255px',
             },
             height: {
                 'chat-msg-avatar': chatMsgAvatarSize,

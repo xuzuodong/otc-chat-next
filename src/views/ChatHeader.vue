@@ -24,7 +24,7 @@
         </div>
     </div>
 
-    <div v-if="false">
+    <div v-if="debug">
         <div>from: {{ from }}</div>
         <div>token: {{ token }}</div>
         <div>orderid: {{ orderid }}</div>

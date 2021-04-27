@@ -4,7 +4,7 @@
             fromMyself ? 'bg-secondary' : 'bg-white',
             fromMyself ? 'rounded-chat-msg-bubble-myself' : 'rounded-chat-msg-bubble-opposite',
         ]"
-        class="py-3 px-4"
+        class="py-3 px-4 max-w-chat-msg-text break-all"
     >
         <a
             v-if="isUrlMessage"
