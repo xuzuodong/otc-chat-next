@@ -51,7 +51,7 @@ export interface OrderInfo {
     type: 1 | 2
 }
 
-let orderInfo: OrderInfo
+let orderInfo: OrderInfo | undefined
 
 /** 获得订单信息，顺便获取对方 id */
 export const getOrderInfo = (): Promise<OrderInfo> => {
@@ -102,6 +102,10 @@ export const getOrderInfo = (): Promise<OrderInfo> => {
                 })
         }
     })
+}
+
+export const clearOrderInfo = (): void => {
+    orderInfo = undefined
 }
 
 /** 我的 id */

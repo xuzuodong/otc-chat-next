@@ -33,8 +33,9 @@
 
 <script lang="ts">
 import { computed, defineComponent, ref } from 'vue'
-import { from, token, orderid, getOrderInfo, OrderInfo } from '@/store/appCallerStore'
+import { from, token, orderid, getOrderInfo, OrderInfo, clearOrderInfo } from '@/store/appCallerStore'
 import jsBridge from '@/utils/jsBridge'
+import { Platform } from 'quasar'
 
 export default defineComponent({
     setup() {
@@ -51,6 +52,8 @@ export default defineComponent({
 
         // 计算剩余时间
         const timeLeft = computed(() => {
+            console.log('重新计算时间！')
+
             const levelTime = orderInfo.value?.levelTime
             if (!levelTime) return
 
@@ -65,6 +68,18 @@ export default defineComponent({
             if (!orderInfo.value?.levelTime) return
             orderInfo.value.levelTime--
         }, 1000)
+
+        // 应用被用户调回前台时，重新向服务器获取时间
+        window.addEventListener('visibilitychange', () => {
+            if (Platform.is.desktop && orderInfo.value?.levelTime === 0) return
+            if (document.visibilityState === 'visible') {
+                clearOrderInfo()
+                getOrderInfo().then((info) => {
+                    if (!orderInfo.value?.levelTime) return
+                    orderInfo.value.levelTime = info.levelTime
+                })
+            }
+        })
 
         return { from, token, orderid, debug, close, targetNick, orderInfo, timeLeft }
     },
