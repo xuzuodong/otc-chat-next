@@ -33,6 +33,7 @@ export default defineComponent({
             const receiveMethods = orderInfo.value.pay.map((m) => ({
                 accountName: m.bankName,
                 accountAddress: m.cardId,
+                accountType: m.type,
             }))
 
             quasar

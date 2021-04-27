@@ -29,7 +29,7 @@
                         class="flex justify-between flex-grow text-right pr-2"
                     >
                         <div>{{ receiveMethod.accountName }}</div>
-                        <div>{{ receiveMethod.accountAddress }}</div>
+                        <div>{{ methodNumber(receiveMethod) }}</div>
                     </div>
                 </div>
             </div>
@@ -56,6 +56,8 @@ import { ref, watch } from 'vue'
 interface ReceiveMethod {
     accountName: string
     accountAddress: string
+    /** 类型 1银行卡 2支付宝 3微信 */
+    accountType: string
 }
 
 export default defineComponent({
@@ -90,6 +92,14 @@ export default defineComponent({
             disableOkButton.value = selectedMap.every((item) => item === false)
         })
 
+        const methodNumber = (receiveMethod: ReceiveMethod) => {
+            console.log(receiveMethod)
+
+            return receiveMethod.accountType === '1'
+                ? '****' + receiveMethod.accountAddress.slice(-4)
+                : receiveMethod.accountAddress
+        }
+
         return {
             dialogRef,
             ok,
@@ -97,6 +107,7 @@ export default defineComponent({
             onDialogHide,
             cancel: onDialogCancel,
             disableOkButton,
+            methodNumber,
         }
     },
 })
