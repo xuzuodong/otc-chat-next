@@ -35,7 +35,14 @@
             </div>
             <!-- 确定按钮 -->
             <q-card-actions align="center">
-                <q-btn class="w-full h-10" color="primary" unelevated label="确认" @click="ok" />
+                <q-btn
+                    class="w-full h-10"
+                    color="primary"
+                    unelevated
+                    label="确认"
+                    @click="ok"
+                    :disable="disableOkButton"
+                />
             </q-card-actions>
         </q-card>
     </q-dialog>
@@ -44,6 +51,7 @@
 <script lang='ts'>
 import { defineComponent, PropType, reactive } from '@vue/runtime-core'
 import { useDialogPluginComponent } from 'quasar'
+import { ref, watch } from 'vue'
 
 interface ReceiveMethod {
     accountName: string
@@ -68,7 +76,7 @@ export default defineComponent({
         const { dialogRef, onDialogOK, onDialogHide, onDialogCancel } = useDialogPluginComponent()
 
         /** 记录用户选了哪几种收款方式 */
-        const selectedMap = reactive(props.receiveMethods.map(() => false))
+        const selectedMap = reactive(props.receiveMethods.map(() => true))
         selectedMap[0] === false && (selectedMap[0] = true) // 默认勾选第一种
 
         /** 点击确定收款 */
@@ -76,12 +84,19 @@ export default defineComponent({
             onDialogOK(selectedMap)
         }
 
+        /** 用户没有选中任何一个付款方式，则 disable 掉 OK 按钮 */
+        const disableOkButton = ref(false)
+        watch(selectedMap, () => {
+            disableOkButton.value = selectedMap.every((item) => item === false)
+        })
+
         return {
             dialogRef,
             ok,
             selectedMap,
             onDialogHide,
             cancel: onDialogCancel,
+            disableOkButton,
         }
     },
 })
