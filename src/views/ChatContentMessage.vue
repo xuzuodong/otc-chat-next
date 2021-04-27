@@ -2,7 +2,7 @@
     <div>
         <div v-if="!hideDatetime" class="text-xs text-gray-400 text-center pb-2 pt-4">{{ time }}</div>
         <div
-            class="flex justify-between items-start flex-nowrap w-screen py-1.5"
+            class="flex items-start flex-nowrap w-screen py-1.5"
             :class="{ 'flex-row-reverse': fromMyself }"
         >
             <!-- 头像  -->
@@ -11,10 +11,7 @@
             </q-avatar>
 
             <!-- 消息气泡 -->
-            <div
-                :class="[{ 'flex-row-reverse': fromMyself }]"
-                class="flex-auto flex items-center max-w-chat-msg-bubble"
-            >
+            <div :class="[{ 'flex-row-reverse': fromMyself }]" class="flex items-center max-w-chat-msg-bubble">
                 <!-- 文本消息 -->
                 <ChatContentMessageTextVue v-if="type === 1" :from-myself="fromMyself" :content="content" />
 
