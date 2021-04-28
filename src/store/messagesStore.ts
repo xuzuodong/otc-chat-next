@@ -134,6 +134,7 @@ class MessageStore {
                 })
                 .catch((err) => {
                     console.log(err)
+                    message.state = 'failure'
                 })
         }
         // 文本类消息，不需要上传 OSS，直接发送
