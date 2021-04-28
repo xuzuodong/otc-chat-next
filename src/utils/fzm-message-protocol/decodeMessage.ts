@@ -52,7 +52,7 @@ const decode = (data: Uint8Array): { header: Header; body: Uint8Array } => {
     if (bodyData.length) {
         body = bodyData
     } else {
-        body = new Uint8Array
+        body = new Uint8Array()
     }
 
     return {
@@ -69,3 +69,21 @@ export default (rawMsg: Blob): Promise<{ header: Header; body: Uint8Array }> => 
         })
     })
 }
+
+// 兼容部分安卓无法调用 Blob.prototype.arrayBuffer
+// https://gist.github.com/hanayashiki/8dac237671343e7f0b15de617b0051bd
+;(function () {
+    File.prototype.arrayBuffer = File.prototype.arrayBuffer || myArrayBuffer
+    Blob.prototype.arrayBuffer = Blob.prototype.arrayBuffer || myArrayBuffer
+
+    function myArrayBuffer(this: Blob) {
+        // this: File or Blob
+        return new Promise((resolve) => {
+            const fr = new FileReader()
+            fr.onload = () => {
+                resolve(fr.result)
+            }
+            fr.readAsArrayBuffer(this)
+        })
+    }
+})()
