@@ -6,7 +6,6 @@
         </div>
         <div class="self-center font-bold text-lg">{{ targetNick }}</div>
         <div class="w-10 text-center flex justify-center items-center">
-            <!-- <i class="iconfont text-3xl"> &#xe607;</i> -->
         </div>
     </div>
 
@@ -36,24 +35,30 @@ import { computed, defineComponent, ref } from 'vue'
 import { from, token, orderid, getOrderInfo, OrderInfo, clearOrderInfo } from '@/store/appCallerStore'
 import jsBridge from '@/utils/jsBridge'
 import { Platform } from 'quasar'
+import { useRouter } from 'vue-router'
 
 export default defineComponent({
     setup() {
         const debug = process.env.NODE_ENV === 'development'
 
-        const close = () => new jsBridge().closeCurrentWebview()
+        // 点击返回按钮
+        const router = useRouter()
+        const close = () => {
+            new jsBridge().closeCurrentWebview()
+            router.go(-1)
+        }
 
+        // 取得订单详情
         const orderInfo = ref<OrderInfo | undefined>(undefined)
         getOrderInfo().then((info) => (orderInfo.value = info))
 
+        // 推断对方昵称
         const targetNick = computed(() => {
             return from == orderInfo.value?.userId ? orderInfo.value?.merchantNick : orderInfo.value?.userNick
         })
 
         // 计算剩余时间
         const timeLeft = computed(() => {
-            console.log('重新计算时间！')
-
             const levelTime = orderInfo.value?.levelTime
             if (!levelTime) return
 
@@ -69,7 +74,7 @@ export default defineComponent({
             orderInfo.value.levelTime--
         }, 1000)
 
-        // 应用被用户调回前台时，重新向服务器获取时间
+        // 应用被用户调回前台时，重新向服务器获取最新剩余时间
         window.addEventListener('visibilitychange', () => {
             if (Platform.is.desktop && orderInfo.value?.levelTime === 0) return
             if (document.visibilityState === 'visible') {
