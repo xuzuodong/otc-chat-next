@@ -148,7 +148,9 @@ class MessageStore {
         this.appendingNewMessage.value = this.messages.length ? false : true
         return new Promise((resolve, reject) => {
             const logid = this.messages.length ? this.messages[0].logid : undefined
-            const url = `http://${baseUrl}/record/chatrecord?uid=${from}&orderId=${orderid}&count=${this.retrieveLength}`
+            let url = `http://${baseUrl}/record/chatrecord?uid=${from}&orderId=${orderid}&count=${this.retrieveLength}`
+            // 加时间戳防止部分机型缓存 http 请求
+            url += `&timestamp=${Date.now()}`
             axios({
                 method: 'get',
                 url: logid ? url + `&logId=${logid}` : url,
