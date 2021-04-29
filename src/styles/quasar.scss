@@ -3,6 +3,14 @@ body,
 #app {
     height: 100%;
     width: 100%;
+
+    /* 全局禁用长按/拖动鼠标选择文本 */
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Chrome/Safari/Opera */
+    -khtml-user-select: none; /* Konqueror */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none; /* Non-prefixed version, currently not supported by any browser */
 }
 
 #viewer {
@@ -27,6 +35,17 @@ body,
 @import 'tailwindcss/base';
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
+
+@layer utilities {
+    .enable-touch {
+        -webkit-touch-callout: default; /* displays the callout */
+        -webkit-user-select: text; /* Chrome/Safari/Opera */
+        -khtml-user-select: text; /* Konqueror */
+        -moz-user-select: text; /* Firefox */
+        -ms-user-select: text; /* Internet Explorer/Edge */
+        user-select: initial; /* Non-prefixed version, currently not supported by any browser */
+    }
+}
 
 // iconfont
 @import './icon.css';

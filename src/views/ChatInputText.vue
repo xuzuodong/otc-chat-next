@@ -2,7 +2,7 @@
     <textarea
         ref="textarea"
         @keydown.enter.prevent="sendTextMessage"
-        class="flex-grow border-none outline-none py-2.5 h-9"
+        class="enable-touch flex-grow border-none outline-none py-2.5 h-9"
         v-model="inputText"
         style="max-height: 6em"
         type="text"
