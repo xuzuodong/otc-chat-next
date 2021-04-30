@@ -46,7 +46,7 @@ export default defineComponent({
         const isPlaying = ref(false)
 
         /** 未读标记 */
-        const showUnreadMark = ref(props.state === null)
+        const showUnreadMark = ref(props.state === null && !props.fromMyself)
 
         /** `<audio>` HTML 元素 */
         const audio = ref<null | HTMLAudioElement>(null)

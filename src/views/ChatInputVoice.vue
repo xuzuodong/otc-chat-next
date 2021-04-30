@@ -4,7 +4,11 @@
         @touchstart="startRecording"
         @touchend="endRecording"
         ref="voiceInput"
-        :class="voiceState !== 0 ? 'bg-secondary-focus' : 'bg-secondary'"
+        :class="[
+            voiceState !== 0 ? 'bg-secondary-focus' : 'bg-secondary',
+            disableVoiceInput ? 'cursor-not-allowed' : '',
+            disableVoiceInput ? ' opacity-30' : '',
+        ]"
         class="w-3/5 text-center text-primary py-2 rounded-full shadow-blue select-none"
     >
         按住说话
@@ -16,7 +20,7 @@
     </teleport>
 </template>
 
-<script lang='ts'>
+<script lang="ts">
 import { defineComponent, onMounted, ref } from '@vue/runtime-core'
 import { dom } from 'quasar'
 import ChatInputVoiceToastVue from './ChatInputVoiceToast.vue'
@@ -34,10 +38,19 @@ export default defineComponent({
 
         let recorder: Recorder
 
+        const disableVoiceInput = ref(false)
         onMounted(() => {
             /** 禁止语音输入框长按弹出菜单 */
             voiceInput.value && voiceInput.value.addEventListener('contextmenu', (e) => e.preventDefault())
+
             recorder = new Recorder()
+            recorder.initRecorder()
+
+            let getUserMedia = navigator.getUserMedia
+            if (!getUserMedia) {
+                disableVoiceInput.value = true
+                alert('无法调用您设备的录音功能')
+            }
         })
 
         /** 语音输入状态 */
@@ -65,6 +78,7 @@ export default defineComponent({
         /** 按住按钮的时间 */
         let interval: number
         const startRecording = (): void => {
+            if (disableVoiceInput.value) return
             recorder.start()
 
             voiceState.value = VoiceState.endRecording
@@ -111,6 +125,8 @@ export default defineComponent({
                 return
             }
 
+            if (!recorder.duration) return
+
             const audioMessageContent: MessageContent = {
                 mediaUrl: '',
                 time: parseInt(recorder.duration.toFixed(0)),
@@ -142,6 +158,7 @@ export default defineComponent({
             endRecording,
             cancelRecording,
             timeCount,
+            disableVoiceInput,
         }
     },
 })

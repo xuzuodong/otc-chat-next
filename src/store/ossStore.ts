@@ -29,7 +29,7 @@ const getCredentials = (): Promise<Credentials> => {
 
             axios({
                 method: 'get',
-                url: `http://${baseUrl}/oss/get-token`,
+                url: `http://${baseUrl}/oss/get-token?timestamp=${Date.now()}`,
             })
                 .then((res) => {
                     credentials = res.data.data.Credentials as Credentials
