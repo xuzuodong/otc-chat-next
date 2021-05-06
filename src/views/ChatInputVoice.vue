@@ -138,6 +138,8 @@ export default defineComponent({
         }
 
         const cancelRecording = (e: TouchEvent): void => {
+            if (voiceState.value !== VoiceState.endRecording) return
+
             /** 求语音输入按钮与视口的高度差 */
             const { offset } = dom
             let offsetTop = 0
