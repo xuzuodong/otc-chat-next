@@ -1,5 +1,5 @@
 <template>
-    <q-dialog id="viewer" ref="dialogRef" @hide="onDialogHide">
+    <q-dialog id="viewer" ref="dialogRef" @hide="onDialogHide" class="enable-touch">
         <q-img v-if="type === 'image'" @click="onCancelClick" :src="url" :ratio="ratio" class="w-full" no-spinner />
         <div v-else>
             <q-btn color="dark" icon="close" round class="absolute top-4 right-4 z-10" @click="onCancelClick" />
