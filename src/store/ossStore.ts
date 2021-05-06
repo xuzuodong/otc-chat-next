@@ -24,9 +24,6 @@ const getCredentials = (): Promise<Credentials> => {
             console.log(`OSS 凭证已存在，直接使用`)
             resolve(credentials)
         } else {
-            // if (!credentials) console.log(`OSS 凭证不存在，请求 OSS 凭证...`)
-            // else console.log(`OSS 凭证过期，请求新的 OSS 凭证...`)
-
             axios({
                 method: 'get',
                 url: `http://${baseUrl}/oss/get-token?timestamp=${Date.now()}`,
