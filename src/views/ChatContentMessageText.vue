@@ -4,18 +4,18 @@
             fromMyself ? 'bg-secondary' : 'bg-white',
             fromMyself ? 'rounded-chat-msg-bubble-myself' : 'rounded-chat-msg-bubble-opposite',
         ]"
-        class="py-3 px-4 max-w-chat-msg-text break-all enable-touch"
+        class="py-3 px-4 max-w-chat-msg-text break-all"
     >
         <a
             v-if="isUrlMessage"
             :href="prependHttp(textMessage)"
-            class="text-primary"
+            class="text-primary enable-touch"
             target="_blank"
             rel="noopener noreferrer"
         >
             {{ textMessage }}
         </a>
-        <div v-else>{{ textMessage }}</div>
+        <div v-else class="enable-touch">{{ textMessage }}</div>
     </div>
 </template>
 
@@ -36,5 +36,4 @@ export default defineComponent({
 })
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

@@ -3,6 +3,8 @@
         @touchmove.prevent="cancelRecording"
         @touchstart="startRecording"
         @touchend="endRecording"
+        @mousedown="startRecording"
+        @mouseup="endRecording"
         ref="voiceInput"
         :class="[
             voiceState !== 0 ? 'bg-secondary-focus' : 'bg-secondary',

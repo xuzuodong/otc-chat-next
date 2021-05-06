@@ -5,8 +5,7 @@
             <i class="iconfont text-lg">&#xe606;</i>
         </div>
         <div class="self-center font-bold text-lg">{{ targetNick }}</div>
-        <div class="w-10 text-center flex justify-center items-center">
-        </div>
+        <div class="w-10 text-center flex justify-center items-center"></div>
     </div>
 
     <!-- 订单信息栏 -->
@@ -23,7 +22,7 @@
         </div>
     </div>
 
-    <div v-if="debug">
+    <div v-if="debug" class="enable-touch">
         <div>from: {{ from }}</div>
         <div>token: {{ token }}</div>
         <div>orderid: {{ orderid }}</div>
