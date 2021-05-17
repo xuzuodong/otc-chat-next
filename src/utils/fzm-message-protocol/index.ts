@@ -1,7 +1,12 @@
 import encodeMessage from './encodeMessage'
 import FzmMessageProtocolConnection from './FzmMessageProtocolConnection'
 import { FzmMessageTypes } from './FzmMessageTypes'
-import { AuthMsg } from './types'
+
+export interface AuthMsg {
+    appId: string
+    token: string
+    ext?: Uint8Array
+}
 
 export default class FzmMessageProtocol {
     url: string

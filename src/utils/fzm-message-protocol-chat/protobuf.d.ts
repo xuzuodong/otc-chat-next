@@ -1,47 +1,44 @@
-import * as $protobuf from "protobufjs";
+/* eslint-disable */
+import * as $protobuf from 'protobufjs'
 /** Namespace dtalk. */
 export namespace dtalk {
-
     /** Namespace proto. */
     namespace proto {
-
         /** Device enum. */
         enum Device {
             Android = 0,
-            IOS = 1
+            IOS = 1,
         }
 
         /** Properties of a Login. */
         interface ILogin {
-
             /** Login device */
-            device?: (dtalk.proto.Device|null);
+            device?: dtalk.proto.Device | null
 
             /** Login username */
-            username?: (string|null);
+            username?: string | null
         }
 
         /** Represents a Login. */
         class Login implements ILogin {
-
             /**
              * Constructs a new Login.
              * @param [properties] Properties to set
              */
-            constructor(properties?: dtalk.proto.ILogin);
+            constructor(properties?: dtalk.proto.ILogin)
 
             /** Login device. */
-            public device: dtalk.proto.Device;
+            public device: dtalk.proto.Device
 
             /** Login username. */
-            public username: string;
+            public username: string
 
             /**
              * Creates a new Login instance using the specified properties.
              * @param [properties] Properties to set
              * @returns Login instance
              */
-            public static create(properties?: dtalk.proto.ILogin): dtalk.proto.Login;
+            public static create(properties?: dtalk.proto.ILogin): dtalk.proto.Login
 
             /**
              * Encodes the specified Login message. Does not implicitly {@link dtalk.proto.Login.verify|verify} messages.
@@ -49,7 +46,7 @@ export namespace dtalk {
              * @param [writer] Writer to encode to
              * @returns Writer
              */
-            public static encode(message: dtalk.proto.ILogin, writer?: $protobuf.Writer): $protobuf.Writer;
+            public static encode(message: dtalk.proto.ILogin, writer?: $protobuf.Writer): $protobuf.Writer
 
             /**
              * Encodes the specified Login message, length delimited. Does not implicitly {@link dtalk.proto.Login.verify|verify} messages.
@@ -57,7 +54,7 @@ export namespace dtalk {
              * @param [writer] Writer to encode to
              * @returns Writer
              */
-            public static encodeDelimited(message: dtalk.proto.ILogin, writer?: $protobuf.Writer): $protobuf.Writer;
+            public static encodeDelimited(message: dtalk.proto.ILogin, writer?: $protobuf.Writer): $protobuf.Writer
 
             /**
              * Decodes a Login message from the specified reader or buffer.
@@ -67,7 +64,7 @@ export namespace dtalk {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): dtalk.proto.Login;
+            public static decode(reader: $protobuf.Reader | Uint8Array, length?: number): dtalk.proto.Login
 
             /**
              * Decodes a Login message from the specified reader or buffer, length delimited.
@@ -76,21 +73,21 @@ export namespace dtalk {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): dtalk.proto.Login;
+            public static decodeDelimited(reader: $protobuf.Reader | Uint8Array): dtalk.proto.Login
 
             /**
              * Verifies a Login message.
              * @param message Plain object to verify
              * @returns `null` if valid, otherwise the reason why it is not
              */
-            public static verify(message: { [k: string]: any }): (string|null);
+            public static verify(message: { [k: string]: any }): string | null
 
             /**
              * Creates a Login message from a plain object. Also converts values to their respective internal types.
              * @param object Plain object
              * @returns Login
              */
-            public static fromObject(object: { [k: string]: any }): dtalk.proto.Login;
+            public static fromObject(object: { [k: string]: any }): dtalk.proto.Login
 
             /**
              * Creates a plain object from a Login message. Also converts values to other types if specified.
@@ -98,46 +95,47 @@ export namespace dtalk {
              * @param [options] Conversion options
              * @returns Plain object
              */
-            public static toObject(message: dtalk.proto.Login, options?: $protobuf.IConversionOptions): { [k: string]: any };
+            public static toObject(
+                message: dtalk.proto.Login,
+                options?: $protobuf.IConversionOptions
+            ): { [k: string]: any }
 
             /**
              * Converts this Login to JSON.
              * @returns JSON object
              */
-            public toJSON(): { [k: string]: any };
+            public toJSON(): { [k: string]: any }
         }
 
         /** Properties of a Proto. */
         interface IProto {
-
             /** Proto eventType */
-            eventType?: (dtalk.proto.EventType|null);
+            eventType?: dtalk.proto.EventType | null
 
             /** Proto body */
-            body?: (Uint8Array|null);
+            body?: Uint8Array | null
         }
 
         /** Represents a Proto. */
         class Proto implements IProto {
-
             /**
              * Constructs a new Proto.
              * @param [properties] Properties to set
              */
-            constructor(properties?: dtalk.proto.IProto);
+            constructor(properties?: dtalk.proto.IProto)
 
             /** Proto eventType. */
-            public eventType: dtalk.proto.EventType;
+            public eventType: dtalk.proto.EventType
 
             /** Proto body. */
-            public body: Uint8Array;
+            public body: Uint8Array
 
             /**
              * Creates a new Proto instance using the specified properties.
              * @param [properties] Properties to set
              * @returns Proto instance
              */
-            public static create(properties?: dtalk.proto.IProto): dtalk.proto.Proto;
+            public static create(properties?: dtalk.proto.IProto): dtalk.proto.Proto
 
             /**
              * Encodes the specified Proto message. Does not implicitly {@link dtalk.proto.Proto.verify|verify} messages.
@@ -145,7 +143,7 @@ export namespace dtalk {
              * @param [writer] Writer to encode to
              * @returns Writer
              */
-            public static encode(message: dtalk.proto.IProto, writer?: $protobuf.Writer): $protobuf.Writer;
+            public static encode(message: dtalk.proto.IProto, writer?: $protobuf.Writer): $protobuf.Writer
 
             /**
              * Encodes the specified Proto message, length delimited. Does not implicitly {@link dtalk.proto.Proto.verify|verify} messages.
@@ -153,7 +151,7 @@ export namespace dtalk {
              * @param [writer] Writer to encode to
              * @returns Writer
              */
-            public static encodeDelimited(message: dtalk.proto.IProto, writer?: $protobuf.Writer): $protobuf.Writer;
+            public static encodeDelimited(message: dtalk.proto.IProto, writer?: $protobuf.Writer): $protobuf.Writer
 
             /**
              * Decodes a Proto message from the specified reader or buffer.
@@ -163,7 +161,7 @@ export namespace dtalk {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): dtalk.proto.Proto;
+            public static decode(reader: $protobuf.Reader | Uint8Array, length?: number): dtalk.proto.Proto
 
             /**
              * Decodes a Proto message from the specified reader or buffer, length delimited.
@@ -172,21 +170,21 @@ export namespace dtalk {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): dtalk.proto.Proto;
+            public static decodeDelimited(reader: $protobuf.Reader | Uint8Array): dtalk.proto.Proto
 
             /**
              * Verifies a Proto message.
              * @param message Plain object to verify
              * @returns `null` if valid, otherwise the reason why it is not
              */
-            public static verify(message: { [k: string]: any }): (string|null);
+            public static verify(message: { [k: string]: any }): string | null
 
             /**
              * Creates a Proto message from a plain object. Also converts values to their respective internal types.
              * @param object Plain object
              * @returns Proto
              */
-            public static fromObject(object: { [k: string]: any }): dtalk.proto.Proto;
+            public static fromObject(object: { [k: string]: any }): dtalk.proto.Proto
 
             /**
              * Creates a plain object from a Proto message. Also converts values to other types if specified.
@@ -194,82 +192,83 @@ export namespace dtalk {
              * @param [options] Conversion options
              * @returns Plain object
              */
-            public static toObject(message: dtalk.proto.Proto, options?: $protobuf.IConversionOptions): { [k: string]: any };
+            public static toObject(
+                message: dtalk.proto.Proto,
+                options?: $protobuf.IConversionOptions
+            ): { [k: string]: any }
 
             /**
              * Converts this Proto to JSON.
              * @returns JSON object
              */
-            public toJSON(): { [k: string]: any };
+            public toJSON(): { [k: string]: any }
         }
 
         /** Properties of a CommonMsg. */
         interface ICommonMsg {
-
             /** CommonMsg channelType */
-            channelType?: (number|null);
+            channelType?: number | null
 
             /** CommonMsg logId */
-            logId?: (number|Long|null);
+            logId?: number | Long | null
 
             /** CommonMsg msgId */
-            msgId?: (string|null);
+            msgId?: string | null
 
             /** CommonMsg from */
-            from?: (string|null);
+            from?: string | null
 
             /** CommonMsg target */
-            target?: (string|null);
+            target?: string | null
 
             /** CommonMsg msgType */
-            msgType?: (number|null);
+            msgType?: number | null
 
             /** CommonMsg msg */
-            msg?: (Uint8Array|null);
+            msg?: Uint8Array | null
 
             /** CommonMsg datetime */
-            datetime?: (number|Long|null);
+            datetime?: number | Long | null
         }
 
         /** Represents a CommonMsg. */
         class CommonMsg implements ICommonMsg {
-
             /**
              * Constructs a new CommonMsg.
              * @param [properties] Properties to set
              */
-            constructor(properties?: dtalk.proto.ICommonMsg);
+            constructor(properties?: dtalk.proto.ICommonMsg)
 
             /** CommonMsg channelType. */
-            public channelType: number;
+            public channelType: number
 
             /** CommonMsg logId. */
-            public logId: (number|Long);
+            public logId: number | Long
 
             /** CommonMsg msgId. */
-            public msgId: string;
+            public msgId: string
 
             /** CommonMsg from. */
-            public from: string;
+            public from: string
 
             /** CommonMsg target. */
-            public target: string;
+            public target: string
 
             /** CommonMsg msgType. */
-            public msgType: number;
+            public msgType: number
 
             /** CommonMsg msg. */
-            public msg: Uint8Array;
+            public msg: Uint8Array
 
             /** CommonMsg datetime. */
-            public datetime: (number|Long);
+            public datetime: number | Long
 
             /**
              * Creates a new CommonMsg instance using the specified properties.
              * @param [properties] Properties to set
              * @returns CommonMsg instance
              */
-            public static create(properties?: dtalk.proto.ICommonMsg): dtalk.proto.CommonMsg;
+            public static create(properties?: dtalk.proto.ICommonMsg): dtalk.proto.CommonMsg
 
             /**
              * Encodes the specified CommonMsg message. Does not implicitly {@link dtalk.proto.CommonMsg.verify|verify} messages.
@@ -277,7 +276,7 @@ export namespace dtalk {
              * @param [writer] Writer to encode to
              * @returns Writer
              */
-            public static encode(message: dtalk.proto.ICommonMsg, writer?: $protobuf.Writer): $protobuf.Writer;
+            public static encode(message: dtalk.proto.ICommonMsg, writer?: $protobuf.Writer): $protobuf.Writer
 
             /**
              * Encodes the specified CommonMsg message, length delimited. Does not implicitly {@link dtalk.proto.CommonMsg.verify|verify} messages.
@@ -285,7 +284,7 @@ export namespace dtalk {
              * @param [writer] Writer to encode to
              * @returns Writer
              */
-            public static encodeDelimited(message: dtalk.proto.ICommonMsg, writer?: $protobuf.Writer): $protobuf.Writer;
+            public static encodeDelimited(message: dtalk.proto.ICommonMsg, writer?: $protobuf.Writer): $protobuf.Writer
 
             /**
              * Decodes a CommonMsg message from the specified reader or buffer.
@@ -295,7 +294,7 @@ export namespace dtalk {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): dtalk.proto.CommonMsg;
+            public static decode(reader: $protobuf.Reader | Uint8Array, length?: number): dtalk.proto.CommonMsg
 
             /**
              * Decodes a CommonMsg message from the specified reader or buffer, length delimited.
@@ -304,21 +303,21 @@ export namespace dtalk {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): dtalk.proto.CommonMsg;
+            public static decodeDelimited(reader: $protobuf.Reader | Uint8Array): dtalk.proto.CommonMsg
 
             /**
              * Verifies a CommonMsg message.
              * @param message Plain object to verify
              * @returns `null` if valid, otherwise the reason why it is not
              */
-            public static verify(message: { [k: string]: any }): (string|null);
+            public static verify(message: { [k: string]: any }): string | null
 
             /**
              * Creates a CommonMsg message from a plain object. Also converts values to their respective internal types.
              * @param object Plain object
              * @returns CommonMsg
              */
-            public static fromObject(object: { [k: string]: any }): dtalk.proto.CommonMsg;
+            public static fromObject(object: { [k: string]: any }): dtalk.proto.CommonMsg
 
             /**
              * Creates a plain object from a CommonMsg message. Also converts values to other types if specified.
@@ -326,19 +325,22 @@ export namespace dtalk {
              * @param [options] Conversion options
              * @returns Plain object
              */
-            public static toObject(message: dtalk.proto.CommonMsg, options?: $protobuf.IConversionOptions): { [k: string]: any };
+            public static toObject(
+                message: dtalk.proto.CommonMsg,
+                options?: $protobuf.IConversionOptions
+            ): { [k: string]: any }
 
             /**
              * Converts this CommonMsg to JSON.
              * @returns JSON object
              */
-            public toJSON(): { [k: string]: any };
+            public toJSON(): { [k: string]: any }
         }
 
         /** EventType enum. */
         enum EventType {
             commonMsg = 0,
-            commonMsgAck = 1
+            commonMsgAck = 1,
         }
 
         /** MsgType enum. */
@@ -349,40 +351,38 @@ export namespace dtalk {
             Image = 3,
             Video = 4,
             File = 5,
-            Card = 6
+            Card = 6,
         }
 
         /** Properties of a CommonMsgAck. */
         interface ICommonMsgAck {
-
             /** CommonMsgAck logId */
-            logId?: (number|Long|null);
+            logId?: number | Long | null
 
             /** CommonMsgAck datetime */
-            datetime?: (number|Long|null);
+            datetime?: number | Long | null
         }
 
         /** Represents a CommonMsgAck. */
         class CommonMsgAck implements ICommonMsgAck {
-
             /**
              * Constructs a new CommonMsgAck.
              * @param [properties] Properties to set
              */
-            constructor(properties?: dtalk.proto.ICommonMsgAck);
+            constructor(properties?: dtalk.proto.ICommonMsgAck)
 
             /** CommonMsgAck logId. */
-            public logId: (number|Long);
+            public logId: number | Long
 
             /** CommonMsgAck datetime. */
-            public datetime: (number|Long);
+            public datetime: number | Long
 
             /**
              * Creates a new CommonMsgAck instance using the specified properties.
              * @param [properties] Properties to set
              * @returns CommonMsgAck instance
              */
-            public static create(properties?: dtalk.proto.ICommonMsgAck): dtalk.proto.CommonMsgAck;
+            public static create(properties?: dtalk.proto.ICommonMsgAck): dtalk.proto.CommonMsgAck
 
             /**
              * Encodes the specified CommonMsgAck message. Does not implicitly {@link dtalk.proto.CommonMsgAck.verify|verify} messages.
@@ -390,7 +390,7 @@ export namespace dtalk {
              * @param [writer] Writer to encode to
              * @returns Writer
              */
-            public static encode(message: dtalk.proto.ICommonMsgAck, writer?: $protobuf.Writer): $protobuf.Writer;
+            public static encode(message: dtalk.proto.ICommonMsgAck, writer?: $protobuf.Writer): $protobuf.Writer
 
             /**
              * Encodes the specified CommonMsgAck message, length delimited. Does not implicitly {@link dtalk.proto.CommonMsgAck.verify|verify} messages.
@@ -398,7 +398,10 @@ export namespace dtalk {
              * @param [writer] Writer to encode to
              * @returns Writer
              */
-            public static encodeDelimited(message: dtalk.proto.ICommonMsgAck, writer?: $protobuf.Writer): $protobuf.Writer;
+            public static encodeDelimited(
+                message: dtalk.proto.ICommonMsgAck,
+                writer?: $protobuf.Writer
+            ): $protobuf.Writer
 
             /**
              * Decodes a CommonMsgAck message from the specified reader or buffer.
@@ -408,7 +411,7 @@ export namespace dtalk {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): dtalk.proto.CommonMsgAck;
+            public static decode(reader: $protobuf.Reader | Uint8Array, length?: number): dtalk.proto.CommonMsgAck
 
             /**
              * Decodes a CommonMsgAck message from the specified reader or buffer, length delimited.
@@ -417,21 +420,21 @@ export namespace dtalk {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): dtalk.proto.CommonMsgAck;
+            public static decodeDelimited(reader: $protobuf.Reader | Uint8Array): dtalk.proto.CommonMsgAck
 
             /**
              * Verifies a CommonMsgAck message.
              * @param message Plain object to verify
              * @returns `null` if valid, otherwise the reason why it is not
              */
-            public static verify(message: { [k: string]: any }): (string|null);
+            public static verify(message: { [k: string]: any }): string | null
 
             /**
              * Creates a CommonMsgAck message from a plain object. Also converts values to their respective internal types.
              * @param object Plain object
              * @returns CommonMsgAck
              */
-            public static fromObject(object: { [k: string]: any }): dtalk.proto.CommonMsgAck;
+            public static fromObject(object: { [k: string]: any }): dtalk.proto.CommonMsgAck
 
             /**
              * Creates a plain object from a CommonMsgAck message. Also converts values to other types if specified.
@@ -439,40 +442,41 @@ export namespace dtalk {
              * @param [options] Conversion options
              * @returns Plain object
              */
-            public static toObject(message: dtalk.proto.CommonMsgAck, options?: $protobuf.IConversionOptions): { [k: string]: any };
+            public static toObject(
+                message: dtalk.proto.CommonMsgAck,
+                options?: $protobuf.IConversionOptions
+            ): { [k: string]: any }
 
             /**
              * Converts this CommonMsgAck to JSON.
              * @returns JSON object
              */
-            public toJSON(): { [k: string]: any };
+            public toJSON(): { [k: string]: any }
         }
 
         /** Properties of a TextMsg. */
         interface ITextMsg {
-
             /** TextMsg content */
-            content?: (string|null);
+            content?: string | null
         }
 
         /** Represents a TextMsg. */
         class TextMsg implements ITextMsg {
-
             /**
              * Constructs a new TextMsg.
              * @param [properties] Properties to set
              */
-            constructor(properties?: dtalk.proto.ITextMsg);
+            constructor(properties?: dtalk.proto.ITextMsg)
 
             /** TextMsg content. */
-            public content: string;
+            public content: string
 
             /**
              * Creates a new TextMsg instance using the specified properties.
              * @param [properties] Properties to set
              * @returns TextMsg instance
              */
-            public static create(properties?: dtalk.proto.ITextMsg): dtalk.proto.TextMsg;
+            public static create(properties?: dtalk.proto.ITextMsg): dtalk.proto.TextMsg
 
             /**
              * Encodes the specified TextMsg message. Does not implicitly {@link dtalk.proto.TextMsg.verify|verify} messages.
@@ -480,7 +484,7 @@ export namespace dtalk {
              * @param [writer] Writer to encode to
              * @returns Writer
              */
-            public static encode(message: dtalk.proto.ITextMsg, writer?: $protobuf.Writer): $protobuf.Writer;
+            public static encode(message: dtalk.proto.ITextMsg, writer?: $protobuf.Writer): $protobuf.Writer
 
             /**
              * Encodes the specified TextMsg message, length delimited. Does not implicitly {@link dtalk.proto.TextMsg.verify|verify} messages.
@@ -488,7 +492,7 @@ export namespace dtalk {
              * @param [writer] Writer to encode to
              * @returns Writer
              */
-            public static encodeDelimited(message: dtalk.proto.ITextMsg, writer?: $protobuf.Writer): $protobuf.Writer;
+            public static encodeDelimited(message: dtalk.proto.ITextMsg, writer?: $protobuf.Writer): $protobuf.Writer
 
             /**
              * Decodes a TextMsg message from the specified reader or buffer.
@@ -498,7 +502,7 @@ export namespace dtalk {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): dtalk.proto.TextMsg;
+            public static decode(reader: $protobuf.Reader | Uint8Array, length?: number): dtalk.proto.TextMsg
 
             /**
              * Decodes a TextMsg message from the specified reader or buffer, length delimited.
@@ -507,21 +511,21 @@ export namespace dtalk {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): dtalk.proto.TextMsg;
+            public static decodeDelimited(reader: $protobuf.Reader | Uint8Array): dtalk.proto.TextMsg
 
             /**
              * Verifies a TextMsg message.
              * @param message Plain object to verify
              * @returns `null` if valid, otherwise the reason why it is not
              */
-            public static verify(message: { [k: string]: any }): (string|null);
+            public static verify(message: { [k: string]: any }): string | null
 
             /**
              * Creates a TextMsg message from a plain object. Also converts values to their respective internal types.
              * @param object Plain object
              * @returns TextMsg
              */
-            public static fromObject(object: { [k: string]: any }): dtalk.proto.TextMsg;
+            public static fromObject(object: { [k: string]: any }): dtalk.proto.TextMsg
 
             /**
              * Creates a plain object from a TextMsg message. Also converts values to other types if specified.
@@ -529,46 +533,47 @@ export namespace dtalk {
              * @param [options] Conversion options
              * @returns Plain object
              */
-            public static toObject(message: dtalk.proto.TextMsg, options?: $protobuf.IConversionOptions): { [k: string]: any };
+            public static toObject(
+                message: dtalk.proto.TextMsg,
+                options?: $protobuf.IConversionOptions
+            ): { [k: string]: any }
 
             /**
              * Converts this TextMsg to JSON.
              * @returns JSON object
              */
-            public toJSON(): { [k: string]: any };
+            public toJSON(): { [k: string]: any }
         }
 
         /** Properties of an AudioMsg. */
         interface IAudioMsg {
-
             /** AudioMsg mediaUrl */
-            mediaUrl?: (string|null);
+            mediaUrl?: string | null
 
             /** AudioMsg time */
-            time?: (number|null);
+            time?: number | null
         }
 
         /** Represents an AudioMsg. */
         class AudioMsg implements IAudioMsg {
-
             /**
              * Constructs a new AudioMsg.
              * @param [properties] Properties to set
              */
-            constructor(properties?: dtalk.proto.IAudioMsg);
+            constructor(properties?: dtalk.proto.IAudioMsg)
 
             /** AudioMsg mediaUrl. */
-            public mediaUrl: string;
+            public mediaUrl: string
 
             /** AudioMsg time. */
-            public time: number;
+            public time: number
 
             /**
              * Creates a new AudioMsg instance using the specified properties.
              * @param [properties] Properties to set
              * @returns AudioMsg instance
              */
-            public static create(properties?: dtalk.proto.IAudioMsg): dtalk.proto.AudioMsg;
+            public static create(properties?: dtalk.proto.IAudioMsg): dtalk.proto.AudioMsg
 
             /**
              * Encodes the specified AudioMsg message. Does not implicitly {@link dtalk.proto.AudioMsg.verify|verify} messages.
@@ -576,7 +581,7 @@ export namespace dtalk {
              * @param [writer] Writer to encode to
              * @returns Writer
              */
-            public static encode(message: dtalk.proto.IAudioMsg, writer?: $protobuf.Writer): $protobuf.Writer;
+            public static encode(message: dtalk.proto.IAudioMsg, writer?: $protobuf.Writer): $protobuf.Writer
 
             /**
              * Encodes the specified AudioMsg message, length delimited. Does not implicitly {@link dtalk.proto.AudioMsg.verify|verify} messages.
@@ -584,7 +589,7 @@ export namespace dtalk {
              * @param [writer] Writer to encode to
              * @returns Writer
              */
-            public static encodeDelimited(message: dtalk.proto.IAudioMsg, writer?: $protobuf.Writer): $protobuf.Writer;
+            public static encodeDelimited(message: dtalk.proto.IAudioMsg, writer?: $protobuf.Writer): $protobuf.Writer
 
             /**
              * Decodes an AudioMsg message from the specified reader or buffer.
@@ -594,7 +599,7 @@ export namespace dtalk {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): dtalk.proto.AudioMsg;
+            public static decode(reader: $protobuf.Reader | Uint8Array, length?: number): dtalk.proto.AudioMsg
 
             /**
              * Decodes an AudioMsg message from the specified reader or buffer, length delimited.
@@ -603,21 +608,21 @@ export namespace dtalk {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): dtalk.proto.AudioMsg;
+            public static decodeDelimited(reader: $protobuf.Reader | Uint8Array): dtalk.proto.AudioMsg
 
             /**
              * Verifies an AudioMsg message.
              * @param message Plain object to verify
              * @returns `null` if valid, otherwise the reason why it is not
              */
-            public static verify(message: { [k: string]: any }): (string|null);
+            public static verify(message: { [k: string]: any }): string | null
 
             /**
              * Creates an AudioMsg message from a plain object. Also converts values to their respective internal types.
              * @param object Plain object
              * @returns AudioMsg
              */
-            public static fromObject(object: { [k: string]: any }): dtalk.proto.AudioMsg;
+            public static fromObject(object: { [k: string]: any }): dtalk.proto.AudioMsg
 
             /**
              * Creates a plain object from an AudioMsg message. Also converts values to other types if specified.
@@ -625,52 +630,53 @@ export namespace dtalk {
              * @param [options] Conversion options
              * @returns Plain object
              */
-            public static toObject(message: dtalk.proto.AudioMsg, options?: $protobuf.IConversionOptions): { [k: string]: any };
+            public static toObject(
+                message: dtalk.proto.AudioMsg,
+                options?: $protobuf.IConversionOptions
+            ): { [k: string]: any }
 
             /**
              * Converts this AudioMsg to JSON.
              * @returns JSON object
              */
-            public toJSON(): { [k: string]: any };
+            public toJSON(): { [k: string]: any }
         }
 
         /** Properties of an ImageMsg. */
         interface IImageMsg {
-
             /** ImageMsg mediaUrl */
-            mediaUrl?: (string|null);
+            mediaUrl?: string | null
 
             /** ImageMsg height */
-            height?: (number|null);
+            height?: number | null
 
             /** ImageMsg width */
-            width?: (number|null);
+            width?: number | null
         }
 
         /** Represents an ImageMsg. */
         class ImageMsg implements IImageMsg {
-
             /**
              * Constructs a new ImageMsg.
              * @param [properties] Properties to set
              */
-            constructor(properties?: dtalk.proto.IImageMsg);
+            constructor(properties?: dtalk.proto.IImageMsg)
 
             /** ImageMsg mediaUrl. */
-            public mediaUrl: string;
+            public mediaUrl: string
 
             /** ImageMsg height. */
-            public height: number;
+            public height: number
 
             /** ImageMsg width. */
-            public width: number;
+            public width: number
 
             /**
              * Creates a new ImageMsg instance using the specified properties.
              * @param [properties] Properties to set
              * @returns ImageMsg instance
              */
-            public static create(properties?: dtalk.proto.IImageMsg): dtalk.proto.ImageMsg;
+            public static create(properties?: dtalk.proto.IImageMsg): dtalk.proto.ImageMsg
 
             /**
              * Encodes the specified ImageMsg message. Does not implicitly {@link dtalk.proto.ImageMsg.verify|verify} messages.
@@ -678,7 +684,7 @@ export namespace dtalk {
              * @param [writer] Writer to encode to
              * @returns Writer
              */
-            public static encode(message: dtalk.proto.IImageMsg, writer?: $protobuf.Writer): $protobuf.Writer;
+            public static encode(message: dtalk.proto.IImageMsg, writer?: $protobuf.Writer): $protobuf.Writer
 
             /**
              * Encodes the specified ImageMsg message, length delimited. Does not implicitly {@link dtalk.proto.ImageMsg.verify|verify} messages.
@@ -686,7 +692,7 @@ export namespace dtalk {
              * @param [writer] Writer to encode to
              * @returns Writer
              */
-            public static encodeDelimited(message: dtalk.proto.IImageMsg, writer?: $protobuf.Writer): $protobuf.Writer;
+            public static encodeDelimited(message: dtalk.proto.IImageMsg, writer?: $protobuf.Writer): $protobuf.Writer
 
             /**
              * Decodes an ImageMsg message from the specified reader or buffer.
@@ -696,7 +702,7 @@ export namespace dtalk {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): dtalk.proto.ImageMsg;
+            public static decode(reader: $protobuf.Reader | Uint8Array, length?: number): dtalk.proto.ImageMsg
 
             /**
              * Decodes an ImageMsg message from the specified reader or buffer, length delimited.
@@ -705,21 +711,21 @@ export namespace dtalk {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): dtalk.proto.ImageMsg;
+            public static decodeDelimited(reader: $protobuf.Reader | Uint8Array): dtalk.proto.ImageMsg
 
             /**
              * Verifies an ImageMsg message.
              * @param message Plain object to verify
              * @returns `null` if valid, otherwise the reason why it is not
              */
-            public static verify(message: { [k: string]: any }): (string|null);
+            public static verify(message: { [k: string]: any }): string | null
 
             /**
              * Creates an ImageMsg message from a plain object. Also converts values to their respective internal types.
              * @param object Plain object
              * @returns ImageMsg
              */
-            public static fromObject(object: { [k: string]: any }): dtalk.proto.ImageMsg;
+            public static fromObject(object: { [k: string]: any }): dtalk.proto.ImageMsg
 
             /**
              * Creates a plain object from an ImageMsg message. Also converts values to other types if specified.
@@ -727,58 +733,59 @@ export namespace dtalk {
              * @param [options] Conversion options
              * @returns Plain object
              */
-            public static toObject(message: dtalk.proto.ImageMsg, options?: $protobuf.IConversionOptions): { [k: string]: any };
+            public static toObject(
+                message: dtalk.proto.ImageMsg,
+                options?: $protobuf.IConversionOptions
+            ): { [k: string]: any }
 
             /**
              * Converts this ImageMsg to JSON.
              * @returns JSON object
              */
-            public toJSON(): { [k: string]: any };
+            public toJSON(): { [k: string]: any }
         }
 
         /** Properties of a VideoMsg. */
         interface IVideoMsg {
-
             /** VideoMsg mediaUrl */
-            mediaUrl?: (string|null);
+            mediaUrl?: string | null
 
             /** VideoMsg time */
-            time?: (number|null);
+            time?: number | null
 
             /** VideoMsg height */
-            height?: (number|null);
+            height?: number | null
 
             /** VideoMsg width */
-            width?: (number|null);
+            width?: number | null
         }
 
         /** Represents a VideoMsg. */
         class VideoMsg implements IVideoMsg {
-
             /**
              * Constructs a new VideoMsg.
              * @param [properties] Properties to set
              */
-            constructor(properties?: dtalk.proto.IVideoMsg);
+            constructor(properties?: dtalk.proto.IVideoMsg)
 
             /** VideoMsg mediaUrl. */
-            public mediaUrl: string;
+            public mediaUrl: string
 
             /** VideoMsg time. */
-            public time: number;
+            public time: number
 
             /** VideoMsg height. */
-            public height: number;
+            public height: number
 
             /** VideoMsg width. */
-            public width: number;
+            public width: number
 
             /**
              * Creates a new VideoMsg instance using the specified properties.
              * @param [properties] Properties to set
              * @returns VideoMsg instance
              */
-            public static create(properties?: dtalk.proto.IVideoMsg): dtalk.proto.VideoMsg;
+            public static create(properties?: dtalk.proto.IVideoMsg): dtalk.proto.VideoMsg
 
             /**
              * Encodes the specified VideoMsg message. Does not implicitly {@link dtalk.proto.VideoMsg.verify|verify} messages.
@@ -786,7 +793,7 @@ export namespace dtalk {
              * @param [writer] Writer to encode to
              * @returns Writer
              */
-            public static encode(message: dtalk.proto.IVideoMsg, writer?: $protobuf.Writer): $protobuf.Writer;
+            public static encode(message: dtalk.proto.IVideoMsg, writer?: $protobuf.Writer): $protobuf.Writer
 
             /**
              * Encodes the specified VideoMsg message, length delimited. Does not implicitly {@link dtalk.proto.VideoMsg.verify|verify} messages.
@@ -794,7 +801,7 @@ export namespace dtalk {
              * @param [writer] Writer to encode to
              * @returns Writer
              */
-            public static encodeDelimited(message: dtalk.proto.IVideoMsg, writer?: $protobuf.Writer): $protobuf.Writer;
+            public static encodeDelimited(message: dtalk.proto.IVideoMsg, writer?: $protobuf.Writer): $protobuf.Writer
 
             /**
              * Decodes a VideoMsg message from the specified reader or buffer.
@@ -804,7 +811,7 @@ export namespace dtalk {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): dtalk.proto.VideoMsg;
+            public static decode(reader: $protobuf.Reader | Uint8Array, length?: number): dtalk.proto.VideoMsg
 
             /**
              * Decodes a VideoMsg message from the specified reader or buffer, length delimited.
@@ -813,21 +820,21 @@ export namespace dtalk {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): dtalk.proto.VideoMsg;
+            public static decodeDelimited(reader: $protobuf.Reader | Uint8Array): dtalk.proto.VideoMsg
 
             /**
              * Verifies a VideoMsg message.
              * @param message Plain object to verify
              * @returns `null` if valid, otherwise the reason why it is not
              */
-            public static verify(message: { [k: string]: any }): (string|null);
+            public static verify(message: { [k: string]: any }): string | null
 
             /**
              * Creates a VideoMsg message from a plain object. Also converts values to their respective internal types.
              * @param object Plain object
              * @returns VideoMsg
              */
-            public static fromObject(object: { [k: string]: any }): dtalk.proto.VideoMsg;
+            public static fromObject(object: { [k: string]: any }): dtalk.proto.VideoMsg
 
             /**
              * Creates a plain object from a VideoMsg message. Also converts values to other types if specified.
@@ -835,58 +842,59 @@ export namespace dtalk {
              * @param [options] Conversion options
              * @returns Plain object
              */
-            public static toObject(message: dtalk.proto.VideoMsg, options?: $protobuf.IConversionOptions): { [k: string]: any };
+            public static toObject(
+                message: dtalk.proto.VideoMsg,
+                options?: $protobuf.IConversionOptions
+            ): { [k: string]: any }
 
             /**
              * Converts this VideoMsg to JSON.
              * @returns JSON object
              */
-            public toJSON(): { [k: string]: any };
+            public toJSON(): { [k: string]: any }
         }
 
         /** Properties of a FileMsg. */
         interface IFileMsg {
-
             /** FileMsg mediaUrl */
-            mediaUrl?: (string|null);
+            mediaUrl?: string | null
 
             /** FileMsg name */
-            name?: (string|null);
+            name?: string | null
 
             /** FileMsg md5 */
-            md5?: (string|null);
+            md5?: string | null
 
             /** FileMsg size */
-            size?: (number|Long|null);
+            size?: number | Long | null
         }
 
         /** Represents a FileMsg. */
         class FileMsg implements IFileMsg {
-
             /**
              * Constructs a new FileMsg.
              * @param [properties] Properties to set
              */
-            constructor(properties?: dtalk.proto.IFileMsg);
+            constructor(properties?: dtalk.proto.IFileMsg)
 
             /** FileMsg mediaUrl. */
-            public mediaUrl: string;
+            public mediaUrl: string
 
             /** FileMsg name. */
-            public name: string;
+            public name: string
 
             /** FileMsg md5. */
-            public md5: string;
+            public md5: string
 
             /** FileMsg size. */
-            public size: (number|Long);
+            public size: number | Long
 
             /**
              * Creates a new FileMsg instance using the specified properties.
              * @param [properties] Properties to set
              * @returns FileMsg instance
              */
-            public static create(properties?: dtalk.proto.IFileMsg): dtalk.proto.FileMsg;
+            public static create(properties?: dtalk.proto.IFileMsg): dtalk.proto.FileMsg
 
             /**
              * Encodes the specified FileMsg message. Does not implicitly {@link dtalk.proto.FileMsg.verify|verify} messages.
@@ -894,7 +902,7 @@ export namespace dtalk {
              * @param [writer] Writer to encode to
              * @returns Writer
              */
-            public static encode(message: dtalk.proto.IFileMsg, writer?: $protobuf.Writer): $protobuf.Writer;
+            public static encode(message: dtalk.proto.IFileMsg, writer?: $protobuf.Writer): $protobuf.Writer
 
             /**
              * Encodes the specified FileMsg message, length delimited. Does not implicitly {@link dtalk.proto.FileMsg.verify|verify} messages.
@@ -902,7 +910,7 @@ export namespace dtalk {
              * @param [writer] Writer to encode to
              * @returns Writer
              */
-            public static encodeDelimited(message: dtalk.proto.IFileMsg, writer?: $protobuf.Writer): $protobuf.Writer;
+            public static encodeDelimited(message: dtalk.proto.IFileMsg, writer?: $protobuf.Writer): $protobuf.Writer
 
             /**
              * Decodes a FileMsg message from the specified reader or buffer.
@@ -912,7 +920,7 @@ export namespace dtalk {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): dtalk.proto.FileMsg;
+            public static decode(reader: $protobuf.Reader | Uint8Array, length?: number): dtalk.proto.FileMsg
 
             /**
              * Decodes a FileMsg message from the specified reader or buffer, length delimited.
@@ -921,21 +929,21 @@ export namespace dtalk {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): dtalk.proto.FileMsg;
+            public static decodeDelimited(reader: $protobuf.Reader | Uint8Array): dtalk.proto.FileMsg
 
             /**
              * Verifies a FileMsg message.
              * @param message Plain object to verify
              * @returns `null` if valid, otherwise the reason why it is not
              */
-            public static verify(message: { [k: string]: any }): (string|null);
+            public static verify(message: { [k: string]: any }): string | null
 
             /**
              * Creates a FileMsg message from a plain object. Also converts values to their respective internal types.
              * @param object Plain object
              * @returns FileMsg
              */
-            public static fromObject(object: { [k: string]: any }): dtalk.proto.FileMsg;
+            public static fromObject(object: { [k: string]: any }): dtalk.proto.FileMsg
 
             /**
              * Creates a plain object from a FileMsg message. Also converts values to other types if specified.
@@ -943,52 +951,53 @@ export namespace dtalk {
              * @param [options] Conversion options
              * @returns Plain object
              */
-            public static toObject(message: dtalk.proto.FileMsg, options?: $protobuf.IConversionOptions): { [k: string]: any };
+            public static toObject(
+                message: dtalk.proto.FileMsg,
+                options?: $protobuf.IConversionOptions
+            ): { [k: string]: any }
 
             /**
              * Converts this FileMsg to JSON.
              * @returns JSON object
              */
-            public toJSON(): { [k: string]: any };
+            public toJSON(): { [k: string]: any }
         }
 
         /** Properties of a CardMsg. */
         interface ICardMsg {
-
             /** CardMsg bank */
-            bank?: (string|null);
+            bank?: string | null
 
             /** CardMsg name */
-            name?: (string|null);
+            name?: string | null
 
             /** CardMsg account */
-            account?: (string|null);
+            account?: string | null
         }
 
         /** Represents a CardMsg. */
         class CardMsg implements ICardMsg {
-
             /**
              * Constructs a new CardMsg.
              * @param [properties] Properties to set
              */
-            constructor(properties?: dtalk.proto.ICardMsg);
+            constructor(properties?: dtalk.proto.ICardMsg)
 
             /** CardMsg bank. */
-            public bank: string;
+            public bank: string
 
             /** CardMsg name. */
-            public name: string;
+            public name: string
 
             /** CardMsg account. */
-            public account: string;
+            public account: string
 
             /**
              * Creates a new CardMsg instance using the specified properties.
              * @param [properties] Properties to set
              * @returns CardMsg instance
              */
-            public static create(properties?: dtalk.proto.ICardMsg): dtalk.proto.CardMsg;
+            public static create(properties?: dtalk.proto.ICardMsg): dtalk.proto.CardMsg
 
             /**
              * Encodes the specified CardMsg message. Does not implicitly {@link dtalk.proto.CardMsg.verify|verify} messages.
@@ -996,7 +1005,7 @@ export namespace dtalk {
              * @param [writer] Writer to encode to
              * @returns Writer
              */
-            public static encode(message: dtalk.proto.ICardMsg, writer?: $protobuf.Writer): $protobuf.Writer;
+            public static encode(message: dtalk.proto.ICardMsg, writer?: $protobuf.Writer): $protobuf.Writer
 
             /**
              * Encodes the specified CardMsg message, length delimited. Does not implicitly {@link dtalk.proto.CardMsg.verify|verify} messages.
@@ -1004,7 +1013,7 @@ export namespace dtalk {
              * @param [writer] Writer to encode to
              * @returns Writer
              */
-            public static encodeDelimited(message: dtalk.proto.ICardMsg, writer?: $protobuf.Writer): $protobuf.Writer;
+            public static encodeDelimited(message: dtalk.proto.ICardMsg, writer?: $protobuf.Writer): $protobuf.Writer
 
             /**
              * Decodes a CardMsg message from the specified reader or buffer.
@@ -1014,7 +1023,7 @@ export namespace dtalk {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): dtalk.proto.CardMsg;
+            public static decode(reader: $protobuf.Reader | Uint8Array, length?: number): dtalk.proto.CardMsg
 
             /**
              * Decodes a CardMsg message from the specified reader or buffer, length delimited.
@@ -1023,21 +1032,21 @@ export namespace dtalk {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): dtalk.proto.CardMsg;
+            public static decodeDelimited(reader: $protobuf.Reader | Uint8Array): dtalk.proto.CardMsg
 
             /**
              * Verifies a CardMsg message.
              * @param message Plain object to verify
              * @returns `null` if valid, otherwise the reason why it is not
              */
-            public static verify(message: { [k: string]: any }): (string|null);
+            public static verify(message: { [k: string]: any }): string | null
 
             /**
              * Creates a CardMsg message from a plain object. Also converts values to their respective internal types.
              * @param object Plain object
              * @returns CardMsg
              */
-            public static fromObject(object: { [k: string]: any }): dtalk.proto.CardMsg;
+            public static fromObject(object: { [k: string]: any }): dtalk.proto.CardMsg
 
             /**
              * Creates a plain object from a CardMsg message. Also converts values to other types if specified.
@@ -1045,13 +1054,16 @@ export namespace dtalk {
              * @param [options] Conversion options
              * @returns Plain object
              */
-            public static toObject(message: dtalk.proto.CardMsg, options?: $protobuf.IConversionOptions): { [k: string]: any };
+            public static toObject(
+                message: dtalk.proto.CardMsg,
+                options?: $protobuf.IConversionOptions
+            ): { [k: string]: any }
 
             /**
              * Converts this CardMsg to JSON.
              * @returns JSON object
              */
-            public toJSON(): { [k: string]: any };
+            public toJSON(): { [k: string]: any }
         }
     }
 }

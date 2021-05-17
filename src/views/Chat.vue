@@ -51,8 +51,9 @@ import ChatHeaderVue from './ChatHeader.vue'
 import { connectionState } from '@/store/connectionStore'
 import FzmMessageProtocol from '@/utils/fzm-message-protocol'
 import { baseUrl } from '@/store/baseUrlStore'
-import { getOrderInfo } from '@/store/appCallerStore'
+import { getOrderInfo, OrderInfo } from '@/store/appCallerStore'
 import { token, from, orderid } from '@/store/appCallerStore'
+import computeExt from '@/utils/getFzmMesageProtocolExt'
 
 export default defineComponent({
     components: { ChatHeaderVue, ChatContentVue, ChatInputVue },
@@ -61,25 +62,21 @@ export default defineComponent({
         const initError = ref(false)
         const debug = process.env.NODE_ENV === 'development'
 
-        const connect = () => {
+        const connect = async () => {
             connectionState.error = false
             initError.value = false
 
             const fmp = new FzmMessageProtocol(`ws://${baseUrl}/sub/`)
-            console.log(token)
 
-            Promise.all([
-                // 连接 WebSocket
-                fmp.authorize({
-                    appId: 'zb_otc',
-                    token,
-                }),
-
-                // 获取订单信息
-                getOrderInfo(),
-            ])
-                .then((values) => {
-                    const [conn] = values
+            getOrderInfo()
+                .then((res: OrderInfo) => {
+                    return fmp.authorize({
+                        appId: 'zb_otc',
+                        token,
+                        ext: computeExt(res)
+                    })
+                })
+                .then((conn) => {
                     connectionState.connection = conn
                 })
                 .catch((reason) => {

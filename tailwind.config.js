@@ -1,3 +1,4 @@
+/* eslint-disable */
 const colors = require('./colors.config')
 
 const chatMsgAvatarSize = '35px'

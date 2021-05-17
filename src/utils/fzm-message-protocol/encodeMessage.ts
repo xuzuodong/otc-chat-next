@@ -1,25 +1,8 @@
-import { MessageEncoderPayload, AuthMsg } from './types'
-import { Type, Field } from 'protobufjs'
 import { numberToArray, concatArrays } from 'enc-utils'
+import { AuthMsg } from '.'
 import FzmMessageProtocolHeader from './FzmMessageProtocolHeader'
 import { FzmMessageTypes } from './FzmMessageTypes'
-
-const encodeAuthMsg = (payload: AuthMsg): Uint8Array => {
-    const type = new Type('Message')
-    let key: keyof AuthMsg
-
-    let i = 1
-    for (key in payload) {
-        const value = payload[key]
-        type.add(new Field(key, i, typeof value))
-        i++
-    }
-
-    const msg = type.create(Object.assign({}, payload)) // 如果直接 type.create(payload) 会报错，因为 payload 里有个 __proto__ 会被编码进去
-    const bodyData = type.encode(msg).finish()
-
-    return bodyData
-}
+import { chat33 } from './protobuf'
 
 /**
  * 将一个数字转换为一定长度的二进制数据
@@ -43,35 +26,33 @@ const encodeNumberWithFixedLength = (num: number, byteLength: number): Uint8Arra
     return Uint8Array.from(arr)
 }
 
-// 
-function isAuthMsg(message: AuthMsg | Uint8Array): message is AuthMsg {
-    return (<AuthMsg>message).token !== undefined
-}
-
+export type MessageEncoderPayload = AuthMsg | Uint8Array | null
 /** 对消息进行编码 */
 export default (payload: MessageEncoderPayload, messageType: FzmMessageTypes, seq = 0, ack?: number): Uint8Array => {
-    // 先对 body 进行编码
+    // 1. 构造 body
     let bodyData: Uint8Array
 
-    // 判断 Message Type, 如果是鉴权, 则内部解析; 如果是正常发送消息, 则需要自行解析成 protobuf 格式
-    if (payload && isAuthMsg(payload)) {
-        bodyData = encodeAuthMsg(payload)
-    } else if (payload && !isAuthMsg(payload)) {
-        bodyData = payload
+    // 判断 `messageType`：
+    // 如果是初次连接鉴权, 则内部解析成二进制流;
+    // 如果是正常发送消息, 则直接接收二进制流。
+    if (payload && messageType === FzmMessageTypes.Auth) {
+        bodyData = chat33.comet.AuthMsg.encode(payload as AuthMsg).finish()
+    } else if (payload && messageType !== FzmMessageTypes.Auth) {
+        bodyData = payload as Uint8Array
     } else {
         bodyData = new Uint8Array()
     }
 
-    // 基于 body 构造对应的 header
+    // 2. 基于 body 构造对应的 header
     const header = new FzmMessageProtocolHeader(messageType, seq, ack || 0)
     header.updatePackageLength(bodyData)
-    
-    // 对 header 编码
+
+    // 3. 对 header 编码
     const headerData = Object.values(header.header).reduce((prev, curr) => {
         return concatArrays(prev, encodeNumberWithFixedLength(curr.value, curr.length))
     }, new Uint8Array())
 
-    // 拼接 header 和 body
+    // 4. 拼接 header 和 body
     const data = concatArrays(headerData, bodyData)
 
     return data
