@@ -1,5 +1,5 @@
 <template>
-    <ChatInputMenuButtonVue @click="input.click()" label="图片/视频" :iconUrl="iconUrl" />
+    <ChatInputMenuButtonVue @click="input && input.click()" label="图片/视频" :iconUrl="iconUrl" />
 
     <input
         v-show="false"

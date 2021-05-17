@@ -1,8 +1,7 @@
 <template>
     <!-- input bar -->
-    <div class="flex justify-between items-center min-h-input-bar bg-white" :class="disableVoiceInput ? 'pl-4' : ''">
+    <div class="flex justify-between items-center min-h-input-bar bg-white">
         <div
-            v-if="!disableVoiceInput"
             @click="inputType === 1 ? (inputType = 2) : (inputType = 1)"
             class="w-7 h-7 mx-2.5 text-center select-none"
         >
@@ -61,9 +60,6 @@ export default defineComponent({
         /** 菜单是否弹出 */
         const showMenu = ref(false)
 
-        /** 桌面设备暂时禁用语音 */
-        const disableVoiceInput = ref(!Platform.is.mobile)
-
         /** 发送消息 */
         const sendChatMessage = (payload: { type: ChatMessageTypes; content: MessageContent }) => {
             messageStore.sendMessage(payload.type, payload.content)
@@ -91,7 +87,6 @@ export default defineComponent({
             showMenu,
             sendChatMessage,
             showReceiptInput,
-            disableVoiceInput,
         }
     },
 })

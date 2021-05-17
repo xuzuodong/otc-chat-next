@@ -3,8 +3,6 @@
         @touchmove.prevent="cancelRecording"
         @touchstart="startRecording"
         @touchend="endRecording"
-        @mousedown="startRecording"
-        @mouseup="endRecording"
         ref="voiceInput"
         :class="[
             voiceState !== 0 ? 'bg-secondary-focus' : 'bg-secondary',
@@ -42,8 +40,13 @@ export default defineComponent({
 
         const disableVoiceInput = ref(false)
         onMounted(() => {
-            /** 禁止语音输入框长按弹出菜单 */
-            voiceInput.value && voiceInput.value.addEventListener('contextmenu', (e) => e.preventDefault())
+            if (voiceInput.value) {
+                /** 监听鼠标拖拽 */
+                listenDragOut(voiceInput.value)
+
+                /** 禁止语音输入框长按弹出菜单 */
+                voiceInput.value.addEventListener('contextmenu', (e) => e.preventDefault())
+            }
 
             recorder = new Recorder()
             recorder.initRecorder()
@@ -66,9 +69,13 @@ export default defineComponent({
             /** 按住时间太短 */
             tooShort,
         }
+        /** 语音输入界面状态 */
         const voiceState = ref(VoiceState.notRecording)
 
-        /** 用户上划取消发送时变为 true */
+        /**
+         * 用于在发出消息前确认该条消息是否应该被中止，
+         * 用户上划取消发送时变为 true
+         */
         const shouldCancelRecording = ref(false)
 
         /** 计算按住语音按钮的时间 */
@@ -137,22 +144,53 @@ export default defineComponent({
             messageStore.sendMessage(ChatMessageTypes.Audio, audioMessageContent)
         }
 
-        const cancelRecording = (e: TouchEvent): void => {
-            if (voiceState.value !== VoiceState.endRecording) return
-
-            /** 求语音输入按钮与视口的高度差 */
+        const cancelRecording = (e: TouchEvent | MouseEvent): void => {
+            // voiceInput 元素的顶端 y 坐标
+            // 用于判断是否需要取消发送
             const { offset } = dom
             let offsetTop = 0
             if (voiceInput.value) {
                 offsetTop = offset(voiceInput.value).top
             }
-            if (e.touches[0].clientY < offsetTop) {
+
+            // 用户手指 / 鼠标的 y 坐标
+            let userY
+            if (e instanceof TouchEvent) {
+                userY = e.touches[0].clientY
+            } else {
+                userY = e.y
+            }
+
+            if (userY < offsetTop) {
                 shouldCancelRecording.value = true
                 voiceState.value = VoiceState.cancel
             } else {
                 shouldCancelRecording.value = false
                 voiceState.value = VoiceState.endRecording
             }
+        }
+
+        /** 监听 voiceInput 的鼠标 `按住+拖拽+松开` 事件，以取消发送语音*/
+        function listenDragOut(ele: HTMLDivElement) {
+            let fromEle = false
+            ele.addEventListener('mousedown', (e) => {
+                e.stopPropagation()
+                fromEle = true
+                startRecording()
+            })
+            document.body.addEventListener('mousedown', () => (fromEle = false))
+
+            document.body.addEventListener('mousemove', (e) => fromEle && cancelRecording(e))
+
+            ele.addEventListener('mouseup', (e) => {
+                e.stopPropagation()
+                if (fromEle) endRecording()
+                fromEle = false
+            })
+            document.body.addEventListener('mouseup', () => {
+                if (fromEle) endRecording()
+                fromEle = false
+            })
         }
 
         return {
