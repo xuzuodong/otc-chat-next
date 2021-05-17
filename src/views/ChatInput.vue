@@ -37,7 +37,6 @@ import ChatInputAlbumVue from './ChatInputAlbum.vue'
 import ChatInputReceiptVue from './ChatInputReceipt.vue'
 import { getOrderInfo } from '@/store/appCallerStore'
 import { from } from '@/store/appCallerStore'
-import { Platform } from 'quasar'
 
 export default defineComponent({
     components: {

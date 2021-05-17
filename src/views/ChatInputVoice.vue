@@ -21,8 +21,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, ref } from '@vue/runtime-core'
-import { dom } from 'quasar'
+import { defineComponent, nextTick, onMounted, ref } from '@vue/runtime-core'
+import { dom, useQuasar } from 'quasar'
 import ChatInputVoiceToastVue from './ChatInputVoiceToast.vue'
 import Recorder from 'js-audio-recorder'
 import { ChatMessageTypes } from '@/types/chatMessageTypes'
@@ -33,6 +33,8 @@ export default defineComponent({
     components: { ChatInputVoiceToastVue },
 
     setup() {
+        const quasar = useQuasar()
+
         /** 文本输入框 div 元素 */
         const voiceInput = ref<HTMLDivElement | null>(null)
 
@@ -49,13 +51,19 @@ export default defineComponent({
             }
 
             recorder = new Recorder()
-            recorder.initRecorder()
 
-            let getUserMedia = navigator.getUserMedia
-            if (!getUserMedia) {
-                disableVoiceInput.value = true
-                alert('无法调用您设备的录音功能')
-            }
+            navigator.mediaDevices
+                .getUserMedia({ audio: true })
+                .then((stream) => {
+                    stream && stream.getTracks().forEach((track) => track.stop())
+                })
+                .catch(() => {
+                    disableVoiceInput.value = true
+                    quasar.dialog({
+                        title: '调用麦克风失败',
+                        message: '无法调用您设备上的麦克风，因此无法使用发送语音功能',
+                    })
+                })
         })
 
         /** 语音输入状态 */
@@ -174,6 +182,7 @@ export default defineComponent({
         function listenDragOut(ele: HTMLDivElement) {
             let fromEle = false
             ele.addEventListener('mousedown', (e) => {
+                if (disableVoiceInput.value) return
                 e.stopPropagation()
                 fromEle = true
                 startRecording()
