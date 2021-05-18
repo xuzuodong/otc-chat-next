@@ -49,6 +49,8 @@ export interface DisplayMessage {
 
 class MessageStore {
     messages: UnwrapNestedRefs<DisplayMessage[]>
+    /** 标记是否还有更多历史消息 */
+    noMoreHistoryMessages: Ref<boolean>
     /** 一次向服务器请求消息的数量 */
     retrieveLength = 10
     /** 记录最后一次添加数据的操作是否为新数据，当数据变化时根据此属性来判断是否滚动至最底部 */
@@ -57,6 +59,7 @@ class MessageStore {
     constructor() {
         this.messages = reactive<DisplayMessage[]>([])
         this.appendingNewMessage = ref(true)
+        this.noMoreHistoryMessages = ref(false)
     }
 
     private shouldDisplayMessageDate(latterDate: number, formerDate: number): boolean {
@@ -176,6 +179,11 @@ class MessageStore {
                                 underMessage.datetime,
                                 record.create_time
                             )
+                        }
+
+                        // 标记是否还有更多历史消息
+                        if (res.data.data.record_count < 10) {
+                            this.noMoreHistoryMessages.value = true
                         }
                     })
                     resolve()

@@ -1,8 +1,11 @@
-
 <template>
     <!-- style="flex-basis: 0px" 是为了兼容 iOS 和 macOS 下的 Safari 浏览器，如果没有这个样式，整个聊天列表无法显示 -->
     <q-scroll-area ref="scrollArea" class="flex-grow" style="flex-basis: 0px" :visible="false">
-        <q-pull-to-refresh @refresh="loadMore" class="h-full w-full absolute">
+        <q-pull-to-refresh @refresh="loadMore" :disable="noMoreMessages" icon="history" class="h-full w-full absolute">
+            <div class="text-center py-2.5 text-xs font-medium text-subtle">
+                <div v-if="noMoreMessages && messages.length > 0">没有更多消息</div>
+                <div v-else>{{ isMobile ? '下滑加载更多' : '按住鼠标向下拖拽以加载更多' }}</div>
+            </div>
             <ChatContentMessageVue
                 v-for="message in messages"
                 :key="message.uuid"
@@ -29,14 +32,16 @@ import useScrollTo from '@/composables/useScrollTo'
 import ChatContentMessageVue from './ChatContentMessage.vue'
 import { ChatMessageTypes } from '@/types/chatMessageTypes'
 import decodeChatMessage from '@/utils/fzm-message-protocol-chat/decodeChatMessage'
-import { date } from 'quasar'
+import { date, Platform } from 'quasar'
 
 export default defineComponent({
     components: { ChatContentMessageVue },
     setup() {
         const messages = messageStore.messages
+        const noMoreMessages = messageStore.noMoreHistoryMessages
         const myid = from
         const formatDate = date.formatDate
+        const isMobile = Platform.is.mobile
 
         // 监听「下拉加载更多」操作，记录当前的第一条消息 id
         let firstMessageSnapshot: DisplayMessage
@@ -92,7 +97,7 @@ export default defineComponent({
             })
         })
 
-        return { scrollToBottom, scrollArea, messages, myid, formatDate, loadMore }
+        return { scrollToBottom, scrollArea, messages, noMoreMessages, isMobile, myid, formatDate, loadMore }
     },
 })
 </script>
