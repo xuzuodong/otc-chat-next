@@ -53,7 +53,7 @@ export default defineComponent({
 
         // 推断对方昵称
         const targetNick = computed(() => {
-            return from == orderInfo.value?.userId ? orderInfo.value?.merchantNick : orderInfo.value?.userNick
+            return from == orderInfo.value?.userZbId ? orderInfo.value?.merchantNick : orderInfo.value?.userNick
         })
 
         // 计算剩余时间

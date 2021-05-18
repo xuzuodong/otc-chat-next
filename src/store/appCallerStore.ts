@@ -31,10 +31,14 @@ interface Pay {
 }
 
 export interface OrderInfo {
-    /** 用户找币uid */
+    /** 用户 `OTC` id */
     userId: string
-    /** 承兑商找币uid */
+    /** 用户 `找币` id */
+    userZbId: string
+    /** 承兑商 `OTC` id */
     merchantId: string
+    /** 承兑商 `找币` id */
+    merchantZbId: string
     /** 用户昵称 */
     userNick: string
     /** 承兑商昵称 */
@@ -84,7 +88,9 @@ export const getOrderInfo = (): Promise<OrderInfo> => {
 
                         orderInfo = {
                             userId,
+                            userZbId: rawOrderInfo.user_zb_id,
                             merchantId,
+                            merchantZbId: rawOrderInfo.merchant_zb_id,
                             userNick: rawOrderInfo.user_nick,
                             merchantNick: rawOrderInfo.merchant_nick,
                             status: rawOrderInfo.status,

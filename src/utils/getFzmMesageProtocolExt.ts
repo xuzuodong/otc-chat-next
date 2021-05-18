@@ -26,7 +26,7 @@ interface Ext {
 export default function (orderInfo: OrderInfo): Uint8Array {
     const ext: Ext = {
         device: getDevice(),
-        username: from == orderInfo.userId ? orderInfo.userNick : orderInfo.merchantNick,
+        username: from == orderInfo.userZbId ? orderInfo.userNick : orderInfo.merchantNick,
     }
     const extData = dtalk.proto.Login.encode(ext).finish()
 
