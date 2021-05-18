@@ -67,6 +67,9 @@ class MessageStore {
     }
 
     displayNewMessage(message: DisplayMessage) {
+        // 去除重复消息
+        if (this.messages.find((m) => m.uuid === message.uuid)) return
+
         // 和上条消息发送间隔小于 2 分钟的隐藏显示时间
         if (this.messages.length) {
             const lastMsg = this.messages[this.messages.length - 1]
