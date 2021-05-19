@@ -21,7 +21,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, nextTick, onMounted, ref } from '@vue/runtime-core'
+import { defineComponent, onMounted, ref } from '@vue/runtime-core'
 import { dom, useQuasar } from 'quasar'
 import ChatInputVoiceToastVue from './ChatInputVoiceToast.vue'
 import Recorder from 'js-audio-recorder'

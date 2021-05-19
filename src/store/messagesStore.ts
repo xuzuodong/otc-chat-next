@@ -4,7 +4,7 @@
 
 import { MessageContent } from '@/types/chat-message'
 import { reactive, UnwrapNestedRefs, Ref, ref } from '@vue/reactivity'
-import { from, orderid, target } from '@/store/appCallerStore'
+import { from, orderid, target, token } from '@/store/appCallerStore'
 import { ChatMessageTypes } from '@/types/chatMessageTypes'
 import encodeChatMessage from '@/utils/fzm-message-protocol-chat/encodeChatMessage'
 import { v4 as uuidv4 } from 'uuid'
@@ -14,7 +14,7 @@ import { dtalk } from '@/utils/fzm-message-protocol-chat/protobuf'
 import { date } from 'quasar'
 import { Checkpoint } from 'ali-oss'
 import axios, { AxiosResponse } from 'axios'
-import { baseUrl } from './baseUrlStore'
+import { baseTradeUrl, baseUrl } from './baseUrlStore'
 import { ChatRecordBody } from '@/types/record'
 import { watchEffect } from '@vue/runtime-core'
 import decodeChatMessage from '@/utils/fzm-message-protocol-chat/decodeChatMessage'
@@ -66,7 +66,7 @@ class MessageStore {
         // 接收消息，把消息存入 messageStore 并显示
         watchEffect((): void => {
             if (!connectionState.connection) return
-            
+
             // 收到消息，解码并存入 `messageStore`
             connectionState.connection.onReceiveMessage = (msgData) => {
                 const msg = decodeChatMessage(msgData)
@@ -277,6 +277,17 @@ class MessageStore {
                 checkpoint,
             }
         }
+    }
+
+    /** 发送 `收款方式` 时调用，从而告知 OTC 后台，改变 App 端相应按钮状态 */
+    showPay() {
+        let url = `http://${baseTradeUrl}/backend/order/show-pay?order_num=${orderid}`
+        url += `&timestamp=${Date.now()}`
+        axios({
+            url,
+            method: `get`,
+            headers: { Authorization: token },
+        })
     }
 }
 

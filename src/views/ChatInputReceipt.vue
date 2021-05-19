@@ -44,26 +44,33 @@ export default defineComponent({
                     },
                 })
                 .onOk((selectedMap: boolean[]) => {
+                    let payShowed = false
+
                     orderInfo.value?.pay.forEach((m, index) => {
-                        if (selectedMap[index]) {
-                            switch (m.type) {
-                                case '1':
-                                    // 银行卡
-                                    messageStore.sendMessage(ChatMessageTypes.Card, {
-                                        bank: m.bankName,
-                                        name: m.name,
-                                        account: m.cardId,
-                                    })
-                                    break
-                                default:
-                                    // 支付宝 | 微信
-                                    messageStore.sendMessage(ChatMessageTypes.Image, {
-                                        mediaUrl: m.codeImage,
-                                        height: 200,
-                                        width: 200,
-                                    })
-                                    break
-                            }
+                        if (!selectedMap[index]) return
+
+                        if (!payShowed) {
+                            messageStore.showPay()
+                            payShowed = true
+                        }
+
+                        switch (m.type) {
+                            case '1':
+                                // 银行卡
+                                messageStore.sendMessage(ChatMessageTypes.Card, {
+                                    bank: m.bankName,
+                                    name: m.name,
+                                    account: m.cardId,
+                                })
+                                break
+                            default:
+                                // 支付宝 | 微信
+                                messageStore.sendMessage(ChatMessageTypes.Image, {
+                                    mediaUrl: m.codeImage,
+                                    height: 200,
+                                    width: 200,
+                                })
+                                break
                         }
                     })
                 })
