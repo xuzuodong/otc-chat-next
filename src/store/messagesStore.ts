@@ -16,6 +16,8 @@ import { Checkpoint } from 'ali-oss'
 import axios, { AxiosResponse } from 'axios'
 import { baseUrl } from './baseUrlStore'
 import { ChatRecordBody } from '@/types/record'
+import { watchEffect } from '@vue/runtime-core'
+import decodeChatMessage from '@/utils/fzm-message-protocol-chat/decodeChatMessage'
 
 /** 多媒体消息的上传进度 */
 export interface UploadProgress {
@@ -60,6 +62,34 @@ class MessageStore {
         this.messages = reactive<DisplayMessage[]>([])
         this.appendingNewMessage = ref(true)
         this.noMoreHistoryMessages = ref(false)
+
+        // 接收消息，把消息存入 messageStore 并显示
+        watchEffect((): void => {
+            if (!connectionState.connection) return
+            
+            // 收到消息，解码并存入 `messageStore`
+            connectionState.connection.onReceiveMessage = (msgData) => {
+                const msg = decodeChatMessage(msgData)
+                // 收到的非本笔订单的消息不处理
+                if (msg.orderid !== orderid) return
+
+                messageStore.displayNewMessage({
+                    content: msg.content,
+                    from: msg.from,
+                    uuid: msg.uuid,
+                    state: null,
+                    type: (msg.type || 0) as ChatMessageTypes,
+                    datetime: msg.datetime,
+                    logid: msg.logid,
+                })
+            }
+
+            // 断连，修改相应连接状态
+            connectionState.connection.onLoseConnection = () => {
+                connectionState.connection = undefined
+                connectionState.error = true
+            }
+        })
     }
 
     private shouldDisplayMessageDate(latterDate: number, formerDate: number): boolean {

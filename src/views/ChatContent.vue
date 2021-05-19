@@ -24,14 +24,11 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, nextTick, watch, watchEffect } from 'vue'
-import { from, orderid } from '@/store/appCallerStore'
-import { connectionState } from '@/store/connectionStore'
+import { defineComponent, nextTick, watch } from 'vue'
+import { from } from '@/store/appCallerStore'
 import { DisplayMessage, messageStore } from '@/store/messagesStore'
 import useScrollTo from '@/composables/useScrollTo'
 import ChatContentMessageVue from './ChatContentMessage.vue'
-import { ChatMessageTypes } from '@/types/chatMessageTypes'
-import decodeChatMessage from '@/utils/fzm-message-protocol-chat/decodeChatMessage'
 import { date, Platform } from 'quasar'
 
 export default defineComponent({
@@ -56,34 +53,6 @@ export default defineComponent({
             })
         }
         retrieveMessages()
-
-        // 接收消息，把消息存入 messageStore 并显示
-        watchEffect((): void => {
-            if (connectionState.connection) {
-                // 收到消息，解码并存入 `messageStore`
-                connectionState.connection.onReceiveMessage = (msgData) => {
-                    const msg = decodeChatMessage(msgData)
-                    // 收到的非本笔订单的消息不处理
-                    if (msg.orderid !== orderid) return
-
-                    messageStore.displayNewMessage({
-                        content: msg.content,
-                        from: msg.from,
-                        uuid: msg.uuid,
-                        state: null,
-                        type: (msg.type || 0) as ChatMessageTypes,
-                        datetime: msg.datetime,
-                        logid: msg.logid,
-                    })
-                }
-
-                // 断连，修改相应连接状态
-                connectionState.connection.onLoseConnection = () => {
-                    connectionState.connection = undefined
-                    connectionState.error = true
-                }
-            }
-        })
 
         // 收到新消息时滚动至底部
         const { scrollToBottom, scrollArea, scrollToElement } = useScrollTo()
