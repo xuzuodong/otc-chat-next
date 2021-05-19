@@ -96,9 +96,14 @@ class MessageStore {
         return date.getDateDiff(latterDate, formerDate, 'seconds') < 120
     }
 
+    /** 判断一条消息是否已在显示列表中 */
+    private isMessageDuplicated(message: DisplayMessage) {
+        return !!this.messages.find((m) => m.uuid === message.uuid)
+    }
+
+    /** 新消息入数组 */
     displayNewMessage(message: DisplayMessage) {
-        // 去除重复消息
-        if (this.messages.find((m) => m.uuid === message.uuid)) return
+        if (this.isMessageDuplicated(message)) return
 
         // 和上条消息发送间隔小于 2 分钟的隐藏显示时间
         if (this.messages.length) {
@@ -194,7 +199,7 @@ class MessageStore {
                 .then((res: AxiosResponse<ChatRecordBody>) => {
                     // data.result 中的最后一条消息是最老的，也就是需要放在 this.messages 的最前面
                     res.data.data.result.forEach((record) => {
-                        this.messages.unshift({
+                        const message: DisplayMessage = {
                             content: record.content,
                             from: record.user_id,
                             uuid: record.msg_id,
@@ -203,7 +208,11 @@ class MessageStore {
                             datetime: record.create_time,
                             hideDatetime: false,
                             logid: record.log_id,
-                        })
+                        }
+
+                        if (this.isMessageDuplicated(message)) return
+
+                        this.messages.unshift(message)
 
                         // 新插入的消息和下面那条消息比较时间，小于两分钟就隐藏下面那条消息的时间
                         const underMessage = this.messages[1]
@@ -213,12 +222,11 @@ class MessageStore {
                                 record.create_time
                             )
                         }
-
-                        // 标记是否还有更多历史消息
-                        if (res.data.data.record_count < 10) {
-                            this.noMoreHistoryMessages.value = true
-                        }
                     })
+                    // 标记是否还有更多历史消息
+                    if (res.data.data.record_count < 10) {
+                        this.noMoreHistoryMessages.value = true
+                    }
                     resolve()
                 })
                 .catch((res) => {
