@@ -289,7 +289,7 @@ class MessageStore {
 
     /** 发送 `收款方式` 时调用，从而告知 OTC 后台，改变 App 端相应按钮状态 */
     showPay() {
-        let url = `http://${baseTradeUrl}/backend/order/show-pay?order_num=${orderid}`
+        let url = `http://${baseTradeUrl}/backend/order/show-pay-chat?order_num=${orderid}`
         url += `&timestamp=${Date.now()}`
         axios({
             url,
