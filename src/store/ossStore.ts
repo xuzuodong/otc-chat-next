@@ -44,8 +44,8 @@ const expired = (expiration: Date) => {
     return dateDiff >= 0
 }
 
-const bucket = 'dld-test'
-const region = 'oss-cn-shanghai'
+const bucket = process.env.development ? 'dld-test' : 'otc-chat'
+const region = process.env.development ? 'oss-cn-shanghai' : 'oss-cn-shanghai'
 const ossBaseUrl = `http://${bucket}.${region}.aliyuncs.com/`
 
 const getOssClientInstance = (): Promise<OSS> => {
@@ -56,8 +56,8 @@ const getOssClientInstance = (): Promise<OSS> => {
                     accessKeyId: c.AccessKeyId,
                     accessKeySecret: c.AccessKeySecret,
                     stsToken: c.SecurityToken,
-                    region: 'oss-cn-shanghai', // 到时候需要替换成正式的
-                    bucket: 'dld-test', // 到时候需要替换成正式的
+                    region,
+                    bucket,
                 })
                 resolve(oss)
             })

@@ -2,7 +2,7 @@ let url
 let tradeUrl
 
 if (process.env.NODE_ENV === 'production') {
-    url = '172.16.101.126:8888'
+    url = '47.242.199.130:8888'
     tradeUrl = '172.16.100.214:8080'
 } else if (process.env.NODE_ENV === 'development') {
     url = '172.16.101.126:8888'
