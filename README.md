@@ -8,9 +8,40 @@
 
 支持发送文字、语音、图片、视频。
 
-## 项目配置
+## 项目构建
 
-### 构建命令
+需知：项目启动后第一时间会发现提示 “初始化聊天失败” ，这是因为 url 栏没有携带参数。真实使用环境下（App 内嵌）都会携带三个参数：`token`, `id`, 以及 `orderid`。其中 `token` 为用户 OTC token，`id` 为找币用户 id，`orderid` 为订单 id。任何一个参数不正确都会导致聊天无法顺利进行，因此在调试和开发前请确保地址栏填写了正确的参数。
+
+### 运维人员部署
+
+首先确保本地安装了 `node.js`，然后在终端 `cd` 到本项目的根目录，输入以下命令：
+
+```
+npm install # 安装依赖
+```
+
+安装完成后，构建用于正式部署的生产包：
+
+```
+npm run build # 构建生产包，用于正式部署
+```
+
+构建完成后的包在 `/dist` 下，把所有文件放至服务器上的某个目录下，并且配置 Nginx。
+
+例如将文件夹放至在服务器的 `/home/html` 下，则对应的 Nginx 配置为：
+
+```nginx
+server {
+	listen       80;
+	server_name  domain.com  www.domain.com;
+	root         /home/html;
+	location / {
+		try_files $uri $uri/ /index.html;
+	}
+}
+```
+
+### 开发人员调试
 
 ```
 npm install # 安装依赖
@@ -20,21 +51,15 @@ npm install # 安装依赖
 npm run serve # 启动开发环境
 ```
 
-项目启动后会发现提示 “初始化聊天失败” ，这是因为 url 栏没有携带参数。真实使用环境下（App 内嵌）都会携带三个参数：`token`, `id`, 以及 `orderid`。其中 `token` 为用户 OTC token，`id` 为找币用户 id，`orderid` 为订单 id。任何一个参数不正确都会导致聊天无法顺利进行，因此在调试和开发前请确保地址栏填写了正确的参数。
+```
+npm run lint # 检查语法
+```
 
 ```
 npm run development # 构建生产包，用于测试
 ```
 
-```
-npm run build # 构建生产包，用于正式部署
-```
-
-```
-npm run lint # 检查语法
-```
-
-## 项目开发
+## 开发注意事项
 
 ### 代码格式化
 
@@ -44,7 +69,7 @@ npm run lint # 检查语法
 
 由根目录的 `colors.config.js` 统一进行配置，Quasar 和 Tailwind 会读取，保证具有相同的颜色。
 
-## 业务逻辑
+## 业务逻辑注意事项
 
 ### 消息
 
