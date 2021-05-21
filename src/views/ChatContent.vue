@@ -2,14 +2,15 @@
     <!-- style="flex-basis: 0px" 是为了兼容 iOS 和 macOS 下的 Safari 浏览器，如果没有这个样式，整个聊天列表无法显示 -->
     <q-scroll-area ref="scrollArea" class="flex-grow" style="flex-basis: 0px" :visible="false">
         <q-pull-to-refresh
+            v-if="messages.length"
             @refresh="loadMore"
             :disable="noMoreMessages || messages.length === 0"
             icon="history"
             class="h-full w-full absolute"
         >
             <div class="text-center py-2.5 text-xs font-medium text-subtle">
-                <div v-if="noMoreMessages && messages.length > 0">没有更多消息</div>
-                <div v-else-if="messages.length > 0">
+                <div v-if="noMoreMessages && messages.length >= 10">没有更多消息</div>
+                <div v-else-if="!noMoreMessages && messages.length >= 10">
                     {{ isMobile ? '下滑加载更多' : '按住鼠标向下拖拽以加载更多' }}
                 </div>
             </div>
