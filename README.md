@@ -1,34 +1,44 @@
-# otc-chat-next 找币改版-私聊模块
+# otc-chat-next 找币改版-聊天模块
 
-项目用于内嵌在原生开发的 iOS 和 Android App 内，用户和承兑商的聊天。
+项目用于找币用户间即时通讯。
+
+运行环境： iOS 和 Android 的 `找币` App 内，以及网页端找币内。
+
+项目作用：用于两个找币用户（一个普通用户和一个承兑商用户）之间基于一个订单聊天。
 
 支持发送文字、语音、图片、视频。
 
 ## 项目配置
 
-### Setup
+### 构建命令
 
 ```
-npm install
-```
-
-```
-npm run serve
+npm install # 安装依赖
 ```
 
 ```
-npm run build
+npm run serve # 启动开发环境
+```
+
+项目启动后会发现提示 “初始化聊天失败” ，这是因为 url 栏没有携带参数。真实使用环境下（App 内嵌）都会携带三个参数：`token`, `id`, 以及 `orderid`。其中 `token` 为用户 OTC token，`id` 为找币用户 id，`orderid` 为订单 id。任何一个参数不正确都会导致聊天无法顺利进行，因此在调试和开发前请确保地址栏填写了正确的参数。
+
+```
+npm run development # 构建生产包，用于测试
 ```
 
 ```
-npm run lint
+npm run build # 构建生产包，用于正式部署
 ```
+
+```
+npm run lint # 检查语法
+```
+
+## 项目开发
 
 ### 代码格式化
 
 代码使用 [Prettier](https://prettier.io) 自动格式化，配置文件为根目录下的 `.prettierrc.js` 。**请务必在 commit 代码时保证格式统一**，如果想自动格式化代码，确保你的 IDE 安装了 Prettier 插件。
-
-## 项目开发
 
 ### 颜色系统
 
@@ -53,6 +63,8 @@ npm run lint
 #### 图片
 
 上传的图片会先被压缩，最大尺寸为长边 1920px。
+
+已知限制：发送 gif 格式的动图会被压缩成静态的。
 
 #### 视频
 
