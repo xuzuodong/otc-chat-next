@@ -43,8 +43,8 @@ const expired = (expiration: Date) => {
     return dateDiff >= 0
 }
 
-const bucket = process.env.development ? 'dld-test' : 'otc-chat'
-const region = process.env.development ? 'oss-cn-shanghai' : 'oss-cn-shanghai'
+const bucket = process.env.NODE_ENV === 'development' ? 'dld-test' : 'otc-chat'
+const region = process.env.NODE_ENV === 'development' ? 'oss-cn-shanghai' : 'oss-cn-shanghai'
 const ossBaseUrl = `http://${bucket}.${region}.aliyuncs.com/`
 
 const getOssClientInstance = (): Promise<OSS> => {
