@@ -14,7 +14,6 @@ import { dtalk } from '@/utils/fzm-message-protocol-chat/protobuf'
 import { date } from 'quasar'
 import { Checkpoint } from 'ali-oss'
 import axios, { AxiosResponse } from 'axios'
-import { baseTradeUrl, baseUrl } from './baseUrlStore'
 import { ChatRecordBody } from '@/types/record'
 import { watchEffect } from '@vue/runtime-core'
 import decodeChatMessage from '@/utils/fzm-message-protocol-chat/decodeChatMessage'
@@ -189,7 +188,7 @@ class MessageStore {
         this.appendingNewMessage.value = this.messages.length ? false : true
         return new Promise((resolve, reject) => {
             const logid = this.messages.length ? this.messages[0].logid : undefined
-            let url = `http://${baseUrl}/record/chatrecord?uid=${from}&orderId=${orderid}&count=${this.retrieveLength}`
+            let url = `/record/chatrecord?uid=${from}&orderId=${orderid}&count=${this.retrieveLength}`
             // 加时间戳防止部分机型缓存 http 请求
             url += `&timestamp=${Date.now()}`
             axios({
@@ -289,7 +288,7 @@ class MessageStore {
 
     /** 发送 `收款方式` 时调用，从而告知 OTC 后台，改变 App 端相应按钮状态 */
     showPay() {
-        let url = `http://${baseTradeUrl}/backend/order/show-pay-chat?order_num=${orderid}`
+        let url = `/backend/order/show-pay-chat?order_num=${orderid}`
         url += `&timestamp=${Date.now()}`
         axios({
             url,

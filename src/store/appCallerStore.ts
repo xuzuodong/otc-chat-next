@@ -6,7 +6,6 @@
  */
 
 import axios from 'axios'
-import { baseTradeUrl } from './baseUrlStore'
 
 const [, uri] = window.location.href.split('?')
 const pairs = uri && uri.split('&')
@@ -63,7 +62,7 @@ export const getOrderInfo = (): Promise<OrderInfo> => {
         if (orderInfo) {
             resolve(orderInfo)
         } else {
-            let url = `http://${baseTradeUrl}/receive/trade-opponent?order_num=${query.orderid}`
+            let url = `/receive/trade-opponent?order_num=${query.orderid}`
             url += `&timestamp=${Date.now()}`
             axios({
                 url,

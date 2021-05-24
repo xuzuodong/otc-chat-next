@@ -12,7 +12,7 @@
 
 需知：项目启动后第一时间会发现提示 “初始化聊天失败” ，这是因为 url 栏没有携带参数。真实使用环境下（App 内嵌）都会携带三个参数：`token`, `id`, 以及 `orderid`。其中 `token` 为用户 OTC token，`id` 为找币用户 id，`orderid` 为订单 id。任何一个参数不正确都会导致聊天无法顺利进行，因此在调试和开发前请确保地址栏填写了正确的参数。
 
-### 运维人员部署
+### 部署
 
 首先确保本地安装了 `node.js`，然后在终端 `cd` 到本项目的根目录，输入以下命令：
 
@@ -32,16 +32,40 @@ npm run build # 构建生产包，用于正式部署
 
 ```nginx
 server {
-	listen       80;
-	server_name  domain.com  www.domain.com;
-	root         /home/html;
-	location / {
-		try_files $uri $uri/ /index.html;
-	}
+    listen  9099;
+    root    /usr/share/nginx/html/otc-chat-next;
+
+    location / {
+        try_files $uri $uri/ /index.html;
+    }
+
+    location /receive {
+        proxy_pass http://172.16.100.214:8080;
+    }
+
+    location /backend {
+        proxy_pass http://172.16.100.214:8080;
+    }
+
+    location /sub {
+        proxy_pass http://172.16.101.126:8888;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "Upgrade";
+        proxy_set_header Host $host;
+    }
+
+    location /oss {
+        proxy_pass http://172.16.101.126:8888;
+    }
+
+    location /record {
+        proxy_pass http://172.16.101.126:8888;
+    }
 }
 ```
 
-### 开发人员调试
+### 开发
 
 ```
 npm install # 安装依赖
@@ -69,7 +93,7 @@ npm run development # 构建生产包，用于测试
 
 由根目录的 `colors.config.js` 统一进行配置，Quasar 和 Tailwind 会读取，保证具有相同的颜色。
 
-## 业务逻辑注意事项
+## 业务逻辑备忘
 
 ### 消息
 

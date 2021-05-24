@@ -4,7 +4,6 @@
 
 import axios from 'axios'
 import { date } from 'quasar'
-import { baseUrl } from './baseUrlStore'
 import OSS, { Checkpoint } from 'ali-oss'
 import { ChatMessageTypes } from '@/types/chatMessageTypes'
 import { v4 as uuidv4 } from 'uuid'
@@ -26,7 +25,7 @@ const getCredentials = (): Promise<Credentials> => {
         } else {
             axios({
                 method: 'get',
-                url: `http://${baseUrl}/oss/get-token?timestamp=${Date.now()}`,
+                url: `/oss/get-token?timestamp=${Date.now()}`,
             })
                 .then((res) => {
                     credentials = res.data.data.Credentials as Credentials
