@@ -1,5 +1,5 @@
 <template>
-    <div class="flex flex-col h-full text-base bg-gray-50">
+    <div class="flex flex-col flex-nowrap h-full text-base bg-gray-50">
         <!-- 没连上时界面上只有一个返回按钮 -->
         <div
             v-if="!connectionState.connection"
