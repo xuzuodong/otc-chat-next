@@ -23,7 +23,7 @@
                 />
             </div>
             <div v-else @click="playVideo" class="absolute-full flex flex-center">
-                <q-avatar size="100px" font-size="52px" text-color="white" icon="play_circle" />
+                <q-avatar font-size="52px" text-color="white" icon="play_circle" />
             </div>
         </transition>
     </q-img>
