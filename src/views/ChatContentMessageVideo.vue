@@ -35,12 +35,18 @@ import { useQuasar } from 'quasar'
 import MediaViewerVue from '@/components/MediaViewer.vue'
 
 export default defineComponent({
-    props: { fromMyself: Boolean, content: Object, state: String, uploadProgress: Object },
+    props: { fromMyself: Boolean, content: { type: Object, required: true }, state: String, uploadProgress: Object },
 
     setup(props) {
         const posterImgSrc = ref<string | undefined>(undefined)
 
-        const videoUrl = props?.content?.rawMessage || props?.content?.mediaUrl
+        const videoSource: File | string = props?.content?.rawMessage || props?.content?.mediaUrl
+        let videoUrl: string
+        if (videoSource instanceof File) {
+            videoUrl = URL.createObjectURL(videoSource)
+        } else {
+            videoUrl = videoSource
+        }
         drawVideoToCanvas(videoUrl).then((canvas: HTMLCanvasElement) => {
             canvas.toBlob((blob) => {
                 posterImgSrc.value = URL.createObjectURL(blob)
@@ -105,5 +111,4 @@ function drawVideoToCanvas(url: string): Promise<HTMLCanvasElement> {
 }
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>
