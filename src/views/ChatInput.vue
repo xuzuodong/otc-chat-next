@@ -2,6 +2,7 @@
     <!-- input bar -->
     <div class="flex justify-between items-center min-h-input-bar bg-white">
         <div
+            v-if="false"
             @click="inputType === 1 ? (inputType = 2) : (inputType = 1)"
             class="w-7 h-7 mx-2.5 text-center select-none"
         >
@@ -9,7 +10,7 @@
             <i v-else class="iconfont text-primary text-xl">&#xe60d;</i>
         </div>
 
-        <ChatInputTextVue v-if="inputType === 1" @send="sendChatMessage" @click="showMenu = false" />
+        <ChatInputTextVue v-if="inputType === 1" @send="sendChatMessage" @click="showMenu = false" class="pl-5" />
         <ChatInputVoiceVue v-else-if="inputType === 2" />
 
         <div @click="showMenu ? (showMenu = false) : (showMenu = true)" class="w-7 h-7 mx-2.5 text-center select-none">
