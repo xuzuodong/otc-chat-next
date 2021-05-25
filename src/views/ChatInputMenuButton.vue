@@ -1,8 +1,8 @@
 <template>
-    <div class="mx-2.5 mt-1.5" @click="$emit('click')">
+    <button class="mx-2.5 mt-1.5 focus:outline-none" @click="$emit('click')">
         <div><q-img :src="iconUrl" :ratio="1" width="60px" height="60px" /></div>
         <div class="text-center mt-1">{{ label }}</div>
-    </div>
+    </button>
 </template>
 
 <script lang="ts">
@@ -22,5 +22,4 @@ export default defineComponent({
 })
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>
