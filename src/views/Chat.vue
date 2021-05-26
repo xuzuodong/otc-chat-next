@@ -53,6 +53,10 @@ import FzmMessageProtocol from '@/utils/fzm-message-protocol'
 import { getOrderInfo } from '@/store/appCallerStore'
 import { token, from, orderid } from '@/store/appCallerStore'
 import computeExt from '@/utils/getFzmMesageProtocolExt'
+import { watch } from '@vue/runtime-core'
+import decodeChatMessage from '@/utils/fzm-message-protocol-chat/decodeChatMessage'
+import { messageStore } from '@/store/messagesStore'
+import { ChatMessageTypes } from '@/types/chatMessageTypes'
 
 export default defineComponent({
     components: { ChatHeaderVue, ChatContentVue, ChatInputVue },
@@ -61,7 +65,7 @@ export default defineComponent({
         const initError = ref(false)
         const debug = process.env.NODE_ENV === 'development'
 
-        const connect = async () => {
+        const connect = () => {
             connectionState.error = false
             initError.value = false
 
@@ -86,6 +90,37 @@ export default defineComponent({
         }
 
         connect()
+
+        // 监听连接状态
+        watch(
+            () => connectionState.connection,
+            () => {
+                if (!connectionState.connection) return
+
+                // 连接后，指定每次收到消息要做的事
+                connectionState.connection.onReceiveMessage = (msgData) => {
+                    const msg = decodeChatMessage(msgData)
+                    // 收到的非本笔订单的消息不处理
+                    if (msg.orderid !== orderid) return
+
+                    messageStore.displayNewMessage({
+                        content: msg.content,
+                        from: msg.from,
+                        uuid: msg.uuid,
+                        state: null,
+                        type: (msg.type || 0) as ChatMessageTypes,
+                        datetime: msg.datetime,
+                        logid: msg.logid,
+                    })
+                }
+
+                // 连接后，指定每次断开连接要做的事
+                connectionState.connection.onLoseConnection = () => {
+                    connectionState.connection = undefined
+                    connectionState.error = true
+                }
+            }
+        )
 
         onBeforeUnmount(() => {
             connectionState.connection?.disconnect()

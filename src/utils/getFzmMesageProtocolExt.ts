@@ -1,5 +1,5 @@
 /**
- * Chat.vue 中进行 WebSocket 鉴权时需要携带 ext 字段
+ * 为满足业务需求，连接 WebSocket 时需要携带 ext 字段
  * 在本文件计算
  */
 
