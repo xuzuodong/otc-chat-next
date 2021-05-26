@@ -17,6 +17,7 @@ import axios, { AxiosResponse } from 'axios'
 import { ChatRecordBody } from '@/types/record'
 import { watchEffect } from '@vue/runtime-core'
 import decodeChatMessage from '@/utils/fzm-message-protocol-chat/decodeChatMessage'
+import { baseUrl } from './baseUrl'
 
 /** 多媒体消息的上传进度 */
 export interface UploadProgress {
@@ -288,7 +289,7 @@ class MessageStore {
 
     /** 发送 `收款方式` 时调用，从而告知 OTC 后台，改变 App 端相应按钮状态 */
     showPay() {
-        let url = `/backend/order/show-pay-chat?order_num=${orderid}`
+        let url = baseUrl + `/backend/order/show-pay-chat?order_num=${orderid}`
         url += `&timestamp=${Date.now()}`
         axios({
             url,

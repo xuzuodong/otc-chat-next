@@ -7,6 +7,7 @@
 
 import { ref, Ref } from '@vue/reactivity'
 import axios from 'axios'
+import { baseUrl } from './baseUrl'
 
 const [, uri] = window.location.href.split('?')
 const pairs = uri && uri.split('&')
@@ -64,7 +65,7 @@ export const getOrderInfo = (): Promise<Ref<OrderInfo>> => {
         if (!shouldUpdateOrderInfo) {
             resolve(orderInfo as Ref<OrderInfo>)
         } else {
-            let url = `/receive/trade-opponent?order_num=${query.orderid}`
+            let url = baseUrl + `/receive/trade-opponent?order_num=${query.orderid}`
             url += `&timestamp=${Date.now()}`
             axios({
                 url,
