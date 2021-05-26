@@ -22,7 +22,7 @@
         </div>
     </div>
 
-    <div v-if="debug" class="enable-touch">
+    <div v-if="debug" @click="mutateOrderInfo" class="enable-touch">
         <div>from: {{ from }}</div>
         <div>token: {{ token }}</div>
         <div>orderid: {{ orderid }}</div>
@@ -30,8 +30,8 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, ref } from 'vue'
-import { from, token, orderid, getOrderInfo, OrderInfo, clearOrderInfo } from '@/store/appCallerStore'
+import { computed, defineComponent } from 'vue'
+import { from, token, orderid, getOrderInfo, clearOrderInfo, mutateOrderInfo , orderInfo} from '@/store/appCallerStore'
 import jsBridge from '@/utils/jsBridge'
 import { Platform } from 'quasar'
 import { useRouter } from 'vue-router'
@@ -46,10 +46,6 @@ export default defineComponent({
             new jsBridge().closeCurrentWebview()
             router.go(-1)
         }
-
-        // 取得订单详情
-        const orderInfo = ref<OrderInfo | undefined>(undefined)
-        getOrderInfo().then((info) => (orderInfo.value = info))
 
         // 推断对方昵称
         const targetNick = computed(() => {
@@ -80,12 +76,12 @@ export default defineComponent({
                 clearOrderInfo()
                 getOrderInfo().then((info) => {
                     if (!orderInfo.value?.levelTime) return
-                    orderInfo.value.levelTime = info.levelTime
+                    orderInfo.value.levelTime = info.value.levelTime
                 })
             }
         })
 
-        return { from, token, orderid, debug, close, targetNick, orderInfo, timeLeft }
+        return { from, token, orderid, debug, close, targetNick, orderInfo, timeLeft, mutateOrderInfo }
     },
 })
 </script>

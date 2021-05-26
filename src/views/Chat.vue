@@ -50,7 +50,7 @@ import ChatInputVue from './ChatInput.vue'
 import ChatHeaderVue from './ChatHeader.vue'
 import { connectionState } from '@/store/connectionStore'
 import FzmMessageProtocol from '@/utils/fzm-message-protocol'
-import { getOrderInfo, OrderInfo } from '@/store/appCallerStore'
+import { getOrderInfo } from '@/store/appCallerStore'
 import { token, from, orderid } from '@/store/appCallerStore'
 import computeExt from '@/utils/getFzmMesageProtocolExt'
 
@@ -69,11 +69,11 @@ export default defineComponent({
             const fmp = new FzmMessageProtocol(wsUrl)
 
             getOrderInfo()
-                .then((res: OrderInfo) => {
+                .then((res) => {
                     return fmp.authorize({
                         appId: 'zb_otc',
                         token,
-                        ext: computeExt(res),
+                        ext: computeExt(res.value),
                     })
                 })
                 .then((conn) => {

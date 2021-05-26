@@ -5,6 +5,7 @@
  *     @param orderId 当前聊天双方基于的订单 id
  */
 
+import { ref, Ref } from '@vue/reactivity'
 import axios from 'axios'
 
 const [, uri] = window.location.href.split('?')
@@ -54,13 +55,14 @@ export interface OrderInfo {
     type: 1 | 2
 }
 
-let orderInfo: OrderInfo | undefined
+export const orderInfo: Ref<OrderInfo | undefined> = ref(undefined)
+let shouldUpdateOrderInfo = true
 
 /** 获得订单信息，顺便获取对方 id */
-export const getOrderInfo = (): Promise<OrderInfo> => {
+export const getOrderInfo = (): Promise<Ref<OrderInfo>> => {
     return new Promise((resolve, reject) => {
-        if (orderInfo) {
-            resolve(orderInfo)
+        if (!shouldUpdateOrderInfo) {
+            resolve(orderInfo as Ref<OrderInfo>)
         } else {
             let url = `/receive/trade-opponent?order_num=${query.orderid}`
             url += `&timestamp=${Date.now()}`
@@ -70,6 +72,7 @@ export const getOrderInfo = (): Promise<OrderInfo> => {
                 headers: { Authorization: token },
             })
                 .then((res) => {
+                    shouldUpdateOrderInfo = false
                     if (res.status == 200 && res.data.code == 200) {
                         const rawOrderInfo = res.data.data
                         const userId = rawOrderInfo.user_id
@@ -85,7 +88,7 @@ export const getOrderInfo = (): Promise<OrderInfo> => {
                             }
                         })
 
-                        orderInfo = {
+                        orderInfo.value = {
                             userId,
                             userZbId: rawOrderInfo.user_zb_id,
                             merchantId,
@@ -98,8 +101,8 @@ export const getOrderInfo = (): Promise<OrderInfo> => {
                             levelTime: rawOrderInfo.level_time,
                             type: rawOrderInfo.type,
                         }
-
-                        resolve(orderInfo)
+                        polling()
+                        resolve(orderInfo as Ref<OrderInfo>)
                     } else {
                         reject(res)
                     }
@@ -112,7 +115,24 @@ export const getOrderInfo = (): Promise<OrderInfo> => {
 }
 
 export const clearOrderInfo = (): void => {
-    orderInfo = undefined
+    shouldUpdateOrderInfo = true
+}
+
+// 用于测试轮询到的结果是否会改变视图
+export const mutateOrderInfo = (): void => {
+    if (!orderInfo.value) return
+    orderInfo.value.status = '订单状态已改变'
+    orderInfo.value.cost = 18888
+}
+
+/** 轮询订单状态 */
+function polling() {
+    if (orderInfo.value && (orderInfo.value.status === '待付款' || orderInfo.value.status === '已付款')) {
+        setTimeout(() => {
+            clearOrderInfo()
+            getOrderInfo()
+        }, 10000)
+    }
 }
 
 /** 我的 id */

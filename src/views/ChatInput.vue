@@ -90,10 +90,10 @@ export default defineComponent({
         const showReceiptInput = ref(false)
         getOrderInfo().then((orderInfo) => {
             // 当前用户是承兑商还是普通用户
-            const isUserMerchant = orderInfo.merchantZbId === from
+            const isUserMerchant = orderInfo.value.merchantZbId === from
 
-            const merchantShowInputCase = isUserMerchant && orderInfo.type == 2
-            const userShowInputCase = !isUserMerchant && orderInfo.type == 1
+            const merchantShowInputCase = isUserMerchant && orderInfo.value.type == 2
+            const userShowInputCase = !isUserMerchant && orderInfo.value.type == 1
 
             if (merchantShowInputCase || userShowInputCase) {
                 showReceiptInput.value = true

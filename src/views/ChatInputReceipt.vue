@@ -9,22 +9,19 @@
  *     2. 如果选择的收款方式是微信/支付宝，发送对应二维码的图片
  */
 
-import { defineComponent, ref } from 'vue'
+import { defineComponent } from 'vue'
 import { useQuasar } from 'quasar'
 import iconUrl from '@/assets/input_menu_receive.png'
 import ChatInputMenuButtonVue from '@/views/ChatInputMenuButton.vue'
 import ChatInputReceiptDialogVue from './ChatInputReceiptDialog.vue'
 import { messageStore } from '@/store/messagesStore'
 import { ChatMessageTypes } from '@/types/chatMessageTypes'
-import { getOrderInfo, OrderInfo } from '@/store/appCallerStore'
+import { orderInfo } from '@/store/appCallerStore'
 
 export default defineComponent({
     components: { ChatInputMenuButtonVue },
     setup() {
         const quasar = useQuasar()
-
-        const orderInfo = ref<OrderInfo | undefined>(undefined)
-        getOrderInfo().then((info) => (orderInfo.value = info))
 
         /** 弹出 “选择收款方式” 对话框 */
         const selectReceiveMoneyMethods = () => {
