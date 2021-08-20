@@ -2,70 +2,16 @@
  * 利用此实例来上传文件到「阿里云 OSS」，并获取文件的链接
  */
 
-import axios from 'axios'
 import { date } from 'quasar'
-import OSS, { Checkpoint } from 'ali-oss'
+import { OSS, Checkpoint } from '@/utils/oss'
 import { ChatMessageTypes } from '@/types/chatMessageTypes'
 import { v4 as uuidv4 } from 'uuid'
 
-interface Credentials {
-    AccessKeyId: string
-    AccessKeySecret: string
-    Expiration: string
-    SecurityToken: string
-}
-
-let credentials: Credentials | undefined
-
-const getCredentials = (): Promise<Credentials> => {
-    return new Promise<Credentials>((resolve, reject) => {
-        if (credentials && !expired(new Date(credentials.Expiration))) {
-            console.log(`OSS 凭证已存在，直接使用`)
-            resolve(credentials)
-        } else {
-            axios({
-                method: 'get',
-                url: `/oss/get-token?timestamp=${Date.now()}`,
-            })
-                .then((res) => {
-                    credentials = res.data.data.Credentials as Credentials
-                    resolve(credentials)
-                })
-                .catch(() => {
-                    reject()
-                })
-        }
-    })
-}
-
-const expired = (expiration: Date) => {
-    const dateDiff = date.getDateDiff(new Date(), expiration, 'seconds')
-    return dateDiff >= 0
-}
-
-const protocol = process.env.NODE_ENV === 'development' ? 'http' : 'https'
-const bucket = process.env.NODE_ENV === 'development' ? 'dld-test' : 'otc-chat'
-const region = process.env.NODE_ENV === 'development' ? 'oss-cn-shanghai' : 'oss-cn-shanghai'
-const ossBaseUrl = `${protocol}://${bucket}.${region}.aliyuncs.com/`
-
-const getOssClientInstance = (): Promise<OSS> => {
-    return new Promise((resolve, reject) => {
-        getCredentials()
-            .then((c) => {
-                const oss = new OSS({
-                    accessKeyId: c.AccessKeyId,
-                    accessKeySecret: c.AccessKeySecret,
-                    stsToken: c.SecurityToken,
-                    region,
-                    bucket,
-                })
-                resolve(oss)
-            })
-            .catch((err) => {
-                reject(err)
-            })
-    })
-}
+const oss = new OSS({
+    appId: 'zb-otc',
+    requestUrl: '/oss',
+    authorization: () => ({ 'FZM-SIGNATURE': 'MOCK' }),
+})
 
 type OnprogressFunction = (p: number, checkpoint: Checkpoint) => void
 
@@ -78,56 +24,46 @@ type OnprogressFunction = (p: number, checkpoint: Checkpoint) => void
  */
 export const uploadFile = (file: Blob, type: ChatMessageTypes, onprogress?: OnprogressFunction): Promise<string> => {
     return new Promise((resolve, reject) => {
-        getOssClientInstance()
-            .then((oss) => {
-                let typeName: string
-                let extName: string
-                switch (type) {
-                    case ChatMessageTypes.Audio:
-                        typeName = `audio`
-                        extName = 'wav'
-                        break
-                    case ChatMessageTypes.Image:
-                        typeName = `image`
-                        extName = 'jpg'
-                        break
-                    case ChatMessageTypes.Video:
-                        typeName = `video`
-                        extName = 'mp4'
-                        break
-                    default:
-                        throw '上传阿里云 OSS 时出错：暂未分类的文件类型'
-                }
+        let typeName: string
+        let extName: string
+        switch (type) {
+            case ChatMessageTypes.Audio:
+                typeName = `audio`
+                extName = 'wav'
+                break
+            case ChatMessageTypes.Image:
+                typeName = `image`
+                extName = 'jpg'
+                break
+            case ChatMessageTypes.Video:
+                typeName = `video`
+                extName = 'mp4'
+                break
+            default:
+                throw '上传阿里云 OSS 时出错：暂未分类的文件类型'
+        }
 
-                const day = date.formatDate(new Date(), 'YYYYMMDD')
+        const day = date.formatDate(new Date(), 'YYYYMMDD')
 
-                /** example: `otc-chat/audio/20210415/qqq-www-eee-rrr.wav` */
-                const objectName = `otc-chat/${typeName}/${day}/${uuidv4()}.${extName}`
+        /** example: `otc-chat/audio/20210415/qqq-www-eee-rrr.wav` */
+        const objectName = `otc-chat/${typeName}/${day}/${uuidv4()}.${extName}`
 
-                oss.multipartUpload(objectName, file, {
-                    progress(p, checkpoint) {
-                        onprogress && onprogress(p, checkpoint)
-                    },
-                })
-                    .then((res) => {
-                        resolve(ossBaseUrl + res.name)
-                    })
-                    .catch((res) => {
-                        reject(res)
-                    })
+        oss.uploadFile(file, objectName, (p, checkpoint) => {
+            onprogress && onprogress(p, checkpoint)
+        })
+            .then((res) => {
+                resolve(res)
             })
-            .catch((err) => {
-                reject(err)
+            .catch((res) => {
+                reject(res)
             })
     })
 }
 
 export const abortUploadFile = (checkpoint: Checkpoint): Promise<void> => {
     return new Promise((resolve) => {
-        getOssClientInstance().then((oss) => {
-            oss.abortMultipartUpload(checkpoint.name, checkpoint.uploadId).then(() => {
-                resolve()
-            })
+        oss.abortUploading(checkpoint.fileName).then(() => {
+            resolve()
         })
     })
 }
