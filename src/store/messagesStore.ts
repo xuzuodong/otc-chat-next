@@ -10,9 +10,9 @@ import encodeChatMessage from '@/utils/fzm-message-protocol-chat/encodeChatMessa
 import { v4 as uuidv4 } from 'uuid'
 import { connectionState } from './connectionStore'
 import { uploadFile, abortUploadFile } from './ossStore'
+import { Checkpoint } from '@/utils/oss'
 import { dtalk } from '@/utils/fzm-message-protocol-chat/protobuf'
 import { date } from 'quasar'
-import { Checkpoint } from 'ali-oss'
 import axios, { AxiosResponse } from 'axios'
 import { ChatRecordBody } from '@/types/record'
 
